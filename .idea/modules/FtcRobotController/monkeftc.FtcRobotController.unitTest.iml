@@ -22,7 +22,7 @@
     <content url="file://$MODULE_DIR$/../../../FtcRobotController/src/testDebug" />
     <orderEntry type="jdk" jdkName="Android API 29 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="FtcRobotController-master.FtcRobotController.main" scope="TEST" />
+    <orderEntry type="module" module-name="monkeftc.FtcRobotController.main" scope="TEST" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.firstinspires.ftc:Inspection:9.0.0@aar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.firstinspires.ftc:Blocks:9.0.0@aar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.firstinspires.ftc:Tfod:9.0.0@aar" level="project" />
@@ -69,5 +69,5 @@
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.arch.core:core-common:2.1.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.collection:collection:1.1.0" level="project" />
   </component>
-  <component name="TestModuleProperties" production-module="FtcRobotController-master.FtcRobotController.main" />
+  <component name="TestModuleProperties" production-module="monkeftc.FtcRobotController.main" />
 </module>

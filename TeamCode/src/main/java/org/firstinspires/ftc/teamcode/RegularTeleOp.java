@@ -76,7 +76,7 @@ public class RegularTeleOp extends LinearOpMode  {
 
             robot.motorFrontLeft.setPower(v3*robotSpeed); // some of these might need to be negative
             robot.motorFrontRight.setPower(v4*robotSpeed);
-            robot.motorBackLeft.setPower(v1*robotSpeed * (312/435));
+            robot.motorBackLeft.setPower(v1*robotSpeed);
             robot.motorBackRight.setPower(v2*robotSpeed);
 
             // Deposit

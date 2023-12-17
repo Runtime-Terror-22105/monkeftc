@@ -75,7 +75,7 @@ public class HardwarePushbot {
 
 
         // slides
-        SlideLeft  = hwMap.get(DcMotor.class, "LeftLeftSlide");
+        SlideLeft  = hwMap.get(DcMotor.class, "LeftSlide");
         SlideRight = hwMap.get(DcMotor.class, "RightSlide");
 
 

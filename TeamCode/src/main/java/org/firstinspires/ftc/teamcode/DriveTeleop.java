@@ -74,16 +74,22 @@ public class DriveTeleop extends LinearOpMode  {
             final double v4 = r * Math.cos(robotAngle) - rightX;
 
 
-            robot.motorFrontLeft.setPower(v3*robotSpeed); // some of these might need to be negative
+            robot.motorFrontLeft.setPower(-v3*robotSpeed); // some of these might need to be negative
             robot.motorFrontRight.setPower(v4*robotSpeed);
             robot.motorBackLeft.setPower(v1*robotSpeed);
             robot.motorBackRight.setPower(-v2*robotSpeed);
+            telemetry.addData("SHOWS UPDATE","blah");
+            telemetry.update();
             if(gamepad1.left_trigger>0.2){
                 robot.SlideLeft.setPower(-1.0);
+                telemetry.addData("SHOWS UPDATE","SLIDEPRESSED");
+                telemetry.update();
             }
             else{
                 robot.SlideLeft.setPower(0.0);
             }
+
+            if(gamepad1.)
             if ((gamepad1.left_bumper && gamepad2.right_bumper) || (gamepad2.left_bumper && gamepad2.right_bumper)){
                 // emergency break
                 break;

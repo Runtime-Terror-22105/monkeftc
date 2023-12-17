@@ -11,7 +11,7 @@ public class DriveTeleop extends LinearOpMode  {
     // Initialize robot from another class
     HardwarePushbot robot = new HardwarePushbot();
     @Override
-    public void runOpMode(){
+    public void runOpMode() {
         robot.init(hardwareMap);
         int intakeState = 0; // 0 = off, 1 = on
         int vertSlideState = 0; // 0 = bottom, 1-2-3 set lines

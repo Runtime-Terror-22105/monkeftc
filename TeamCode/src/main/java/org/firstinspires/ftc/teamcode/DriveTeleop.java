@@ -1,10 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 import java.lang.Math;
 
 @TeleOp(name = "DriveTeleop", group = "Concept")
@@ -80,20 +78,11 @@ public class DriveTeleop extends LinearOpMode  {
             robot.motorBackRight.setPower(-v2*robotSpeed);
             telemetry.addData("SHOWS UPDATE","blah");
             telemetry.update();
-            if(gamepad1.right_bumper){
+            if(gamepad1.left_trigger>0.2){
                 robot.SlideLeft.setPower(-1.0);
-//                robot.SlideRight.setPower(-1.0);
                 telemetry.addData("SHOWS UPDATE","SLIDEPRESSED");
                 telemetry.update();
             }
-
-            else if(gamepad1.left_bumper){
-                robot.SlideLeft.setPower(1.0);
-//                robot.SlideRight.setPower(1.0);
-                telemetry.addData("SHOWS UPDATE","SLIDEPRESSED");
-                telemetry.update();
-            }
-
             else{
                 robot.SlideLeft.setPower(0.0);
             }

@@ -14,6 +14,8 @@ public class ObjectPositionPipeline extends OpenCvPipeline {
     public static boolean DETECT_RED = true;
     public static double MIN_VALUES = 100;
     public static double MAX_VALUES = 255;
+    public static double MIN_SATURATION = 100;
+    public static double MAX_SATURATION = 255;
     public static double MIN_BLUE_HUE = 100;
     public static double MAX_BLUE_HUE = 115;
     public static double MIN_RED_LOW_HUE = 0;
@@ -27,13 +29,13 @@ public class ObjectPositionPipeline extends OpenCvPipeline {
         MIDDLE,
         RIGHT
     }
-    private Location location;
+    private Location location = Location.MIDDLE;
 
     // ROI = region of interest, aka the rectangle we're drawing
     // you should fine tune this
-    static final Rect ROI_Left = new Rect(new Point(10, 100), new Point(105, 200));
+    static final Rect ROI_Left   = new Rect(new Point( 10, 100), new Point(105, 200));
     static final Rect ROI_Middle = new Rect(new Point(120, 100), new Point(205, 200));
-    static final Rect ROI_Right = new Rect(new Point(220, 100), new Point(310, 200));
+    static final Rect ROI_Right  = new Rect(new Point(220, 100), new Point(310, 200));
 
     public ObjectPositionPipeline(Telemetry t) {
         telemetry = t;
@@ -51,16 +53,18 @@ public class ObjectPositionPipeline extends OpenCvPipeline {
 
         // If something goes wrong, return
         if (mat.empty()) {
+            telemetry.addData("processFrame func", "something wnet wrong");
+            telemetry.update();
             return input;
         }
 
         // create s
-        Scalar MIN_BLUE = new Scalar(MIN_BLUE_HUE, MIN_VALUES, MIN_VALUES);
-        Scalar MAX_BLUE = new Scalar(MAX_BLUE_HUE, MAX_VALUES, MAX_VALUES);
-        Scalar MIN_RED_LOW = new Scalar(MIN_RED_LOW_HUE, MIN_VALUES, MIN_VALUES);
-        Scalar MAX_RED_LOW = new Scalar(MAX_RED_LOW_HUE, MAX_VALUES, MAX_VALUES);
-        Scalar MIN_RED_HIGH = new Scalar(MIN_RED_HIGH_HUE, MIN_VALUES, MIN_VALUES);
-        Scalar MAX_RED_HIGH = new Scalar(MAX_RED_HIGH_HUE, MAX_VALUES, MAX_VALUES);
+        Scalar MIN_BLUE = new Scalar(MIN_BLUE_HUE, MIN_SATURATION, MIN_VALUES);
+        Scalar MAX_BLUE = new Scalar(MAX_BLUE_HUE, MAX_SATURATION, MAX_VALUES);
+        Scalar MIN_RED_LOW = new Scalar(MIN_RED_LOW_HUE, MIN_SATURATION, MIN_VALUES);
+        Scalar MAX_RED_LOW = new Scalar(MAX_RED_LOW_HUE, MAX_SATURATION, MAX_VALUES);
+        Scalar MIN_RED_HIGH = new Scalar(MIN_RED_HIGH_HUE, MIN_SATURATION, MIN_VALUES);
+        Scalar MAX_RED_HIGH = new Scalar(MAX_RED_HIGH_HUE, MAX_SATURATION, MAX_VALUES);
 
         if (DETECT_RED) {
             // check if red one is there, check both high and low range in spectrum
@@ -127,5 +131,9 @@ public class ObjectPositionPipeline extends OpenCvPipeline {
 
     Location getLocation() {
         return location;
+    }
+
+    void setDetectRed(boolean shouldDetectRed) {
+        DETECT_RED = shouldDetectRed;
     }
 }

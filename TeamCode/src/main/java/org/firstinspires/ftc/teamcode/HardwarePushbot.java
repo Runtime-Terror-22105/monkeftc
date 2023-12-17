@@ -50,10 +50,10 @@ public class HardwarePushbot {
         hwMap = _hwMap;
 
         //initialize the drivetrain motors
-        motorFrontLeft  = hwMap.get(DcMotor.class, "motorFrontLeft");
-        motorFrontRight = hwMap.get(DcMotor.class, "motorFrontRight");
-        motorBackRight  = hwMap.get(DcMotor.class, "motorBackRight");
-        motorBackLeft   = hwMap.get(DcMotor.class, "motorBackLeft");
+        motorFrontLeft  = hwMap.get(DcMotor.class, "motorFrontLeft"); //0
+        motorFrontRight = hwMap.get(DcMotor.class, "motorFrontRight"); //1
+        motorBackRight  = hwMap.get(DcMotor.class, "motorBackRight"); //2
+        motorBackLeft   = hwMap.get(DcMotor.class, "motorBackLeft"); //3
 
         // initialize the other motors
         intake          = hwMap.get(DcMotor.class, "intake");

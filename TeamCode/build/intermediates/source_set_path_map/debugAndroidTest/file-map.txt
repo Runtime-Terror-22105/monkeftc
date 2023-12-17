@@ -1,4 +1,0 @@
-org.firstinspires.ftc.teamcode.test.TeamCode-androidTest-0 C:\Users\aadit\Documents\monkeftc\TeamCode\build\generated\res\resValues\androidTest\debug
-org.firstinspires.ftc.teamcode.test.TeamCode-mergeDebugAndroidTestResources-1 C:\Users\aadit\Documents\monkeftc\TeamCode\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\merged.dir
-org.firstinspires.ftc.teamcode.test.TeamCode-mergeDebugAndroidTestResources-2 C:\Users\aadit\Documents\monkeftc\TeamCode\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\stripped.dir
-org.firstinspires.ftc.teamcode.test.TeamCode-merged_res-3 C:\Users\aadit\Documents\monkeftc\TeamCode\build\intermediates\merged_res\debugAndroidTest

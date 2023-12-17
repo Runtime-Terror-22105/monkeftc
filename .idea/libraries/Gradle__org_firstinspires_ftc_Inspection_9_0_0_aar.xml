@@ -1,15 +1,15 @@
 <component name="libraryTable">
   <library name="Gradle: org.firstinspires.ftc:Inspection:9.0.0@aar">
     <CLASSES>
-      <root url="file://$PROJECT_DIR$/../.gradle/caches/transforms-3/1129875bd731ffa79a670bf96aefa534/transformed/jetified-Inspection-9.0.0/AndroidManifest.xml" />
-      <root url="jar://$PROJECT_DIR$/../.gradle/caches/transforms-3/1129875bd731ffa79a670bf96aefa534/transformed/jetified-Inspection-9.0.0/jars/classes.jar!/" />
-      <root url="file://$PROJECT_DIR$/../.gradle/caches/transforms-3/1129875bd731ffa79a670bf96aefa534/transformed/jetified-Inspection-9.0.0/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/1129875bd731ffa79a670bf96aefa534/transformed/jetified-Inspection-9.0.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/1129875bd731ffa79a670bf96aefa534/transformed/jetified-Inspection-9.0.0/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/1129875bd731ffa79a670bf96aefa534/transformed/jetified-Inspection-9.0.0/res" />
     </CLASSES>
     <JAVADOC>
-      <root url="jar://$PROJECT_DIR$/../.gradle/caches/modules-2/files-2.1/org.firstinspires.ftc/Inspection/9.0.0/16677304a6a0f22d02b3eb51b6913420b9b19559/Inspection-9.0.0-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.firstinspires.ftc/Inspection/9.0.0/16677304a6a0f22d02b3eb51b6913420b9b19559/Inspection-9.0.0-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES>
-      <root url="jar://$PROJECT_DIR$/../.gradle/caches/modules-2/files-2.1/org.firstinspires.ftc/Inspection/9.0.0/1aab56cd4d38b84238debf3890ed5c95c933043f/Inspection-9.0.0-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.firstinspires.ftc/Inspection/9.0.0/1aab56cd4d38b84238debf3890ed5c95c933043f/Inspection-9.0.0-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

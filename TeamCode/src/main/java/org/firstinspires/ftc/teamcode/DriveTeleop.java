@@ -10,7 +10,7 @@ import java.lang.Math;
 public class DriveTeleop extends LinearOpMode  {
     // Initialize robot from another class
     HardwarePushbot robot = new HardwarePushbot();
-
+    @Override
     public void runOpMode(){
         robot.init(hardwareMap);
         int intakeState = 0; // 0 = off, 1 = on
@@ -80,11 +80,21 @@ public class DriveTeleop extends LinearOpMode  {
             telemetry.update();
             if(gamepad1.left_trigger>0.2){
                 robot.SlideLeft.setPower(-1.0);
+                robot.SlideRight.setPower(1.0);
                 telemetry.addData("SHOWS UPDATE","SLIDEPRESSED");
                 telemetry.update();
             }
+
+            else if(gamepad1.left_bumper){
+                robot.SlideLeft.setPower(1.0);
+                robot.SlideRight.setPower(-1.0);
+                telemetry.addData("SHOWS UPDATE","SLIDEPRESSED");
+                telemetry.update();
+            }
+
             else{
                 robot.SlideLeft.setPower(0.0);
+                robot.SlideRight.setPower(0.0);
             }
 
             if(gamepad1.b){

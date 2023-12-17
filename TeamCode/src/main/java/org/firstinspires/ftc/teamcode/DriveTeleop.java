@@ -80,11 +80,18 @@ public class DriveTeleop extends LinearOpMode  {
             robot.motorBackRight.setPower(-v2*robotSpeed);
             telemetry.addData("SHOWS UPDATE","blah");
             telemetry.update();
-            if(gamepad1.left_trigger>0.2){
+            if(gamepad1.left_bumper){
                 robot.SlideLeft.setPower(-1.0);
                 telemetry.addData("SHOWS UPDATE","SLIDEPRESSED");
                 telemetry.update();
             }
+
+            else if(gamepad1.right_bumper){
+                robot.SlideLeft.setPower(1.0);
+                telemetry.addData("SHOWS UPDATE","SLIDEPRESSED");
+                telemetry.update();
+            }
+
             else{
                 robot.SlideLeft.setPower(0.0);
             }

@@ -77,8 +77,13 @@ public class DriveTeleop extends LinearOpMode  {
             robot.motorFrontLeft.setPower(v3*robotSpeed); // some of these might need to be negative
             robot.motorFrontRight.setPower(v4*robotSpeed);
             robot.motorBackLeft.setPower(v1*robotSpeed);
-            robot.motorBackRight.setPower(v2*robotSpeed);
-
+            robot.motorBackRight.setPower(-v2*robotSpeed);
+            if(gamepad1.left_trigger>0.2){
+                robot.SlideLeft.setPower(-1.0);
+            }
+            else{
+                robot.SlideLeft.setPower(0.0);
+            }
             if ((gamepad1.left_bumper && gamepad2.right_bumper) || (gamepad2.left_bumper && gamepad2.right_bumper)){
                 // emergency break
                 break;
@@ -96,7 +101,7 @@ public class DriveTeleop extends LinearOpMode  {
         robot.motorFrontLeft.setPower(power);
         robot.motorFrontRight.setPower(power);
         robot.motorBackRight.setPower(power);
-        robot.motorBackLeft.setPower((312.0) * power);
+        robot.motorBackLeft.setPower( power);
     }
 
     public void slides(double Position){

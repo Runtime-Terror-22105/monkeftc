@@ -2,10 +2,17 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/monkeftc_-_old.iml" filepath="$PROJECT_DIR$/.idea/modules/monkeftc_-_old.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/monkeftc.iml" filepath="$PROJECT_DIR$/.idea/modules/monkeftc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/FtcRobotController/monkeftc.FtcRobotController.iml" filepath="$PROJECT_DIR$/.idea/modules/FtcRobotController/monkeftc.FtcRobotController.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/FtcRobotController/monkeftc.FtcRobotController.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/FtcRobotController/monkeftc.FtcRobotController.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/FtcRobotController/monkeftc.FtcRobotController.main.iml" filepath="$PROJECT_DIR$/.idea/modules/FtcRobotController/monkeftc.FtcRobotController.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/FtcRobotController/monkeftc.FtcRobotController.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/FtcRobotController/monkeftc.FtcRobotController.unitTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/TeamCode/monkeftc.TeamCode.iml" filepath="$PROJECT_DIR$/.idea/modules/TeamCode/monkeftc.TeamCode.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/TeamCode/monkeftc.TeamCode.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/TeamCode/monkeftc.TeamCode.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/TeamCode/monkeftc.TeamCode.main.iml" filepath="$PROJECT_DIR$/.idea/modules/TeamCode/monkeftc.TeamCode.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/TeamCode/monkeftc.TeamCode.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/TeamCode/monkeftc.TeamCode.unitTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/FtcRobotController/monkeftc_-_old.FtcRobotController.iml" filepath="$PROJECT_DIR$/.idea/modules/FtcRobotController/monkeftc_-_old.FtcRobotController.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/FtcRobotController/monkeftc_-_old.FtcRobotController.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/FtcRobotController/monkeftc_-_old.FtcRobotController.androidTest.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/FtcRobotController/monkeftc_-_old.FtcRobotController.main.iml" filepath="$PROJECT_DIR$/.idea/modules/FtcRobotController/monkeftc_-_old.FtcRobotController.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/FtcRobotController/monkeftc_-_old.FtcRobotController.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/FtcRobotController/monkeftc_-_old.FtcRobotController.unitTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/TeamCode/monkeftc_-_old.TeamCode.iml" filepath="$PROJECT_DIR$/.idea/modules/TeamCode/monkeftc_-_old.TeamCode.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/TeamCode/monkeftc_-_old.TeamCode.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/TeamCode/monkeftc_-_old.TeamCode.androidTest.iml" />

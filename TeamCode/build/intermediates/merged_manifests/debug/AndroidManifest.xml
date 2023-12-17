@@ -103,13 +103,10 @@
         android:allowBackup="true"
         android:appComponentFactory="androidx.core.app.CoreComponentFactory"
         android:debuggable="true"
-<<<<<<< HEAD
-        android:extractNativeLibs="true"
-=======
->>>>>>> f2a5e20575313289d016c6692bd65fe9145d1880
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
+        android:testOnly="true"
         android:theme="@style/AppThemeRedRC"
         android:usesCleartextTraffic="true" > <!-- Indicates to the ControlHubUpdater what the latest version of the Control Hub is that this app supports -->
         <meta-data

@@ -1,17 +1,10 @@
 {
     "logs": [
         {
-<<<<<<< HEAD
-            "outputFile": "org.firstinspires.ftc.teamcode.TeamCode-mergeDebugResources-17:/values-port/values-port.xml",
-            "map": [
-                {
-                    "source": "C:\\Users\\aadit\\.gradle\\caches\\transforms-3\\062a3f458de16c5b8ba80b32687f2c0f\\transformed\\appcompat-1.2.0\\res\\values-port\\values-port.xml",
-=======
             "outputFile": "org.firstinspires.ftc.teamcode.TeamCode-mergeDebugResources-18:/values-port/values-port.xml",
             "map": [
                 {
-                    "source": "/Users/tarunj/.gradle/caches/transforms-3/9a854d58a42290773197de38a3e22145/transformed/appcompat-1.2.0/res/values-port/values-port.xml",
->>>>>>> f2a5e20575313289d016c6692bd65fe9145d1880
+                    "source": "/Users/tarunj/.gradle/caches/transforms-3/6397ab5f28a6e87d56088382d90c68b7/transformed/appcompat-1.2.0/res/values-port/values-port.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

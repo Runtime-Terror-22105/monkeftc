@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <category name="HuskyLens.Arrow">
   <block type="huskyLensArrow_getProperty_Number">
     <field name="PROP">x_origin</field>
@@ -24,30 +23,3 @@
     <value name="HUSKY_LENS_ARROW"><block type="variables_get"><field name="VAR">myHuskyLensArrow</field></block></value>
   </block>
 </category>
-=======
-<category name="HuskyLens.Arrow">
-  <block type="huskyLensArrow_getProperty_Number">
-    <field name="PROP">x_origin</field>
-    <value name="HUSKY_LENS_ARROW"><block type="variables_get"><field name="VAR">myHuskyLensArrow</field></block></value>
-  </block>
-  <block type="huskyLensArrow_getProperty_Number">
-    <field name="PROP">y_origin</field>
-    <value name="HUSKY_LENS_ARROW"><block type="variables_get"><field name="VAR">myHuskyLensArrow</field></block></value>
-  </block>
-  <block type="huskyLensArrow_getProperty_Number">
-    <field name="PROP">x_target</field>
-    <value name="HUSKY_LENS_ARROW"><block type="variables_get"><field name="VAR">myHuskyLensArrow</field></block></value>
-  </block>
-  <block type="huskyLensArrow_getProperty_Number">
-    <field name="PROP">y_target</field>
-    <value name="HUSKY_LENS_ARROW"><block type="variables_get"><field name="VAR">myHuskyLensArrow</field></block></value>
-  </block>
-  <block type="huskyLensArrow_getProperty_Number">
-    <field name="PROP">id</field>
-    <value name="HUSKY_LENS_ARROW"><block type="variables_get"><field name="VAR">myHuskyLensArrow</field></block></value>
-  </block>
-  <block type="huskyLensArrow_toText">
-    <value name="HUSKY_LENS_ARROW"><block type="variables_get"><field name="VAR">myHuskyLensArrow</field></block></value>
-  </block>
-</category>
->>>>>>> f2a5e20575313289d016c6692bd65fe9145d1880

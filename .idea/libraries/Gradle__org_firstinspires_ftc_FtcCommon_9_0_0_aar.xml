@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: org.firstinspires.ftc:FtcCommon:9.0.0@aar">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../.gradle/caches/transforms-3/f2915e59aca113df1bfb0ff3c6953f95/transformed/jetified-FtcCommon-9.0.0/jars/classes.jar!/" />
-      <root url="file://$PROJECT_DIR$/../.gradle/caches/transforms-3/f2915e59aca113df1bfb0ff3c6953f95/transformed/jetified-FtcCommon-9.0.0/res" />
-      <root url="file://$PROJECT_DIR$/../.gradle/caches/transforms-3/f2915e59aca113df1bfb0ff3c6953f95/transformed/jetified-FtcCommon-9.0.0/AndroidManifest.xml" />
+      <root url="file://$PROJECT_DIR$/../.gradle/caches/transforms-3/ae22c449c6c015fd9a03a275d197e622/transformed/jetified-FtcCommon-9.0.0/AndroidManifest.xml" />
+      <root url="file://$PROJECT_DIR$/../.gradle/caches/transforms-3/ae22c449c6c015fd9a03a275d197e622/transformed/jetified-FtcCommon-9.0.0/res" />
+      <root url="jar://$PROJECT_DIR$/../.gradle/caches/transforms-3/ae22c449c6c015fd9a03a275d197e622/transformed/jetified-FtcCommon-9.0.0/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$PROJECT_DIR$/../.gradle/caches/modules-2/files-2.1/org.firstinspires.ftc/FtcCommon/9.0.0/2891e654592ddbcc30333f28ed90538c70a2c55b/FtcCommon-9.0.0-javadoc.jar!/" />

@@ -1,8 +1,8 @@
 <component name="libraryTable">
   <library name="Gradle: org.tensorflow:tensorflow-lite-api:2.12.0@aar">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../.gradle/caches/transforms-3/a1696065465cf07d3384d392e450bd7e/transformed/jetified-tensorflow-lite-api-2.12.0/jars/classes.jar!/" />
-      <root url="file://$PROJECT_DIR$/../.gradle/caches/transforms-3/a1696065465cf07d3384d392e450bd7e/transformed/jetified-tensorflow-lite-api-2.12.0/AndroidManifest.xml" />
+      <root url="file://$PROJECT_DIR$/../.gradle/caches/transforms-3/954b5e8089acace42d0be12a707aba5f/transformed/jetified-tensorflow-lite-api-2.12.0/AndroidManifest.xml" />
+      <root url="jar://$PROJECT_DIR$/../.gradle/caches/transforms-3/954b5e8089acace42d0be12a707aba5f/transformed/jetified-tensorflow-lite-api-2.12.0/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

@@ -1,15 +1,15 @@
 <component name="libraryTable">
   <library name="Gradle: org.firstinspires.ftc:Hardware:9.0.0@aar">
     <CLASSES>
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/ab8353d16e3f4650b4101715f2ad06cd/transformed/jetified-Hardware-9.0.0/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/ab8353d16e3f4650b4101715f2ad06cd/transformed/jetified-Hardware-9.0.0/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/ab8353d16e3f4650b4101715f2ad06cd/transformed/jetified-Hardware-9.0.0/res" />
+      <root url="file://$PROJECT_DIR$/../.gradle/caches/transforms-3/c109e8e217fb732502f0d4d36d17d988/transformed/jetified-Hardware-9.0.0/res" />
+      <root url="jar://$PROJECT_DIR$/../.gradle/caches/transforms-3/c109e8e217fb732502f0d4d36d17d988/transformed/jetified-Hardware-9.0.0/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/../.gradle/caches/transforms-3/c109e8e217fb732502f0d4d36d17d988/transformed/jetified-Hardware-9.0.0/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.firstinspires.ftc/Hardware/9.0.0/21bf341c0f20e949c2b19b7799f1134ce36ff3b5/Hardware-9.0.0-javadoc.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../.gradle/caches/modules-2/files-2.1/org.firstinspires.ftc/Hardware/9.0.0/21bf341c0f20e949c2b19b7799f1134ce36ff3b5/Hardware-9.0.0-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.firstinspires.ftc/Hardware/9.0.0/48b7d609af8334d8d87ff88745b3a46640650375/Hardware-9.0.0-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../.gradle/caches/modules-2/files-2.1/org.firstinspires.ftc/Hardware/9.0.0/48b7d609af8334d8d87ff88745b3a46640650375/Hardware-9.0.0-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

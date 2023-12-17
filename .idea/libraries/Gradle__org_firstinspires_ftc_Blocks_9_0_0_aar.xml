@@ -1,15 +1,15 @@
 <component name="libraryTable">
   <library name="Gradle: org.firstinspires.ftc:Blocks:9.0.0@aar">
     <CLASSES>
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/972bd81b3e117d72e6dad0485d6dba77/transformed/jetified-Blocks-9.0.0/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/972bd81b3e117d72e6dad0485d6dba77/transformed/jetified-Blocks-9.0.0/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/972bd81b3e117d72e6dad0485d6dba77/transformed/jetified-Blocks-9.0.0/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/../.gradle/caches/transforms-3/6a9220b961c89d3c5cbe2ea60966fc9f/transformed/jetified-Blocks-9.0.0/AndroidManifest.xml" />
+      <root url="jar://$PROJECT_DIR$/../.gradle/caches/transforms-3/6a9220b961c89d3c5cbe2ea60966fc9f/transformed/jetified-Blocks-9.0.0/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/../.gradle/caches/transforms-3/6a9220b961c89d3c5cbe2ea60966fc9f/transformed/jetified-Blocks-9.0.0/res" />
     </CLASSES>
     <JAVADOC>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.firstinspires.ftc/Blocks/9.0.0/c7e9fa3b6543267ecd0cc419aca34dc71276ed86/Blocks-9.0.0-javadoc.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../.gradle/caches/modules-2/files-2.1/org.firstinspires.ftc/Blocks/9.0.0/c7e9fa3b6543267ecd0cc419aca34dc71276ed86/Blocks-9.0.0-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.firstinspires.ftc/Blocks/9.0.0/881b79b04caae1fe505902591156c92477dbdae2/Blocks-9.0.0-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../.gradle/caches/modules-2/files-2.1/org.firstinspires.ftc/Blocks/9.0.0/881b79b04caae1fe505902591156c92477dbdae2/Blocks-9.0.0-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

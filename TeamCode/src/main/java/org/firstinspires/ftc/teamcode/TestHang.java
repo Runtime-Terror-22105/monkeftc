@@ -6,18 +6,20 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 @Autonomous(name="Test Hang", group="Concept")
 public class TestHang extends LinearOpMode {
-    HardwarePushbot robot = new HardwarePushbot();
-
+//    HardwarePushbot robot = new HardwarePushbot();
+    HardwarePushbot2 robot=new HardwarePushbot2();
 
     @Override
     public void runOpMode() {
         robot.init(hardwareMap);
         waitForStart();
-        FrontDrive(0.5);
-        sleep(1800);
-        CancelPowerRobot();
-        //robot.intake.setPower(0.8);
-        sleep(750);
+//        FrontDrive(0.5);
+//        sleep(1800);
+//        CancelPowerRobot();
+//        //robot.intake.setPower(0.8);
+//        sleep(750);
+        robot.intake.setPower(1.0);
+        sleep(100000);
         robot.intake.setPower(0.0);
     }
 

@@ -46,11 +46,11 @@ public class RegularTeleOp extends LinearOpMode  {
         // PID Initialize for ONE Slide
 
         // Reset the motor encoder so that it reads zero ticks
-        robot.slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        // Sets the starting position of the slide to the down position
-        robot.slide.setTargetPosition((int) vertSlideArray[0]);
-        robot.slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        robot.slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//
+//        // Sets the starting position of the slide to the down position
+//        robot.slide.setTargetPosition((int) vertSlideArray[0]);
+//        robot.slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 
         // Sets the starting position of the hang to the down position
@@ -108,7 +108,7 @@ public class RegularTeleOp extends LinearOpMode  {
 
                 }
                 else if (endGameState == 1) { // Y second click - extend measurement tape
-                    robot.tapeServo.setPower(-1.0);
+//                    robot.tapeServo.setPower(-1.0);
                     endGameState++;
                     sleep(300);
                 }
@@ -117,12 +117,13 @@ public class RegularTeleOp extends LinearOpMode  {
                     FrontDrive(0.4);
                     sleep(100);
                     FrontDrive(0.0);
-                    robot.hang.setPower(-1.0);
+//                    robot.hang.setPower(-1.0);
                     endGameState++;
                     sleep(400);
                 }
                 else{
-                    robot.hang.setPower(0.0);
+                    robot.SlideLeft.setPower(0.0);
+                    robot.SlideRight.setPower(0.0);
                     // Done with the match :)
                 }
             }
@@ -140,12 +141,12 @@ public class RegularTeleOp extends LinearOpMode  {
                 robot.intakeControl.setPosition(intakeSpots[0]);
             }
 
-            if(gamepad1.a){
-                robot.hang.setPower(1.0);
-            }
-            else if(endGameState == 0){
-                robot.hang.setPower(0.0);
-            }
+//            if(gamepad1.a){
+//                robot.hang.setPower(1.0);
+//            }
+//            else if(endGameState == 0){
+//                robot.hang.setPower(0.0);
+//            }
 
             // Adjustable Vertical Slides
 
@@ -161,10 +162,10 @@ public class RegularTeleOp extends LinearOpMode  {
 
             /*
             PID Code for ONE set of slides
-            */
-            robot.slide.setTargetPosition((int) vertSlideArray[vertSlideState]);
-            robot.slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.slide.setPower(1.0);
+//            */
+//            robot.slide.setTargetPosition((int) vertSlideArray[vertSlideState]);
+//            robot.slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//            robot.slide.setPower(1.0);
 
             if ((gamepad1.left_bumper && gamepad2.right_bumper) || (gamepad2.left_bumper && gamepad2.right_bumper)){
                 // emergency break
@@ -183,7 +184,17 @@ public class RegularTeleOp extends LinearOpMode  {
         robot.motorFrontLeft.setPower(power);
         robot.motorFrontRight.setPower(power);
         robot.motorBackRight.setPower(power);
-        robot.motorBackLeft.setPower((312.0/435.0) * power);
+        robot.motorBackLeft.setPower((312.0) * power);
+    }
+
+    public void slides(double Position){
+
+    }
+
+    public void outtake(double Position){
+        robot.depositLeft.setPosition(Position);
+        robot.depositRight.setPosition(Position);
+
     }
 
 

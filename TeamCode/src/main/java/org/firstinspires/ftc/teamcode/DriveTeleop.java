@@ -78,6 +78,8 @@ public class DriveTeleop extends LinearOpMode  {
             robot.motorBackRight.setPower(-v2*robotSpeed);
             telemetry.addData("SHOWS UPDATE","blah");
             telemetry.update();
+
+
             if(gamepad1.right_bumper){
                 robot.SlideLeft.setPower(-1.0);
                 robot.SlideRight.setPower(1.0);
@@ -163,9 +165,6 @@ public class DriveTeleop extends LinearOpMode  {
         robot.motorBackLeft.setPower( power);
     }
 
-    public void slides(double Position){
-
-    }
 
     public void outtake(double Position){
         robot.depositLeft.setPosition(Position);

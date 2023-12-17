@@ -45,7 +45,6 @@ public class AutoTest extends LinearOpMode {
     public void intake(int milliseconds) {
         /**
          * @param milliseconds - How long to intake for, in milliseconds
-         * @param power - The power to use for the motors
          */
         robot.intake.setPower(-1.0);
         robot.intakeControl.setPosition(0.5);
@@ -58,15 +57,31 @@ public class AutoTest extends LinearOpMode {
         robot.WheelRight.setPower(1.0);
     }
 
-    public void outtake(int milliseconds, double power) {
+    public void intake(int milliseconds, double power) {
         /**
-         * @param milliseconds - How long to outtake for, in milliseconds
-         * @param power - The power to use for the servos
+         * @param milliseconds - How long to intake for, in milliseconds
+         * @param power - The power to use for the motors
          */
-        robot.intake.setPower(power);
+        robot.intake.setPower(-power);
+        robot.intakeControl.setPosition(0.5);
+        robot.WheelLeft.setPower(power);
+        robot.WheelRight.setPower(-power);
         sleep(milliseconds);
-        robot.intake.setPower(0);
+        robot.intake.setPower(power);
+        robot.intakeControl.setPosition(0.5);
+        robot.WheelLeft.setPower(-power);
+        robot.WheelRight.setPower(power);
     }
+
+//    public void outtake(int milliseconds, double power) {
+//        /**
+//         * @param milliseconds - How long to outtake for, in milliseconds
+//         * @param power - The power to use for the servos
+//         */
+//        robot.intake.setPower(power);
+//        sleep(milliseconds);
+//        robot.intake.setPower(0);
+//    }
 
     public void spinLeft(double power) {
 //        power=-power;

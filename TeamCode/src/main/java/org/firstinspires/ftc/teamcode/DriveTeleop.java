@@ -96,7 +96,12 @@ public class DriveTeleop extends LinearOpMode  {
                 robot.WheelRight.setPower(-1.0);
 
             }
-
+            else if(gamepad1.a){
+                robot.intake.setPower(1.0);
+                robot.intakeControl.setPosition(0.5); // 0.0 or 1.0
+                robot.WheelLeft.setPower(-1.0);
+                robot.WheelRight.setPower(1.0);
+            }
             else{
                 robot.intake.setPower(0.0);
                 robot.intakeControl.setPosition(0.0); // 0.0 or 1.0

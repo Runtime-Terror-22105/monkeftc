@@ -56,13 +56,13 @@ public class HardwarePushbot {
         motorBackLeft   = hwMap.get(DcMotor.class, "motorBackLeft"); //3
 
 //        // initialize the other motors
-//        intake          = hwMap.get(DcMotor.class, "intake");
+        intake          = hwMap.get(DcMotor.class, "intake");
 //
 //        // initialize the LMEC servo stuff
 //        // TBD, cad hasn't cadded this yet
 //
 //        // initialize the other servos
-//        intakeControl = hwMap.get(Servo.class, "intakeControl");
+        intakeControl = hwMap.get(Servo.class, "intakeControl");
 //
 //        //plane
 //        plane            = hwMap.get(Servo.class, "plane");

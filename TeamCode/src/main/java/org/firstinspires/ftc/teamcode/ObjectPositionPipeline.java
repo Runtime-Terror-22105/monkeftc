@@ -129,11 +129,11 @@ public class ObjectPositionPipeline extends OpenCvPipeline {
         return input;
     }
 
-    Location getLocation() {
+    public Location getLocation() {
         return location;
     }
 
-    void setDetectRed(boolean shouldDetectRed) {
+    public void setDetectRed(boolean shouldDetectRed) {
         DETECT_RED = shouldDetectRed;
     }
 }

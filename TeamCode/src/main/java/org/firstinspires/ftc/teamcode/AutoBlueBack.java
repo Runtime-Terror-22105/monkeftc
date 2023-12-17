@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+
 import android.util.Size;
 
 import com.acmerobotics.dashboard.FtcDashboard;
@@ -8,7 +9,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.Processors.TmpProcessor;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -16,12 +16,13 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 
-@Autonomous(name="BLUE Auto", group="Concept")
-public class BlueAuto extends LinearOpMode {
+@Autonomous(name="Blue Back Auto", group="Red Auto")
+public class AutoBlueBack extends LinearOpMode {
+    public final int RIGHTANGLETURNTIME = 200; // tweak this value with trial and error
     private OpenCvWebcam camera;
     private VisionPortal visionPortal;
     AprilTagProcessor tagProcessor;
-    private TmpProcessor imgProcessor;
+    //    private TmpProcessor imgProcessor;
     private ObjectPositionPipeline detector;
     private FtcDashboard dashboard;
     HardwarePushbot robot = new HardwarePushbot();
@@ -38,24 +39,71 @@ public class BlueAuto extends LinearOpMode {
         dashboard = FtcDashboard.getInstance();
         telemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
 
-        initCamera(hardwareMap, WhatColorToDetect.BLUE);
+        initCamera(hardwareMap, WhatColorToDetect.RED);
 
         waitForStart();
         ObjectPositionPipeline.Location location = detector.getLocation();
         stopLocationDetection();
 
-
-
         // see where the prop is
         switch (location) {
             case LEFT:
-                // ...
+                //      Deposit the Purple Pixel       //
+                moveForward(1000, 0.5);
+                turnRight(0.5);
+                moveForward(10, 0.5);
+                intake(300, -0.4); // reverse the intake slowly
+
+                //      Drive to the Backboard      //
+                turnLeft(0.5);
+                moveForward(4000, 0.5);
+                turnLeft(0.5);
+                moveForward(900, 0.5);
+                turnRight(0.5);
+
+                //      Park      //
+                moveForward(500, 0.5);
                 break;
             case RIGHT:
-                // ...
+                //      Deposit the Purple Pixel       //
+                moveForward(1000, 0.5);
+                turnLeft(0.5);
+                moveForward(10, 0.5);
+                intake(300, -0.4); // reverse the intake very slowly
+
+                //      Drive to the Backboard      //
+                turnRight(0.5);
+                moveForward(1500, 0.5);
+                turnLeft(0.5);
+                moveForward(3800, 0.5);
+                turnLeft(0.5);
+                moveForward(900, 0.5);
+                turnRight(0.5);
+
+                //      Park      //
+                moveForward(500, 0.5);
                 break;
             case MIDDLE:
-                // ...
+                //      Deposit the Purple Pixel       //
+                moveForward(1200, 0.5);
+                SlideLeft(0.5); // TODO: Combine this + next two statements into one function
+                sleep(100);
+                CancelPowerRobot();
+                intake(300, -0.4); // reverse the intake very slowly
+
+                //      Drive to the Backboard      //
+                SlideLeft(0.5); // TODO: Combine this + next two statements into one function
+                sleep(100);
+                CancelPowerRobot();
+                moveForward(1500, 0.5);
+                turnRight(0.5);
+                moveForward(3800, 0.5);
+                turnRight(0.5);
+                moveForward(900, 0.5);
+                turnRight(0.5);
+
+                //      Park      //
+                moveForward(500, 0.5);
                 break;
         }
 
@@ -106,7 +154,7 @@ public class BlueAuto extends LinearOpMode {
 
 
         //        imgProcessor = new CenterStageProcessor(telemetry);
-        imgProcessor = new TmpProcessor(telemetry);
+//        imgProcessor = new TmpProcessor(telemetry);
         tagProcessor = new AprilTagProcessor.Builder()
                 .setDrawAxes(true)
                 .setDrawCubeProjection(true)
@@ -127,6 +175,52 @@ public class BlueAuto extends LinearOpMode {
         camera.stopStreaming();
     }
 
+
+    public void moveForward(int milliseconds, double power) {
+        /**
+         * Move forward for some time.
+         * @param milliseconds - How long to move forward for, in milliseconds
+         * @param power - The power to use for the motors
+         */
+        FrontDrive(power);
+        sleep(milliseconds);
+        CancelPowerRobot();
+    }
+
+    public void turnLeft(double power) {
+        spin(power);
+        long sleeptime = (long)(RIGHTANGLETURNTIME/power); // tweak this value with trial and error
+        sleep(sleeptime);
+        CancelPowerRobot();
+    }
+
+    public void turnRight(double power) {
+        spin(power);
+        long sleeptime = (long)(RIGHTANGLETURNTIME/power);
+        sleep(sleeptime);
+        CancelPowerRobot();
+    }
+
+    public void intake(int milliseconds, double power) {
+        /**
+         * @param milliseconds - How long to intake for, in milliseconds
+         * @param power - The power to use for the motors
+         */
+        robot.intake.setPower(power);
+        sleep(milliseconds);
+        robot.intake.setPower(0);
+    }
+
+    public void outtake(int milliseconds, double power) {
+        /**
+         * @param milliseconds - How long to outtake for, in milliseconds
+         * @param power - The power to use for the servos
+         */
+        robot.intake.setPower(power);
+        sleep(milliseconds);
+        robot.intake.setPower(0);
+    }
+
     public void spin(double power) {
         power=-power;
         robot.motorFrontLeft.setPower(power);
@@ -139,7 +233,7 @@ public class BlueAuto extends LinearOpMode {
         robot.motorFrontLeft.setPower(power);
         robot.motorFrontRight.setPower(power);
         robot.motorBackRight.setPower(power);
-        robot.motorBackLeft.setPower((312.0/435.0) * power);
+        robot.motorBackLeft.setPower(power);
     }
 
     public void LeftSlantDrive(double power) {
@@ -198,7 +292,7 @@ public class BlueAuto extends LinearOpMode {
     }
 
     public void CancelPowerRobot() {
-        double power=0.0;
+        double power = 0.0;
         robot.motorFrontLeft.setPower(power);
         robot.motorFrontRight.setPower(power);
         robot.motorBackRight.setPower(-power);

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+
 import android.util.Size;
 
 import com.acmerobotics.dashboard.FtcDashboard;
@@ -8,7 +9,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.Processors.TmpProcessor;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -17,12 +17,12 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 
 @Autonomous(name="Red Front Auto", group="Red Auto")
-public class RedFrontAuto extends LinearOpMode {
+public class AutoRedFront extends LinearOpMode {
     public final int RIGHTANGLETURNTIME = 200; // tweak this value with trial and error
     private OpenCvWebcam camera;
     private VisionPortal visionPortal;
     AprilTagProcessor tagProcessor;
-    private TmpProcessor imgProcessor;
+//    private TmpProcessor imgProcessor;
     private ObjectPositionPipeline detector;
     private FtcDashboard dashboard;
     HardwarePushbot robot = new HardwarePushbot();
@@ -51,6 +51,7 @@ public class RedFrontAuto extends LinearOpMode {
                 //      Deposit the Purple Pixel       //
                 moveForward(1000, 0.5);
                 turnLeft(0.5);
+                moveForward(10, 0.5);
                 intake(300, -0.4); // reverse the intake slowly
 
                 //      Drive to the Backboard      //
@@ -86,7 +87,7 @@ public class RedFrontAuto extends LinearOpMode {
                 intake(300, -0.4); // reverse the intake very slowly
 
                 //      Drive to the Backboard      //
-                moveForward(2500, 0.5);
+                moveForward(1500, 0.5);
 
                 //      Park      //
                 moveForward(500, 0.5);
@@ -152,7 +153,7 @@ public class RedFrontAuto extends LinearOpMode {
 
 
         //        imgProcessor = new CenterStageProcessor(telemetry);
-        imgProcessor = new TmpProcessor(telemetry);
+//        imgProcessor = new TmpProcessor(telemetry);
         tagProcessor = new AprilTagProcessor.Builder()
                 .setDrawAxes(true)
                 .setDrawCubeProjection(true)

@@ -223,11 +223,12 @@ public class AutoRedBack extends LinearOpMode {
 
     public void spin(double power) {
         power=-power;
-        robot.motorFrontLeft.setPower(power);
-        robot.motorFrontRight.setPower(-power);
-        robot.motorBackRight.setPower(power);
-        robot.motorBackLeft.setPower(power);
+        robot.motorFrontLeft.setPower(-power);
+        robot.motorFrontRight.setPower(+power);
+        robot.motorBackRight.setPower(+power);
+        robot.motorBackLeft.setPower(-power);
     }
+
 
     public void FrontDrive(double power) {
         robot.motorFrontLeft.setPower(power);

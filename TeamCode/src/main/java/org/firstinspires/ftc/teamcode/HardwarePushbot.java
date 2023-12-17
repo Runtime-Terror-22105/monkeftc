@@ -55,28 +55,28 @@ public class HardwarePushbot {
         motorBackRight  = hwMap.get(DcMotor.class, "motorBackRight"); //2
         motorBackLeft   = hwMap.get(DcMotor.class, "motorBackLeft"); //3
 
-        // initialize the other motors
-        intake          = hwMap.get(DcMotor.class, "intake");
-
-        // initialize the LMEC servo stuff
-        // TBD, cad hasn't cadded this yet
-
-        // initialize the other servos
-        intakeControl = hwMap.get(Servo.class, "intakeControl");
-
-        //plane
-        plane            = hwMap.get(Servo.class, "plane");
-        // outatake
-        depositLeft      = hwMap.get(Servo.class, "depositLeft");
-        depositRight     = hwMap.get(Servo.class, "depositRight");
-
-        WheelLeft =hwMap.get(Servo.class, "WheelLeft");
-        WheelRight=hwMap.get(Servo.class, "WheelRight");
-
-
-        // slides
-        SlideLeft  = hwMap.get(DcMotor.class, "LeftSlide");
-        SlideRight = hwMap.get(DcMotor.class, "RightSlide");
+//        // initialize the other motors
+//        intake          = hwMap.get(DcMotor.class, "intake");
+//
+//        // initialize the LMEC servo stuff
+//        // TBD, cad hasn't cadded this yet
+//
+//        // initialize the other servos
+//        intakeControl = hwMap.get(Servo.class, "intakeControl");
+//
+//        //plane
+//        plane            = hwMap.get(Servo.class, "plane");
+//        // outatake
+//        depositLeft      = hwMap.get(Servo.class, "depositLeft");
+//        depositRight     = hwMap.get(Servo.class, "depositRight");
+//
+//        WheelLeft =hwMap.get(Servo.class, "WheelLeft");
+//        WheelRight=hwMap.get(Servo.class, "WheelRight");
+//
+//
+//        // slides
+//        SlideLeft  = hwMap.get(DcMotor.class, "LeftSlide");
+//        SlideRight = hwMap.get(DcMotor.class, "RightSlide");
 
 
         // Camera

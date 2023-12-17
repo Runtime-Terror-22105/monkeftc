@@ -1,14 +1,14 @@
 <component name="libraryTable">
   <library name="Gradle: org.openftc:easyopencv:1.7.0@aar">
     <CLASSES>
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/6a455b9f4820cb5d5e391b809bfa9328/transformed/jetified-easyopencv-1.7.0/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/6a455b9f4820cb5d5e391b809bfa9328/transformed/jetified-easyopencv-1.7.0/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/../.gradle/caches/transforms-3/d87895c8200a5985126bf7a9c5da1fb7/transformed/jetified-easyopencv-1.7.0/AndroidManifest.xml" />
+      <root url="jar://$PROJECT_DIR$/../.gradle/caches/transforms-3/d87895c8200a5985126bf7a9c5da1fb7/transformed/jetified-easyopencv-1.7.0/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.openftc/easyopencv/1.7.0/ba5d7d72b5b6ce30dc3cf4fee50c057665c62fd/easyopencv-1.7.0-javadoc.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../.gradle/caches/modules-2/files-2.1/org.openftc/easyopencv/1.7.0/ba5d7d72b5b6ce30dc3cf4fee50c057665c62fd/easyopencv-1.7.0-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.openftc/easyopencv/1.7.0/459ed754769ce539744816f9b0d50f557749358c/easyopencv-1.7.0-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../.gradle/caches/modules-2/files-2.1/org.openftc/easyopencv/1.7.0/459ed754769ce539744816f9b0d50f557749358c/easyopencv-1.7.0-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

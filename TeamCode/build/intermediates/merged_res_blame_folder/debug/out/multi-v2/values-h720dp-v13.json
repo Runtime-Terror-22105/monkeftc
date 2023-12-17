@@ -1,10 +1,17 @@
 {
     "logs": [
         {
+<<<<<<< HEAD
+            "outputFile": "org.firstinspires.ftc.teamcode.TeamCode-mergeDebugResources-17:/values-h720dp-v13/values-h720dp-v13.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\aadit\\.gradle\\caches\\transforms-3\\062a3f458de16c5b8ba80b32687f2c0f\\transformed\\appcompat-1.2.0\\res\\values-h720dp-v13\\values-h720dp-v13.xml",
+=======
             "outputFile": "org.firstinspires.ftc.teamcode.TeamCode-mergeDebugResources-18:/values-h720dp-v13/values-h720dp-v13.xml",
             "map": [
                 {
                     "source": "/Users/tarunj/.gradle/caches/transforms-3/9a854d58a42290773197de38a3e22145/transformed/appcompat-1.2.0/res/values-h720dp-v13/values-h720dp-v13.xml",
+>>>>>>> f2a5e20575313289d016c6692bd65fe9145d1880
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

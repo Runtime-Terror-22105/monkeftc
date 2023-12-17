@@ -31,6 +31,9 @@ public class HardwarePushbot {
     public Servo depositLeft = null;
     public Servo depositRight = null;
 
+    public Servo WheelLeft=null;
+    public Servo WheelRight=null;
+
     //plane launcher
     public Servo plane = null;
 
@@ -66,6 +69,10 @@ public class HardwarePushbot {
         // outatake
         depositLeft      = hwMap.get(Servo.class, "depositLeft");
         depositRight     = hwMap.get(Servo.class, "depositRight");
+
+        WheelLeft =hwMap.get(Servo.class, "WheelLeft");
+        WheelRight=hwMap.get(Servo.class, "WheelRight");
+
 
         // slides
         SlideLeft  = hwMap.get(DcMotor.class, "LeftLeftSlide");

@@ -39,7 +39,7 @@ public class AutoBlueBack extends LinearOpMode {
         dashboard = FtcDashboard.getInstance();
         telemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
 
-        initCamera(hardwareMap, WhatColorToDetect.RED);
+        initCamera(hardwareMap, WhatColorToDetect.BLUE);
 
         waitForStart();
         ObjectPositionPipeline.Location location = detector.getLocation();
@@ -137,7 +137,7 @@ public class AutoBlueBack extends LinearOpMode {
             @Override
             public void onOpened() {
                 // when cam opens, start streaming
-                camera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
+                camera.startStreaming(320, 240, OpenCvCameraRotation.UPSIDE_DOWN);
                 dashboard.startCameraStream(camera, 30);
             }
 
@@ -182,7 +182,7 @@ public class AutoBlueBack extends LinearOpMode {
          * @param milliseconds - How long to move forward for, in milliseconds
          * @param power - The power to use for the motors
          */
-        FrontDrive(power);
+        FrontDrive(-power);
         sleep(milliseconds);
         CancelPowerRobot();
     }

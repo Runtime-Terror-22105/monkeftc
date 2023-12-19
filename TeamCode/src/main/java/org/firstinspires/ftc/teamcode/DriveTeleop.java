@@ -10,6 +10,8 @@ import java.lang.Math;
 public class DriveTeleop extends LinearOpMode  {
     // Initialize robot from another class
     HardwarePushbot robot = new HardwarePushbot();
+    public int planeTimer = 0;
+
     @Override
     public void runOpMode() {
         robot.init(hardwareMap);
@@ -81,15 +83,15 @@ public class DriveTeleop extends LinearOpMode  {
 
 
             if(gamepad1.right_bumper){
-                robot.SlideLeft.setPower(-1.0);
-                robot.SlideRight.setPower(1.0);
+                robot.SlideLeft.setPower(-0.5);
+                robot.SlideRight.setPower(-0.5);
                 telemetry.addData("SHOWS UPDATE","SLIDEPRESSED");
                 telemetry.update();
             }
 
             else if(gamepad1.left_bumper){
-                robot.SlideLeft.setPower(1.0);
-                robot.SlideRight.setPower(-1.0);
+                robot.SlideLeft.setPower(0.5);
+                robot.SlideRight.setPower(0.5);
                 telemetry.addData("SHOWS UPDATE","SLIDEPRESSED");
                 telemetry.update();
             }
@@ -101,27 +103,37 @@ public class DriveTeleop extends LinearOpMode  {
 
             if(gamepad1.b){
                 robot.intake.setPower(-1.0);
-                robot.intakeControl.setPosition(0.5); // 0.0 or 1.0
+                robot.intakeControl.setPosition(1.0); // 0.0 or 1.0
                 robot.WheelLeft.setPower(1.0);
                 robot.WheelRight.setPower(-1.0);
-
             }
             else if(gamepad1.a){
-                robot.intake.setPower(1.0);
-                robot.intakeControl.setPosition(0.5); // 0.0 or 1.0
-                robot.WheelLeft.setPower(-1.0);
-                robot.WheelRight.setPower(1.0);
+                robot.intake.setPower(0.5);
+                robot.intakeControl.setPosition(1.0); // 0.0 or 1.0
+                robot.WheelLeft.setPower(-0.5);
+                robot.WheelRight.setPower(0.5);
             }
             else{
                 robot.intake.setPower(0.0);
-                robot.intakeControl.setPosition(0.0); // 0.0 or 1.0
+                robot.intakeControl.setPosition(1.0); // 0.0 or 1.0
                 robot.WheelLeft.setPower(0.0);
                 robot.WheelRight.setPower(0.0);
             }
 
+            if (gamepad1.x) {
+                robot.plane.setPosition(planeArray[1]);
+                planeTimer = 100;
+            }
+            else if (planeTimer > 0) {
+                planeTimer--;
+            }
+            else {
+                robot.plane.setPosition(planeArray[0]);
+            }
+
             if(gamepad1.dpad_up){
-                robot.depositLeft.setPosition(0.5);
-                robot.depositRight.setPosition(0.5);
+                robot.depositLeft.setPosition(0.3);
+                robot.depositRight.setPosition(0.7);
             }
             else if(gamepad1.dpad_down){
                 robot.depositLeft.setPosition(0.0);

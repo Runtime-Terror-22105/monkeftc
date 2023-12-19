@@ -137,7 +137,7 @@ public class AutoRedBack extends LinearOpMode {
             @Override
             public void onOpened() {
                 // when cam opens, start streaming
-                camera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
+                camera.startStreaming(320, 240, OpenCvCameraRotation.UPSIDE_DOWN);
                 dashboard.startCameraStream(camera, 30);
             }
 
@@ -182,7 +182,7 @@ public class AutoRedBack extends LinearOpMode {
          * @param milliseconds - How long to move forward for, in milliseconds
          * @param power - The power to use for the motors
          */
-        FrontDrive(power);
+        FrontDrive(-power);
         sleep(milliseconds);
         CancelPowerRobot();
     }

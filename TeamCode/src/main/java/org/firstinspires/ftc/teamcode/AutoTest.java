@@ -62,6 +62,7 @@ public class AutoTest extends LinearOpMode {
          * @param milliseconds - How long to intake for, in milliseconds
          * @param power - The power to use for the motors
          */
+        power = -power;
         robot.intake.setPower(-power);
         robot.intakeControl.setPosition(0.5);
         robot.WheelLeft.setPower(power);

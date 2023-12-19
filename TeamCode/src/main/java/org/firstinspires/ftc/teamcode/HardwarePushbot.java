@@ -64,10 +64,10 @@ public class HardwarePushbot {
         intakeControl = hwMap.get(Servo.class, "intakeControl");
 //
 //        //plane
-//        plane            = hwMap.get(Servo.class, "plane");
+        plane            = hwMap.get(Servo.class, "plane");
 //        // outatake
-//        depositLeft      = hwMap.get(Servo.class, "depositLeft");
-//        depositRight     = hwMap.get(Servo.class, "depositRight");
+        depositLeft      = hwMap.get(Servo.class, "depositLeft");
+        depositRight     = hwMap.get(Servo.class, "depositRight");
 //
         WheelLeft =hwMap.get(CRServo.class, "WheelLeft");
         WheelRight=hwMap.get(CRServo.class, "WheelRight");

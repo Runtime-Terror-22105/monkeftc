@@ -118,7 +118,7 @@ public class AutoBlueFront extends LinearOpMode {
             @Override
             public void onOpened() {
                 // when cam opens, start streaming
-                camera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
+                camera.startStreaming(320, 240, OpenCvCameraRotation.UPSIDE_DOWN);
                 dashboard.startCameraStream(camera, 30);
             }
 
@@ -163,7 +163,7 @@ public class AutoBlueFront extends LinearOpMode {
          * @param milliseconds - How long to move forward for, in milliseconds
          * @param power - The power to use for the motors
          */
-        FrontDrive(power);
+        FrontDrive(-power);
         sleep(milliseconds);
         CancelPowerRobot();
     }
@@ -238,6 +238,7 @@ public class AutoBlueFront extends LinearOpMode {
         robot.motorBackLeft.setPower(-power);
         robot.motorBackRight.setPower(-power);
     }
+
 
     public void FrontDrive(double power) {
         robot.motorFrontLeft.setPower(-power);

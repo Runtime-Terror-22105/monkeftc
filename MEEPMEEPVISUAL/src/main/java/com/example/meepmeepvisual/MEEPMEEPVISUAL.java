@@ -15,8 +15,8 @@ public class MEEPMEEPVISUAL {
                 .setDimensions(14.6457, 16.063)
                 .setConstraints(100, 40, Math.toRadians(360), Math.toRadians(360), 15)
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(-35.59, -67.97, Math.toRadians(90.00)))
-                                .splineTo(new Vector2d(-35.90, -36.51), Math.toRadians(92.86))
+                        drive.trajectorySequenceBuilder(new Pose2d(0, 0, 0))
+                                .splineTo(new Vector2d(-36.19, -28.34), Math.toRadians(91.11))
                                 .build()
                 );
 

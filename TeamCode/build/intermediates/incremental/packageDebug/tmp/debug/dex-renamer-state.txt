@@ -1,12 +1,12 @@
-#Sun Dec 17 11:13:37 PST 2023
-base.0=/Users/tarunj/monkeftc/TeamCode/build/intermediates/dex/debug/mergeExtDexDebug/classes.dex
-base.1=/Users/tarunj/monkeftc/TeamCode/build/intermediates/dex/debug/mergeLibDexDebug/10/classes.dex
-base.2=/Users/tarunj/monkeftc/TeamCode/build/intermediates/dex/debug/mergeLibDexDebug/11/classes.dex
-base.3=/Users/tarunj/monkeftc/TeamCode/build/intermediates/dex/debug/mergeLibDexDebug/8/classes.dex
-base.4=/Users/tarunj/monkeftc/TeamCode/build/intermediates/dex/debug/mergeProjectDexDebug/0/classes.dex
-base.5=/Users/tarunj/monkeftc/TeamCode/build/intermediates/dex/debug/mergeProjectDexDebug/15/classes.dex
-base.6=/Users/tarunj/monkeftc/TeamCode/build/intermediates/dex/debug/mergeProjectDexDebug/7/classes.dex
-base.7=/Users/tarunj/monkeftc/TeamCode/build/intermediates/dex/debug/mergeExtDexDebug/classes2.dex
+#Mon Dec 18 21:42:37 PST 2023
+base.0=C\:\\Users\\aadit\\Downloads\\monkeftc\\TeamCode\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes.dex
+base.1=C\:\\Users\\aadit\\Downloads\\monkeftc\\TeamCode\\build\\intermediates\\dex\\debug\\mergeLibDexDebug\\10\\classes.dex
+base.2=C\:\\Users\\aadit\\Downloads\\monkeftc\\TeamCode\\build\\intermediates\\dex\\debug\\mergeLibDexDebug\\11\\classes.dex
+base.3=C\:\\Users\\aadit\\Downloads\\monkeftc\\TeamCode\\build\\intermediates\\dex\\debug\\mergeLibDexDebug\\8\\classes.dex
+base.4=C\:\\Users\\aadit\\Downloads\\monkeftc\\TeamCode\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\0\\classes.dex
+base.5=C\:\\Users\\aadit\\Downloads\\monkeftc\\TeamCode\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\15\\classes.dex
+base.6=C\:\\Users\\aadit\\Downloads\\monkeftc\\TeamCode\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\7\\classes.dex
+base.7=C\:\\Users\\aadit\\Downloads\\monkeftc\\TeamCode\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes2.dex
 path.0=classes.dex
 path.1=10/classes.dex
 path.2=11/classes.dex

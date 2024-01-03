@@ -18,7 +18,11 @@ public class RegularTeleOp extends LinearOpMode  {
         int intakeState = 0; // 0 = off, 1 = on
         int vertSlideState = 0; // 0 = bottom, 1-2-3 set lines
         int depositState = 0; // 0 = ready to deposit, 1 = deposited
+        int wheelState = 0; // 0 = not intaking, 1 = yes intaking, 2 = reverse intaking
         int endGameState = 0; // 0 = ready, 1 = plane launched, 2 = measurement tape up, 3 = we are hanged on the truss!
+        boolean slideIsUp = false; // false = down, true = up
+        double slideTimerInitial = 0.0;
+        int outtakePos = 0; // 0 = we didn't rotate it, 1 = we rotated it out
 
         double robotSpeed = 1.0;
         double[] intakeArray = {0.0, 1.0}; // speeds of intake
@@ -80,28 +84,34 @@ public class RegularTeleOp extends LinearOpMode  {
             robot.motorBackRight.setPower(-v2*robotSpeed);
 
             // First Segment Servo Deposit
-            if(gamepad1.left_trigger>0.2){
+            if (gamepad1.left_trigger > 0.2) {
                 //Spit Pixel
                 robot.wheel.setPower(1.0);
             }
-            else if(gamepad1.right_trigger>0.2){
+            else if (gamepad1.right_trigger > 0.2) {
                 // hold pixel
                 robot.wheel.setPower(-1.0);
             }
-            else{
+            else if (wheelState == 1) {
+                robot.wheel.setPower(-1.0);
+            }
+            else if (wheelState == 2) {
+                robot.wheel.setPower(1.0);
+            }
+            else {
                 // do nothing
                 robot.wheel.setPower(0.0);
             }
 
             // Second Segment Outtake Position
-            if(gamepad1.y){
+            if (gamepad1.y) {
                 //outtake down
                 robot.depositLeft.setPosition(0.5);
 //                robot.depositRight.setPosition(1.0);
                 telemetry.addData("Thing","y");
                 telemetry.update();
             }
-            else if(gamepad1.a){
+            else if (gamepad1.a) {
                 //outtake up
                 robot.depositLeft.setPosition(0.0);
 //                robot.depositRight.setPosition(0.5);
@@ -110,48 +120,68 @@ public class RegularTeleOp extends LinearOpMode  {
             }
 
             // Third Segment Intake Power
-            if(gamepad2.x){
+            if (gamepad2.x) {
                 // Reverse Intake spit out
+                wheelState = 2; // TODO: check later
                 robot.intake.setPower(-1.0);
                 robot.intakeControl.setPosition(intakecoll);
-
             }
-            else if(gamepad2.b){
+            else if (gamepad2.b) {
                 // Intake Normal
+                wheelState = 1;
                 robot.intake.setPower(1.0);
                 robot.intakeControl.setPosition(intakecoll);
             }
-            else{
+            else {
                 // no power intake
+                wheelState = 0;
                 robot.intake.setPower(0.0);
                 robot.intakeControl.setPosition(intakeup);
             }
 
 
             // 4th segment intake control
-//            if(gamepad2.dpad_up){
-//                // Folded up
-//                robot.intakeControl.setPosition(intakecoll);
-//            }
-//            else if(gamepad2.dpad_down){
-//                // Taking in
-//                robot.intakeControl.setPosition(intakeup);
-//            }
+            if (gamepad2.dpad_up){
+                // Folded up
+                robot.intakeControl.setPosition(intakecoll);
+
+            }
+            else if (gamepad2.dpad_down){
+                // Taking in
+                robot.intakeControl.setPosition(intakeup);
+            }
 
             //5th segment Slides
-            if(gamepad2.left_bumper){
+            if (gamepad2.left_bumper){
+                if (outtakePos == 1) {
+                    // if we rotated the outtake thing out, then rotate it back in
+                    robot.depositLeft.setPosition(0.0);  // TODO: find out actual numbers here
+                    robot.depositRight.setPosition(1.0); // TODO: find out actual numbers here
+                }
                 // Slide down
+                slideIsUp = false;
+                slideTimerInitial = System.currentTimeMillis();
+                robot.SlideLeft.setPower(1.0);
                 robot.SlideRight.setPower(1.0);
-                robot.SlideRight.setPower(-1.0);
             }
-            else if(gamepad2.right_bumper){
+            else if (gamepad2.right_bumper){
                 // Slide up
+                if (!slideIsUp) {
+                    // if the slide was going down and is now going up, then we reset the timer
+                    slideTimerInitial = System.currentTimeMillis();
+                }
+                else if (System.currentTimeMillis() - slideTimerInitial >= 250 && outtakePos != 1) {
+                    // if we didn't rotate it out yet and more than 250 ms have passed, then rotate out the outtake thing
+                    robot.depositLeft.setPosition(0.5);  // TODO: find out actual numbers here
+                    robot.depositRight.setPosition(0.5); // TODO: find out actual numbers here
+                }
+                slideIsUp = true;
+                robot.SlideLeft.setPower(-1.0);
                 robot.SlideRight.setPower(-1.0);
-                robot.SlideRight.setPower(1.0);
             }
-            else{
+            else {
                 // no power
-                robot.SlideRight.setPower(0.0);
+                robot.SlideLeft.setPower(0.0);
                 robot.SlideRight.setPower(0.0);
             }
 
@@ -159,7 +189,7 @@ public class RegularTeleOp extends LinearOpMode  {
 
 
 
-            if ((gamepad1.left_bumper && gamepad2.right_bumper) || (gamepad2.left_bumper && gamepad2.right_bumper)){
+            if ((gamepad1.left_bumper && gamepad2.right_bumper) || (gamepad2.left_bumper && gamepad2.right_bumper)) {
                 // emergency break
                 break;
             }

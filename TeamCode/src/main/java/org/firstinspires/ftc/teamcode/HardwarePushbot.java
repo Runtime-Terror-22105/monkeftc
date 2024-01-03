@@ -65,11 +65,10 @@ public class HardwarePushbot {
 //        //plane
 //        plane            = hwMap.get(Servo.class, "plane");
 //        // outatake position
-        depositLeft      = hwMap.get(Servo.class, "depositLeft"); // servo on slide
-        depositRight     = hwMap.get(Servo.class, "depositRight"); // servo on slide
 
-
-        wheel =hwMap.get(CRServo.class, "Wheel"); // servo in outtake
+        wheel = hwMap.get(CRServo.class, "Wheel"); // servo in outtake
+        depositLeft = hwMap.get(Servo.class, "depositLeft"); // servo for rotating the outtake thing
+        depositRight = hwMap.get(Servo.class, "depositRight"); // servo for rotating the outtake thing
 
 //
 //

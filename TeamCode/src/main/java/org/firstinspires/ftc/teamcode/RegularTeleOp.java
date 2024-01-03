@@ -13,6 +13,8 @@ public class RegularTeleOp extends LinearOpMode  {
 
     public void runOpMode(){
         robot.init(hardwareMap);
+        double intakeup=1.0;
+        double intakecoll=0.6;
         int intakeState = 0; // 0 = off, 1 = on
         int vertSlideState = 0; // 0 = bottom, 1-2-3 set lines
         int depositState = 0; // 0 = ready to deposit, 1 = deposited
@@ -72,98 +74,90 @@ public class RegularTeleOp extends LinearOpMode  {
             final double v4 = r * Math.cos(robotAngle) - rightX;
 
 
-            robot.motorFrontLeft.setPower(v3*robotSpeed); // some of these might need to be negative
+            robot.motorFrontLeft.setPower(-v3*robotSpeed); // some of these might need to be negative
             robot.motorFrontRight.setPower(v4*robotSpeed);
             robot.motorBackLeft.setPower(v1*robotSpeed);
-            robot.motorBackRight.setPower(v2*robotSpeed);
+            robot.motorBackRight.setPower(-v2*robotSpeed);
 
-            // Deposit
-            if (gamepad1.left_trigger > 0.2) { // Reset
-                robot.depositLeft.setPosition(depositLeftArray[0]);
-                robot.depositRight.setPosition(depositRightArray[0]);
+            // First Segment Servo Deposit
+            if(gamepad1.left_trigger>0.2){
+                //Spit Pixel
+                robot.wheel.setPower(1.0);
             }
-            if (gamepad1.right_trigger > 0.2) { // Deposit
-                robot.depositLeft.setPosition(depositLeftArray[1]);
-                robot.depositRight.setPosition(depositRightArray[1]);
-                /*sleep(2000); // adjust this so the pixel has sufficient time to get out
-                robot.depositLeft.setPosition(depositLeftArray[0]);
-                robot.depositRight.setPosition(depositRightArray[0]);
-                vertSlideState = 0;*/
-            }
-
-
-            // Endgame tasks => Plane + Hanging
-            // Hanging has no PID - probably don't need?
-            telemetry.addData("state", endGameState);
-            telemetry.update();
-            if (gamepad1.y) {
-                lastYClick = System.currentTimeMillis();
-                if (endGameState == 0) { // Y first click - launch plane
-                    robot.plane.setPosition(planeArray[1]);
-                    endGameState++;
-                    sleep(300);
-                    // plane is IN ZONE 1 (manifestation)
-
-                }
-                else if (endGameState == 1) { // Y second click - extend measurement tape
-//                    robot.tapeServo.setPower(-1.0);
-                    endGameState++;
-                    sleep(300);
-                }
-                else if(endGameState == 2) {
-                    sleep(3000);
-                    FrontDrive(0.4);
-                    sleep(100);
-                    FrontDrive(0.0);
-//                    robot.hang.setPower(-1.0);
-                    endGameState++;
-                    sleep(400);
-                }
-                else{
-                    robot.SlideLeft.setPower(0.0);
-                    robot.SlideRight.setPower(0.0);
-                    // Done with the match :)
-                }
-            }
-
-            if(gamepad1.b){
-                robot.intake.setPower(-1.0); // intake down + powered
-                robot.intakeControl.setPosition(intakeSpots[1]);
-            }
-            else if(gamepad1.x){
-                robot.intake.setPower(1.0);
-
+            else if(gamepad1.right_trigger>0.2){
+                // hold pixel
+                robot.wheel.setPower(-1.0);
             }
             else{
-                robot.intake.setPower(0.0); // intake up + not moving
-                robot.intakeControl.setPosition(intakeSpots[0]);
+                // do nothing
+                robot.wheel.setPower(0.0);
             }
 
-//            if(gamepad1.a){
-//                robot.hang.setPower(1.0);
+            // Second Segment Outtake Position
+            if(gamepad1.y){
+                //outtake down
+                robot.depositLeft.setPosition(0.5);
+//                robot.depositRight.setPosition(1.0);
+                telemetry.addData("Thing","y");
+                telemetry.update();
+            }
+            else if(gamepad1.a){
+                //outtake up
+                robot.depositLeft.setPosition(0.0);
+//                robot.depositRight.setPosition(0.5);
+                telemetry.addData("Thing","a");
+                telemetry.update();
+            }
+
+            // Third Segment Intake Power
+            if(gamepad2.x){
+                // Reverse Intake spit out
+                robot.intake.setPower(-1.0);
+                robot.intakeControl.setPosition(intakecoll);
+
+            }
+            else if(gamepad2.b){
+                // Intake Normal
+                robot.intake.setPower(1.0);
+                robot.intakeControl.setPosition(intakecoll);
+            }
+            else{
+                // no power intake
+                robot.intake.setPower(0.0);
+                robot.intakeControl.setPosition(intakeup);
+            }
+
+
+            // 4th segment intake control
+//            if(gamepad2.dpad_up){
+//                // Folded up
+//                robot.intakeControl.setPosition(intakecoll);
 //            }
-//            else if(endGameState == 0){
-//                robot.hang.setPower(0.0);
+//            else if(gamepad2.dpad_down){
+//                // Taking in
+//                robot.intakeControl.setPosition(intakeup);
 //            }
 
-            // Adjustable Vertical Slides
-
-            // Note: there is a 100ms cool down between each click, may need to be increased
-            if(gamepad1.right_bumper && System.currentTimeMillis() - lastRightBump > 100){
-                // lastRightBump = System.currentTimeMillis();
-                // vertSlideState = Math.min(vertSlideState + 1, 3);
+            //5th segment Slides
+            if(gamepad2.left_bumper){
+                // Slide down
+                robot.SlideRight.setPower(1.0);
+                robot.SlideRight.setPower(-1.0);
             }
-            if(gamepad1.left_bumper && System.currentTimeMillis() - lastLeftBump > 100){
-                // lastLeftBump = System.currentTimeMillis();
-                // vertSlideState = Math.max(vertSlideState - 1, 0);
+            else if(gamepad2.right_bumper){
+                // Slide up
+                robot.SlideRight.setPower(-1.0);
+                robot.SlideRight.setPower(1.0);
+            }
+            else{
+                // no power
+                robot.SlideRight.setPower(0.0);
+                robot.SlideRight.setPower(0.0);
             }
 
-            /*
-            PID Code for ONE set of slides
-//            */
-//            robot.slide.setTargetPosition((int) vertSlideArray[vertSlideState]);
-//            robot.slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//            robot.slide.setPower(1.0);
+
+
+
 
             if ((gamepad1.left_bumper && gamepad2.right_bumper) || (gamepad2.left_bumper && gamepad2.right_bumper)){
                 // emergency break
@@ -172,7 +166,6 @@ public class RegularTeleOp extends LinearOpMode  {
 
         }
     }
-
     public double slidePosition(double linkage1, double linkage2, double distance){
         // linkage 1 = opposite of theta, linkage 2 = adjacent, distance = desired distance
         // input in cm, output in degrees (north of x axis)

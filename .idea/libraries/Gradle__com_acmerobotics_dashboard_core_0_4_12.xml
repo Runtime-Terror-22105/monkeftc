@@ -1,11 +1,19 @@
 <component name="libraryTable">
   <library name="Gradle: com.acmerobotics.dashboard:core:0.4.12">
     <CLASSES>
+<<<<<<< HEAD
+      <root url="jar://$PROJECT_DIR$/../.gradle/caches/modules-2/files-2.1/com.acmerobotics.dashboard/core/0.4.12/cb81748f9617ce11acc770459131fa9c4ea64e1a/core-0.4.12.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../.gradle/caches/modules-2/files-2.1/com.acmerobotics.dashboard/core/0.4.12/e34ae81a700895d3b1e83bc3353e6b0d1dffc157/core-0.4.12-sources.jar!/" />
+=======
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.acmerobotics.dashboard/core/0.4.12/cb81748f9617ce11acc770459131fa9c4ea64e1a/core-0.4.12.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.acmerobotics.dashboard/core/0.4.12/e34ae81a700895d3b1e83bc3353e6b0d1dffc157/core-0.4.12-sources.jar!/" />
+>>>>>>> refs/remotes/origin/master
     </SOURCES>
   </library>
 </component>

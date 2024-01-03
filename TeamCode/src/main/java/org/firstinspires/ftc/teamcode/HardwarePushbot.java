@@ -30,8 +30,7 @@ public class HardwarePushbot {
     public Servo depositLeft = null;
     public Servo depositRight = null;
 
-    public CRServo WheelLeft=null;
-    public CRServo WheelRight=null;
+    public CRServo wheel=null;
 
     //plane launcher
     public Servo plane = null;
@@ -49,28 +48,29 @@ public class HardwarePushbot {
         hwMap = _hwMap;
 
         //initialize the drivetrain motors
-        motorFrontLeft  = hwMap.get(DcMotor.class, "motorFrontLeft"); //0
-        motorFrontRight = hwMap.get(DcMotor.class, "motorFrontRight"); //1
-        motorBackRight  = hwMap.get(DcMotor.class, "motorBackRight"); //2
-        motorBackLeft   = hwMap.get(DcMotor.class, "motorBackLeft"); //3
+        motorFrontLeft  = hwMap.get(DcMotor.class, "motorFrontLeft"); //1
+        motorFrontRight = hwMap.get(DcMotor.class, "motorFrontRight"); //2
+        motorBackRight  = hwMap.get(DcMotor.class, "motorBackRight"); //0
+        motorBackLeft   = hwMap.get(DcMotor.class, "motorBackLeft"); //3 exp
 
 //        // initialize the other motors
         intake          = hwMap.get(DcMotor.class, "intake");
-//
-//        // initialize the LMEC servo stuff
-//        // TBD, cad hasn't cadded this yet
-//
-//        // initialize the other servos
+
+        // initialize the LMEC servo stuff
+        // TBD, cad hasn't cadded this yet
+
+        // initialize the other servos
         intakeControl = hwMap.get(Servo.class, "intakeControl");
 //
 //        //plane
-        plane            = hwMap.get(Servo.class, "plane");
-//        // outatake
-        depositLeft      = hwMap.get(Servo.class, "depositLeft");
-        depositRight     = hwMap.get(Servo.class, "depositRight");
-//
-        WheelLeft =hwMap.get(CRServo.class, "WheelLeft");
-        WheelRight=hwMap.get(CRServo.class, "WheelRight");
+//        plane            = hwMap.get(Servo.class, "plane");
+//        // outatake position
+        depositLeft      = hwMap.get(Servo.class, "depositLeft"); // servo on slide
+        depositRight     = hwMap.get(Servo.class, "depositRight"); // servo on slide
+
+
+        wheel =hwMap.get(CRServo.class, "Wheel"); // servo in outtake
+
 //
 //
 //        // slides
@@ -79,6 +79,6 @@ public class HardwarePushbot {
 
 
         // Camera
-        camera = hwMap.get(WebcamName.class, "Webcam 1");
+//        camera = hwMap.get(WebcamName.class, "Webcam 1");
     }
 }

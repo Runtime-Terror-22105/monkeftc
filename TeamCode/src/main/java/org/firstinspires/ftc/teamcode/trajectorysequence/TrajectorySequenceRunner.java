@@ -17,6 +17,7 @@ import com.acmerobotics.roadrunner.trajectory.TrajectoryMarker;
 import com.acmerobotics.roadrunner.util.NanoClock;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
+import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.trajectorysequence.sequencesegment.SequenceSegment;
 import org.firstinspires.ftc.teamcode.trajectorysequence.sequencesegment.TrajectorySegment;
 import org.firstinspires.ftc.teamcode.trajectorysequence.sequencesegment.TurnSegment;
@@ -202,7 +203,7 @@ public class TrajectorySequenceRunner {
 
         final double NOMINAL_VOLTAGE = 12.0;
         double voltage = voltageSensor.getVoltage();
-        if (driveSignal != null && !DriveConstants.DriveConstants.RUN_USING_ENCODER) {
+        if (driveSignal != null && !DriveConstants.RUN_USING_ENCODER) {
             driveSignal = new DriveSignal(
                     driveSignal.getVel().times(NOMINAL_VOLTAGE / voltage),
                     driveSignal.getAccel().times(NOMINAL_VOLTAGE / voltage)

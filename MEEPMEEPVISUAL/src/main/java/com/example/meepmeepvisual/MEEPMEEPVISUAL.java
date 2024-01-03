@@ -15,9 +15,13 @@ public class MEEPMEEPVISUAL {
                 .setDimensions(14.6457, 16.063)
                 .setConstraints(100, 40, Math.toRadians(360), Math.toRadians(360), 15)
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(0, 0, 0))
-                                .splineTo(new Vector2d(-36.19, -28.34), Math.toRadians(91.11))
-                                .build()
+                     drive.trajectorySequenceBuilder(new Pose2d(-35.72, -66.68, Math.toRadians(90.00)))
+                        .splineTo(new Vector2d(-28.12, -30.40), Math.toRadians(78.17))
+                        .splineTo(new Vector2d(-62.50, -11.97), Math.toRadians(151.81))
+                        .splineTo(new Vector2d(-56.99, -11.59), Math.toRadians(3.95))
+                        .splineTo(new Vector2d(26.60, -24.70), Math.toRadians(-8.91))
+                        .splineTo(new Vector2d(57.18, -42.93), Math.toRadians(-31.81))
+                        .build()
                 );
 
 

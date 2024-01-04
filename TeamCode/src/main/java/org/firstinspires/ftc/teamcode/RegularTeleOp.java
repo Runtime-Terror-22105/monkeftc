@@ -24,7 +24,8 @@ public class RegularTeleOp extends LinearOpMode  {
         double slideTimerInitial = 0.0;
         int outtakePos = 0; // 0 = we didn't rotate it, 1 = we rotated it out
 
-        double robotSpeed = 1.0;
+        double robotSpeedFast = 1.0;
+        double robotSpeedSlow = 0.5;
         double[] intakeArray = {0.0, 1.0}; // speeds of intake
         double[] intakeSpots = {1.0, 0.52}; // positions of intake servo
         double slidesCPR = 384.5;
@@ -68,7 +69,7 @@ public class RegularTeleOp extends LinearOpMode  {
         waitForStart();
 
         while (opModeIsActive()) {
-            // Drive Train (REUSED CODE)
+            // Drive Train (REUSED CODE), except we cube the motor power to reduce it
             double r = Math.hypot(-gamepad1.left_stick_x, gamepad1.left_stick_y);
             double robotAngle = Math.atan2(gamepad1.left_stick_y, -gamepad1.left_stick_x) - Math.PI / 4;
             double rightX = -gamepad1.right_stick_x;
@@ -77,11 +78,27 @@ public class RegularTeleOp extends LinearOpMode  {
             final double v3 = r * Math.sin(robotAngle) + rightX;
             final double v4 = r * Math.cos(robotAngle) - rightX;
 
+            double frontLeftPower;
+            double frontRightPower;
+            double backLeftPower;
+            double backRightPower;
+            if (gamepad1.x) {
+                frontLeftPower  = -v3*robotSpeedFast;
+                frontRightPower =  v4*robotSpeedFast;
+                backLeftPower   =  v1*robotSpeedFast;
+                backRightPower  = -v2*robotSpeedFast;
+            }
+            else {
+                frontLeftPower  = -v3*robotSpeedSlow;
+                frontRightPower =  v4*robotSpeedSlow;
+                backLeftPower   =  v1*robotSpeedSlow;
+                backRightPower  = -v2*robotSpeedSlow;
+            }
 
-            robot.motorFrontLeft.setPower(-v3*robotSpeed); // some of these might need to be negative
-            robot.motorFrontRight.setPower(v4*robotSpeed);
-            robot.motorBackLeft.setPower(v1*robotSpeed);
-            robot.motorBackRight.setPower(-v2*robotSpeed);
+            robot.motorFrontLeft.setPower(frontLeftPower); // some of these might need to be negative
+            robot.motorFrontRight.setPower(frontRightPower);
+            robot.motorBackLeft.setPower(backLeftPower);
+            robot.motorBackRight.setPower(backRightPower);
 
             // First Segment Servo Deposit
             if (gamepad1.left_trigger > 0.2) {
@@ -93,10 +110,10 @@ public class RegularTeleOp extends LinearOpMode  {
                 robot.wheel.setPower(-1.0);
             }
             else if (wheelState == 1) {
-                robot.wheel.setPower(-1.0);
+                robot.wheel.setPower(1.0);
             }
             else if (wheelState == 2) {
-                robot.wheel.setPower(1.0);
+                robot.wheel.setPower(-1.0);
             }
             else {
                 // do nothing
@@ -140,40 +157,49 @@ public class RegularTeleOp extends LinearOpMode  {
             }
 
 
-            // 4th segment intake control
-            if (gamepad2.dpad_up){
+            // 4th segment intake control (THIS IS JUST A BACKUP IN CASE SOMETHING GOES WRONG, TODO: DELETE THIS)
+            if (gamepad2.dpad_up) {
                 // Folded up
-                robot.intakeControl.setPosition(intakecoll);
-
+//                robot.intakeControl.setPosition(intakecoll);
+                robot.depositLeft.setPosition(0.6);  // TODO: find out actual numbers here
+                robot.depositRight.setPosition(0.6); // TODO: find out actual numbers here
             }
-            else if (gamepad2.dpad_down){
+            else if (gamepad2.dpad_down) {
                 // Taking in
-                robot.intakeControl.setPosition(intakeup);
+//                robot.intakeControl.setPosition(intakeup);
+                robot.depositLeft.setPosition(0.0);  // TODO: find out actual numbers here
+                robot.depositRight.setPosition(1.0); // TODO: find out actual numbers here
             }
 
             //5th segment Slides
-            if (gamepad2.left_bumper){
-                if (outtakePos == 1) {
-                    // if we rotated the outtake thing out, then rotate it back in
+            if (gamepad2.left_bumper) {
+                if (slideIsUp) {
+                    // if the slide was going up and is now going down, then we reset the timer
+                    slideTimerInitial = System.currentTimeMillis();
+                }
+                else if (outtakePos == 1 && System.currentTimeMillis() - slideTimerInitial >= 315) {
+                    outtakePos = 1;
+                    // if we didn't rotate it in yet and more than 250 ms have passed, then rotate in the outtake thing
                     robot.depositLeft.setPosition(0.0);  // TODO: find out actual numbers here
                     robot.depositRight.setPosition(1.0); // TODO: find out actual numbers here
                 }
                 // Slide down
                 slideIsUp = false;
                 slideTimerInitial = System.currentTimeMillis();
-                robot.SlideLeft.setPower(1.0);
-                robot.SlideRight.setPower(1.0);
+                robot.SlideLeft.setPower(0.75);  // go down a little slowly
+                robot.SlideRight.setPower(0.75); // go down a little slowly
             }
-            else if (gamepad2.right_bumper){
+            else if (gamepad2.right_bumper) {
                 // Slide up
                 if (!slideIsUp) {
                     // if the slide was going down and is now going up, then we reset the timer
                     slideTimerInitial = System.currentTimeMillis();
                 }
-                else if (System.currentTimeMillis() - slideTimerInitial >= 250 && outtakePos != 1) {
+                else if (outtakePos != 1 && System.currentTimeMillis() - slideTimerInitial >= 315) {
+                    outtakePos = 1;
                     // if we didn't rotate it out yet and more than 250 ms have passed, then rotate out the outtake thing
-                    robot.depositLeft.setPosition(0.5);  // TODO: find out actual numbers here
-                    robot.depositRight.setPosition(0.5); // TODO: find out actual numbers here
+                    robot.depositLeft.setPosition(0.6);
+                    robot.depositRight.setPosition(0.6);
                 }
                 slideIsUp = true;
                 robot.SlideLeft.setPower(-1.0);

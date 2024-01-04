@@ -12,5 +12,9 @@ public class Test extends LinearOpMode {
         robot.init(hardwareMap);
         waitForStart();
 
+        if (gamepad2.dpad_up) {
+
+        }
+
     }
 }

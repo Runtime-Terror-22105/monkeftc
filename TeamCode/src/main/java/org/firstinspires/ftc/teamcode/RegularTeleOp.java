@@ -205,7 +205,7 @@ public class RegularTeleOp extends LinearOpMode  {
                 }
             }
 
-            if ((gamepad1.left_bumper && gamepad1.right_bumper) || (gamepad2.left_bumper && gamepad2.right_bumper)) {
+            if ((gamepad1.left_bumper && gamepad1.right_bumper)) {
                 // emergency break
                 break;
             }

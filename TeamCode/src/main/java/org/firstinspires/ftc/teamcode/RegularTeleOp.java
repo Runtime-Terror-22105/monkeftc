@@ -196,6 +196,7 @@ public class RegularTeleOp extends LinearOpMode  {
                 robot.SlideRight.setPower(0.0);
             }
 
+
             if (!planeReleased) {
                 if(gamepad1.b) {
                     // rlease the plane
@@ -204,11 +205,7 @@ public class RegularTeleOp extends LinearOpMode  {
                 }
             }
 
-
-
-
-
-            if ((gamepad1.left_bumper && gamepad2.right_bumper) || (gamepad2.left_bumper && gamepad2.right_bumper)) {
+            if ((gamepad1.left_bumper && gamepad1.right_bumper) || (gamepad2.left_bumper && gamepad2.right_bumper)) {
                 // emergency break
                 break;
             }

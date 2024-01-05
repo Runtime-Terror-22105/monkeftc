@@ -63,7 +63,7 @@ public class HardwarePushbot {
         intakeControl = hwMap.get(Servo.class, "intakeControl");
 //
 //        //plane
-        plane            = hwMap.get(Servo.class, "plane");
+//        plane            = hwMap.get(Servo.class, "plane");
 //        // outatake position
 
         wheel = hwMap.get(CRServo.class, "Wheel"); // servo in outtake

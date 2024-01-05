@@ -197,13 +197,13 @@ public class RegularTeleOp extends LinearOpMode  {
             }
 
 
-            if (!planeReleased) {
-                if(gamepad1.b) {
-                    // rlease the plane
-                    planeReleased = true;
-                    robot.plane.setPosition(1.0);
-                }
-            }
+//            if (!planeReleased) {
+//                if(gamepad1.b) {
+//                    // rlease the plane
+//                    planeReleased = true;
+//                    robot.plane.setPosition(1.0);
+//                }
+//            }
 
             if ((gamepad1.left_bumper && gamepad1.right_bumper)) {
                 // emergency break

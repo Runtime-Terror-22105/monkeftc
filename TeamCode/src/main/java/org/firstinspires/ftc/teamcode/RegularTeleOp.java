@@ -23,6 +23,7 @@ public class RegularTeleOp extends LinearOpMode  {
         boolean slideIsUp = false; // false = down, true = up
         double slideTimerInitial = 0.0;
         int outtakePos = 0; // 0 = we didn't rotate it, 1 = we rotated it out
+        boolean planeReleased = false; // false if we didn't release the plane
 
         double robotSpeedFast = 1.0;
         double robotSpeedSlow = 0.5;
@@ -120,22 +121,6 @@ public class RegularTeleOp extends LinearOpMode  {
                 robot.wheel.setPower(0.0);
             }
 
-            // Second Segment Outtake Position
-            if (gamepad1.y) {
-                //outtake down
-                robot.depositLeft.setPosition(0.5);
-//                robot.depositRight.setPosition(1.0);
-                telemetry.addData("Thing","y");
-                telemetry.update();
-            }
-            else if (gamepad1.a) {
-                //outtake up
-                robot.depositLeft.setPosition(0.0);
-//                robot.depositRight.setPosition(0.5);
-                telemetry.addData("Thing","a");
-                telemetry.update();
-            }
-
             // Third Segment Intake Power
             if (gamepad2.x) {
                 // Reverse Intake spit out
@@ -198,8 +183,8 @@ public class RegularTeleOp extends LinearOpMode  {
                 else if (outtakePos != 1 && System.currentTimeMillis() - slideTimerInitial >= 315) {
                     outtakePos = 1;
                     // if we didn't rotate it out yet and more than 250 ms have passed, then rotate out the outtake thing
-                    robot.depositLeft.setPosition(0.6);
-                    robot.depositRight.setPosition(0.6);
+                    robot.depositLeft.setPosition(0.68);  // TODO: find out actual numbers here
+                    robot.depositRight.setPosition(0.32); // TODO: find out actual numbers here
                 }
                 slideIsUp = true;
                 robot.SlideLeft.setPower(-1.0);
@@ -210,6 +195,16 @@ public class RegularTeleOp extends LinearOpMode  {
                 robot.SlideLeft.setPower(0.0);
                 robot.SlideRight.setPower(0.0);
             }
+
+
+            if (!planeReleased) {
+                if(gamepad1.b) {
+                    // rlease the plane
+                    planeReleased = true;
+                    robot.plane.setPosition(1.0);
+                }
+            }
+
             if ((gamepad1.left_bumper && gamepad2.right_bumper) || (gamepad2.left_bumper && gamepad2.right_bumper)) {
                 // emergency break
                 break;

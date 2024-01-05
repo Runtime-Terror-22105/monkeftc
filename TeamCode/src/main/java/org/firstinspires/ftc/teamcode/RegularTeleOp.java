@@ -161,8 +161,8 @@ public class RegularTeleOp extends LinearOpMode  {
             if (gamepad2.dpad_up) {
                 // Folded up
 //                robot.intakeControl.setPosition(intakecoll);
-                robot.depositLeft.setPosition(0.6);  // TODO: find out actual numbers here
-                robot.depositRight.setPosition(0.6); // TODO: find out actual numbers here
+                robot.depositLeft.setPosition(0.68);  // TODO: find out actual numbers here
+                robot.depositRight.setPosition(0.32); // TODO: find out actual numbers here
             }
             else if (gamepad2.dpad_down) {
                 // Taking in
@@ -210,11 +210,6 @@ public class RegularTeleOp extends LinearOpMode  {
                 robot.SlideLeft.setPower(0.0);
                 robot.SlideRight.setPower(0.0);
             }
-
-
-
-
-
             if ((gamepad1.left_bumper && gamepad2.right_bumper) || (gamepad2.left_bumper && gamepad2.right_bumper)) {
                 // emergency break
                 break;

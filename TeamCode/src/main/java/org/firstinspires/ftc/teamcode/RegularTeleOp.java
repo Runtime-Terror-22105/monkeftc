@@ -25,8 +25,6 @@ public class RegularTeleOp extends LinearOpMode  {
         int outtakePos = 0; // 0 = we didn't rotate it, 1 = we rotated it out
         boolean planeReleased = false; // false if we didn't release the plane
 
-        double robotSpeedFast = 1.0;
-        double robotSpeedSlow = 0.5;
         double[] intakeArray = {0.0, 1.0}; // speeds of intake
         double[] intakeSpots = {1.0, 0.52}; // positions of intake servo
         double slidesCPR = 384.5;
@@ -79,27 +77,14 @@ public class RegularTeleOp extends LinearOpMode  {
             final double v3 = r * Math.sin(robotAngle) + rightX;
             final double v4 = r * Math.cos(robotAngle) - rightX;
 
-            double frontLeftPower;
-            double frontRightPower;
-            double backLeftPower;
-            double backRightPower;
-            if (gamepad1.x) {
-                frontLeftPower  = -v3*robotSpeedFast;
-                frontRightPower =  v4*robotSpeedFast;
-                backLeftPower   =  v1*robotSpeedFast;
-                backRightPower  = -v2*robotSpeedFast;
-            }
-            else {
-                frontLeftPower  = -v3*robotSpeedSlow;
-                frontRightPower =  v4*robotSpeedSlow;
-                backLeftPower   =  v1*robotSpeedSlow;
-                backRightPower  = -v2*robotSpeedSlow;
-            }
+            double robotSpeed;
+            if (gamepad1.x) { robotSpeed = 1.0; }
+            else            { robotSpeed = 0.5; }
 
-            robot.motorFrontLeft.setPower(frontLeftPower); // some of these might need to be negative
-            robot.motorFrontRight.setPower(frontRightPower);
-            robot.motorBackLeft.setPower(backLeftPower);
-            robot.motorBackRight.setPower(backRightPower);
+            robot.motorFrontLeft.setPower(-v3*robotSpeed); // some of these might need to be negative
+            robot.motorFrontRight.setPower(v4*robotSpeed);
+            robot.motorBackLeft.setPower(v1*robotSpeed);
+            robot.motorBackRight.setPower(-v2*robotSpeed);
 
             // First Segment Servo Deposit
             if (gamepad1.left_trigger > 0.2) {

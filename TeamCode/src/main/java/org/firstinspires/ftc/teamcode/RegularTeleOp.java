@@ -1,15 +1,20 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import java.lang.Math;
 
+@Config
 @TeleOp(name = "Regular Teleop", group = "Concept")
-
 public class RegularTeleOp extends LinearOpMode  {
     // Initialize robot from another class
     HardwarePushbot robot = new HardwarePushbot();
+    public static volatile double SPEED_FAST = 1.0;
+    public static volatile double SPEED_SLOW = 0.5;
+    public static volatile double[] depositLeftPositions = {0.0, 0.4};
+    public static volatile double[] depositRightPositions = {1.0, 0.6};
 
     public void runOpMode(){
         robot.init(hardwareMap);
@@ -41,8 +46,6 @@ public class RegularTeleOp extends LinearOpMode  {
         for(int i = 0; i < 4; i++){
             vertSlideArray[i] = distanceArray[i] * slidesCPR / circumferenceSlides;
         }
-        double[] depositLeftArray = {0.0, 1.0}; // TBD, will find exact later
-        double[] depositRightArray = {0.0, 1.0}; // TBD, will find exact later
         double[] planeArray = {0.0, 1.0}; // TBD, will find exact later
 
         // Wait for the game to start (driver presses PLAY)
@@ -78,8 +81,8 @@ public class RegularTeleOp extends LinearOpMode  {
             final double v4 = r * Math.cos(robotAngle) - rightX;
 
             double robotSpeed;
-            if (gamepad1.x) { robotSpeed = 1.0; }
-            else            { robotSpeed = 0.5; }
+            if (gamepad1.x) { robotSpeed = SPEED_FAST; }
+            else            { robotSpeed = SPEED_SLOW; }
 
             robot.motorFrontLeft.setPower(-v3*robotSpeed); // some of these might need to be negative
             robot.motorFrontRight.setPower(v4*robotSpeed);
@@ -131,14 +134,14 @@ public class RegularTeleOp extends LinearOpMode  {
             if (gamepad2.dpad_up) {
                 // Folded up
 //                robot.intakeControl.setPosition(intakecoll);
-                robot.depositLeft.setPosition(0.68);  // TODO: find out actual numbers here
-                robot.depositRight.setPosition(0.32); // TODO: find out actual numbers here
+                robot.depositLeft.setPosition(depositLeftPositions[1]);  // TODO: find out actual numbers here
+                robot.depositRight.setPosition(depositRightPositions[1]); // TODO: find out actual numbers here
             }
             else if (gamepad2.dpad_down) {
                 // Taking in
 //                robot.intakeControl.setPosition(intakeup);
-                robot.depositLeft.setPosition(0.0);  // TODO: find out actual numbers here
-                robot.depositRight.setPosition(1.0); // TODO: find out actual numbers here
+                robot.depositLeft.setPosition(depositLeftPositions[0]);  // TODO: find out actual numbers here
+                robot.depositRight.setPosition(depositRightPositions[0]); // TODO: find out actual numbers here
             }
 
             //5th segment Slides
@@ -147,7 +150,7 @@ public class RegularTeleOp extends LinearOpMode  {
                     // if the slide was going up and is now going down, then we reset the timer
                     slideTimerInitial = System.currentTimeMillis();
                 }
-                else if (outtakePos == 1 && System.currentTimeMillis() - slideTimerInitial >= 315) {
+                else if (outtakePos == 1 && System.currentTimeMillis() - slideTimerInitial >= 450) {
                     outtakePos = 1;
                     // if we didn't rotate it in yet and more than 250 ms have passed, then rotate in the outtake thing
                     robot.depositLeft.setPosition(0.0);  // TODO: find out actual numbers here
@@ -156,8 +159,8 @@ public class RegularTeleOp extends LinearOpMode  {
                 // Slide down
                 slideIsUp = false;
                 slideTimerInitial = System.currentTimeMillis();
-                robot.SlideLeft.setPower(0.75);  // go down a little slowly
-                robot.SlideRight.setPower(0.75); // go down a little slowly
+                robot.SlideLeft.setPower(0.4);  // go down a little slowly
+                robot.SlideRight.setPower(0.6); // go down a little slowly
             }
             else if (gamepad2.right_bumper) {
                 // Slide up
@@ -168,8 +171,8 @@ public class RegularTeleOp extends LinearOpMode  {
                 else if (outtakePos != 1 && System.currentTimeMillis() - slideTimerInitial >= 315) {
                     outtakePos = 1;
                     // if we didn't rotate it out yet and more than 250 ms have passed, then rotate out the outtake thing
-                    robot.depositLeft.setPosition(0.68);  // TODO: find out actual numbers here
-                    robot.depositRight.setPosition(0.32); // TODO: find out actual numbers here
+                    robot.depositLeft.setPosition(0.75);  // TODO: find out actual numbers here
+                    robot.depositRight.setPosition(0.25); // TODO: find out actual numbers here
                 }
                 slideIsUp = true;
                 robot.SlideLeft.setPower(-1.0);

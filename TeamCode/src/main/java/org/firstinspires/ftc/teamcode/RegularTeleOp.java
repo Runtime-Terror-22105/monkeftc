@@ -16,7 +16,7 @@ public class RegularTeleOp extends LinearOpMode  {
     public static volatile double[] depositLeftPositions = {0.0, 0.4};
     public static volatile double[] depositRightPositions = {1.0, 0.6};
 
-    public void runOpMode(){
+    public void runOpMode() {
         robot.init(hardwareMap);
         double intakeup=1.0;
         double intakecoll=0.6;
@@ -81,8 +81,8 @@ public class RegularTeleOp extends LinearOpMode  {
             final double v4 = r * Math.cos(robotAngle) - rightX;
 
             double robotSpeed;
-            if (gamepad1.x) { robotSpeed = SPEED_FAST; }
-            else            { robotSpeed = SPEED_SLOW; }
+            if (gamepad1.x) { robotSpeed = SPEED_SLOW; }
+            else            { robotSpeed = SPEED_FAST; }
 
             robot.motorFrontLeft.setPower(-v3*robotSpeed); // some of these might need to be negative
             robot.motorFrontRight.setPower(v4*robotSpeed);

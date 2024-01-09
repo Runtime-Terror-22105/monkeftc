@@ -13,11 +13,11 @@ public class RegularTeleOp extends LinearOpMode  {
     HardwarePushbot robot = new HardwarePushbot();
     public static volatile double SPEED_FAST = 1.0;
     public static volatile double SPEED_SLOW = 0.5;
-    public static DepositPositions depositLeftPositions = new DepositPositions(0.0, 0.75);
-    public static DepositPositions depositRightPositions = new DepositPositions(1.0, 0.25);
     public static volatile double INTAKEUP = 1.0;
     public static volatile double INTAKECOLL = 0.6;
     public static final double slidesCPR = 384.5;
+    public static DepositPositions depositLeftPositions = new DepositPositions(0.0, 0.75);
+    public static DepositPositions depositRightPositions = new DepositPositions(1.0, 0.25);
 
     public static class DepositPositions {
         public double normal;

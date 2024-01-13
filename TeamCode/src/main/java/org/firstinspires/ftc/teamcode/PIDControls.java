@@ -6,7 +6,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-@Autonomous(name="Blue Front Auto", group="Red Auto")
+@Autonomous(name="PIDControls", group="Red Auto")
 public class PIDControls extends LinearOpMode {
     HardwarePushbot robot= new HardwarePushbot();
     double kp=0;

@@ -1,6 +1,8 @@
 // basics of opencv: https://docs.opencv.org/3.4/d6/d6d/tutorial_mat_the_basic_image_container.html
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.config.Config;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -10,20 +12,26 @@ import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
+@Config
 public class ObjectPositionPipeline extends OpenCvPipeline {
     public static boolean DETECT_RED = true;
-    public static double MIN_VALUES = 100;
-    public static double MAX_VALUES = 255;
-    public static double MIN_SATURATION = 100;
-    public static double MAX_SATURATION = 255;
-    public static double MIN_BLUE_HUE = 100;
-    public static double MAX_BLUE_HUE = 115;
-    public static double MIN_RED_LOW_HUE = 0;
-    public static double MAX_RED_LOW_HUE = 25;
-    public static double MIN_RED_HIGH_HUE = 160;
-    public static double MAX_RED_HIGH_HUE = 255;
+    public double leftAvg;
+    public double middleAvg;
+    public double rightAvg;
+    private Telemetry telemetry;
 
-    Telemetry telemetry;
+//    public static double MIN_VALUES = 100;
+//    public static double MAX_VALUES = 255;
+//    public static double MIN_SATURATION = 100;
+//    public static double MAX_SATURATION = 255;
+//    public static double MIN_BLUE_HUE = 100;
+//    public static double MAX_BLUE_HUE = 115;
+//    public static double MIN_RED_LOW_HUE = 0;
+//    public static double MAX_RED_LOW_HUE = 25;
+//    public static double MIN_RED_HIGH_HUE = 160;
+//    public static double MAX_RED_HIGH_HUE = 255;
+
+
     public enum Location {
         LEFT,
         MIDDLE,
@@ -33,9 +41,13 @@ public class ObjectPositionPipeline extends OpenCvPipeline {
 
     // ROI = region of interest, aka the rectangle we're drawing
     // you should fine tune this
-    static final Rect ROI_Left   = new Rect(new Point( 10, 100), new Point(105, 200));
-    static final Rect ROI_Middle = new Rect(new Point(120, 100), new Point(205, 200));
-    static final Rect ROI_Right  = new Rect(new Point(220, 100), new Point(310, 200));
+    public static final Rect ROI_Left   = new Rect(new Point( 10, 100), new Point(105, 200));
+    public static final Rect ROI_Middle = new Rect(new Point(120, 100), new Point(205, 200));
+    public static final Rect ROI_Right  = new Rect(new Point(220, 100), new Point(310, 200));
+
+    // The two colors we're using
+    public static final Scalar redColor  = new Scalar(  0,   0, 255);
+    public static final Scalar blueColor = new Scalar(  0, 255,   0);
 
     public ObjectPositionPipeline(Telemetry t) {
         telemetry = t;
@@ -57,6 +69,50 @@ public class ObjectPositionPipeline extends OpenCvPipeline {
             telemetry.update();
             return input;
         }
+
+        // extract either the red or blue color channel
+        Mat oneColor = new Mat();
+        Scalar propColor;
+        if (DETECT_RED) {
+            propColor = redColor;
+            Core.extractChannel(mat, oneColor, 2);
+        }
+        else {
+            propColor = blueColor;
+            Core.extractChannel(mat, oneColor, 1);
+        }
+
+        // split the matrix into submatrices
+        Mat leftMat = oneColor.submat(ROI_Left);
+        Mat middleMat = oneColor.submat(ROI_Middle);
+        Mat rightMat = oneColor.submat(ROI_Right);
+
+        Scalar leftAvgScalar = Core.mean(leftMat);
+        Scalar middleAvgScalar = Core.mean(middleMat);
+        Scalar rightAvgScalar = Core.mean(rightMat);
+
+        leftAvg = leftAvgScalar.val[0];
+        middleAvg = middleAvgScalar.val[0];
+        rightAvg = rightAvgScalar.val[0];
+
+        if (leftAvg >= rightAvg && leftAvg >= middleAvg ) {
+            location = Location.LEFT;
+            Imgproc.rectangle(mat, ROI_Left, propColor);
+            telemetry.addData("Prop location:", "left");
+        }
+        else if (rightAvg >= middleAvg) {
+            location = Location.RIGHT;
+            Imgproc.rectangle(mat, ROI_Middle, propColor);
+            telemetry.addData("Prop location:", "right");
+        }
+        else {
+            location = Location.MIDDLE;
+            Imgproc.rectangle(mat, ROI_Right, propColor);
+            telemetry.addData("Prop location:", "middle");
+        }
+        telemetry.update();
+
+
 
 
 

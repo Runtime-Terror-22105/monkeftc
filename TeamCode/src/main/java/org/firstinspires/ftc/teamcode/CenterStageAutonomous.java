@@ -145,7 +145,7 @@ public class CenterStageAutonomous {
          * @param milliseconds - How long to move forward for, in milliseconds
          * @param power - The power to use for the motors
          */
-        FrontDrive(power);
+        FrontDrive(-power);
         sleep(milliseconds);
         CancelPowerRobot();
     }

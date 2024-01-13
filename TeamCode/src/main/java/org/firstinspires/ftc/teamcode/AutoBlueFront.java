@@ -6,7 +6,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-@Autonomous(name="Blue Front Auto", group="Red Auto")
+@Autonomous(name="Blue Front Auto", group="Blue Auto")
 public class AutoBlueFront extends LinearOpMode {
     private FtcDashboard dashboard;
     private CenterStageAutonomous auto;

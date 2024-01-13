@@ -87,10 +87,10 @@ public class RegularTeleOp extends LinearOpMode  {
             if (gamepad1.x) { robotSpeed = SPEED_SLOW; }
             else            { robotSpeed = SPEED_FAST; }
 
-            robot.motorFrontLeft.setPower(v3*robotSpeed); // some of these might need to be negative
-            robot.motorFrontRight.setPower(-v4*robotSpeed);
-            robot.motorBackLeft.setPower(-v1*robotSpeed);
-            robot.motorBackRight.setPower(v2*robotSpeed);
+            robot.motorFrontLeft.setPower(-v3*robotSpeed); // some of these might need to be negative
+            robot.motorFrontRight.setPower(v4*robotSpeed);
+            robot.motorBackLeft.setPower(v1*robotSpeed);
+            robot.motorBackRight.setPower(-v2*robotSpeed);
 
             // First Segment Servo Deposit
             if (gamepad1.left_trigger > 0.2) {

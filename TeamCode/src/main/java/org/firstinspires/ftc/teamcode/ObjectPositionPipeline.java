@@ -49,7 +49,7 @@ public class ObjectPositionPipeline extends OpenCvPipeline {
         //          we check for what the hue is since it is the "type" of color
         //          we check for value since it is "brightness", we don't want to accidentally detect black or white or something else
         Mat mat = new Mat(); // our working copy of the image, mat = matrix
-        Imgproc.cvtColor(input, mat, Imgproc.COLOR_RGB2HSV);
+        Imgproc.cvtColor(input, mat, Imgproc.COLOR_RGB2YCrCb);
 
         // If something goes wrong, return
         if (mat.empty()) {
@@ -58,75 +58,77 @@ public class ObjectPositionPipeline extends OpenCvPipeline {
             return input;
         }
 
-        // create s
-        Scalar MIN_BLUE = new Scalar(MIN_BLUE_HUE, MIN_SATURATION, MIN_VALUES);
-        Scalar MAX_BLUE = new Scalar(MAX_BLUE_HUE, MAX_SATURATION, MAX_VALUES);
-        Scalar MIN_RED_LOW = new Scalar(MIN_RED_LOW_HUE, MIN_SATURATION, MIN_VALUES);
-        Scalar MAX_RED_LOW = new Scalar(MAX_RED_LOW_HUE, MAX_SATURATION, MAX_VALUES);
-        Scalar MIN_RED_HIGH = new Scalar(MIN_RED_HIGH_HUE, MIN_SATURATION, MIN_VALUES);
-        Scalar MAX_RED_HIGH = new Scalar(MAX_RED_HIGH_HUE, MAX_SATURATION, MAX_VALUES);
-
-        if (DETECT_RED) {
-            // check if red one is there, check both high and low range in spectrum
-            Mat mat1 = mat.clone();
-            Mat mat2 = mat.clone();
-            Core.inRange(mat1, MIN_RED_LOW, MAX_RED_LOW, mat1);
-            Core.inRange(mat2, MIN_RED_HIGH, MAX_RED_HIGH, mat2);
-            Core.bitwise_or(mat1, mat2, mat);
-        }
-        else {
-            // check if blue one is there
-            Core.inRange(mat, MIN_BLUE, MAX_BLUE, mat);
-        }
-
-        // make submatrices, I don't understand this part yet
-        Mat left = mat.submat(ROI_Left);
-        Mat middle = mat.submat(ROI_Middle);
-        Mat right = mat.submat(ROI_Right);
-
-        // I don't yet understand this but
-        // % white can be determined by adding props, dividing by area
-        // grayscale image only has one channel so we take [0] only
-        double leftValue = Core.sumElems(left).val[0];
-        double middleValue = Core.sumElems(middle).val[0];
-        double rightValue = Core.sumElems(right).val[0];
-
-        telemetry.addData("Left raw value:", leftValue);
-        telemetry.addData("Middle raw value:", middleValue);
-        telemetry.addData("Right raw value:", rightValue);
-
-        // free memory used by the submatrixes, no point in having these big matrices doing nothing slowing down the code
-        left.release();
-        middle.release();
-        right.release();
-
-        if (leftValue >= rightValue && leftValue >= middleValue) {
-            location = Location.LEFT;
-            telemetry.addData("Prop location:", "left");
-        }
-        else if (rightValue >= middleValue) {
-            location = Location.RIGHT;
-            telemetry.addData("Prop location:", "right");
-        }
-        else {
-            location = Location.MIDDLE;
-            telemetry.addData("Prop location:", "middle");
-        }
-        telemetry.update();
 
 
-        /* Draw rectangles to visualize prop location. */
-        // grayscale to rgb
-        Imgproc.cvtColor(mat, mat, Imgproc.COLOR_GRAY2RGB);
-        Scalar pixelColor = new Scalar(255, 255, 255);
-        Scalar propColor = new Scalar(  0,   0, 255);
+//        // create s
+//        Scalar MIN_BLUE = new Scalar(MIN_BLUE_HUE, MIN_SATURATION, MIN_VALUES);
+//        Scalar MAX_BLUE = new Scalar(MAX_BLUE_HUE, MAX_SATURATION, MAX_VALUES);
+//        Scalar MIN_RED_LOW = new Scalar(MIN_RED_LOW_HUE, MIN_SATURATION, MIN_VALUES);
+//        Scalar MAX_RED_LOW = new Scalar(MAX_RED_LOW_HUE, MAX_SATURATION, MAX_VALUES);
+//        Scalar MIN_RED_HIGH = new Scalar(MIN_RED_HIGH_HUE, MIN_SATURATION, MIN_VALUES);
+//        Scalar MAX_RED_HIGH = new Scalar(MAX_RED_HIGH_HUE, MAX_SATURATION, MAX_VALUES);
+//
+//        if (DETECT_RED) {
+//            // check if red one is there, check both high and low range in spectrum
+//            Mat mat1 = mat.clone();
+//            Mat mat2 = mat.clone();
+//            Core.inRange(mat1, MIN_RED_LOW, MAX_RED_LOW, mat1);
+//            Core.inRange(mat2, MIN_RED_HIGH, MAX_RED_HIGH, mat2);
+//            Core.bitwise_or(mat1, mat2, mat);
+//        }
+//        else {
+//            // check if blue one is there
+//            Core.inRange(mat, MIN_BLUE, MAX_BLUE, mat);
+//        }
+//
+//        // make submatrices, I don't understand this part yet
+//        Mat left = mat.submat(ROI_Left);
+//        Mat middle = mat.submat(ROI_Middle);
+//        Mat right = mat.submat(ROI_Right);
+//
+//        // I don't yet understand this but
+//        // % white can be determined by adding props, dividing by area
+//        // grayscale image only has one channel so we take [0] only
+//        double leftValue = Core.sumElems(left).val[0];
+//        double middleValue = Core.sumElems(middle).val[0];
+//        double rightValue = Core.sumElems(right).val[0];
+//
+//        telemetry.addData("Left raw value:", leftValue);
+//        telemetry.addData("Middle raw value:", middleValue);
+//        telemetry.addData("Right raw value:", rightValue);
+//
+//        // free memory used by the submatrixes, no point in having these big matrices doing nothing slowing down the code
+//        left.release();
+//        middle.release();
+//        right.release();
+//
+//        if (leftValue >= rightValue && leftValue >= middleValue) {
+//            location = Location.LEFT;
+//            telemetry.addData("Prop location:", "left");
+//        }
+//        else if (rightValue >= middleValue) {
+//            location = Location.RIGHT;
+//            telemetry.addData("Prop location:", "right");
+//        }
+//        else {
+//            location = Location.MIDDLE;
+//            telemetry.addData("Prop location:", "middle");
+//        }
+//        telemetry.update();
+//
+//
+//        /* Draw rectangles to visualize prop location. */
+//        // grayscale to rgb
+//        Imgproc.cvtColor(mat, mat, Imgproc.COLOR_GRAY2RGB);
+//        Scalar pixelColor = new Scalar(255, 255, 255);
+//        Scalar propColor = new Scalar(  0,   0, 255);
+//
+//        Imgproc.rectangle(mat, ROI_Left, location == Location.LEFT ? pixelColor:propColor);
+//        Imgproc.rectangle(mat, ROI_Middle, location == Location.MIDDLE ? pixelColor:propColor);
+//        Imgproc.rectangle(mat, ROI_Right, location == Location.RIGHT ? pixelColor:propColor);
 
-        Imgproc.rectangle(mat, ROI_Left, location == Location.LEFT ? pixelColor:propColor);
-        Imgproc.rectangle(mat, ROI_Middle, location == Location.MIDDLE ? pixelColor:propColor);
-        Imgproc.rectangle(mat, ROI_Right, location == Location.RIGHT ? pixelColor:propColor);
 
-
-        return input;
+        return mat;
     }
 
     public Location getLocation() {

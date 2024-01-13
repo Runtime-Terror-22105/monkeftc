@@ -33,8 +33,6 @@ public class RegularTeleOp extends LinearOpMode  {
         robot.init(hardwareMap);
         int wheelState = 0; // 0 = not intaking, 1 = yes intaking
         int endGameState = 0; // 0 = ready, 1 = plane launched, 2 = measurement tape up, 3 = we are hanged on the truss!
-        boolean slideIsUp = false; // false = down, true = up
-        double slideTimerInitial = 0.0;
         int depositBoxState = 0; // 0 = we didn't rotate it, 1 = we rotated it out
         boolean planeReleased = false; // false if we didn't release the plane
 
@@ -148,32 +146,11 @@ public class RegularTeleOp extends LinearOpMode  {
 
             //5th segment Slides
             if (gamepad2.left_bumper) {
-                if (slideIsUp) {
-                    // if the slide was going up and is now going down, then we reset the timer
-                    slideTimerInitial = System.currentTimeMillis();
-                }
-                else if (depositBoxState == 1 && System.currentTimeMillis() - slideTimerInitial >= 450) {
-                    // if we didn't rotate it in yet and more than 250 ms have passed, then rotate in the outtake thing
-                    depositBoxState = 0;
-                }
                 // Slide down
-                slideIsUp = false;
-                slideTimerInitial = System.currentTimeMillis();
                 robot.SlideLeft.setPower(0.4);  // go down a little slowly
                 robot.SlideRight.setPower(0.6); // go down a little slowly
             }
             else if (gamepad2.right_bumper) {
-                // Slide up
-                if (!slideIsUp) {
-                    // if the slide was going down and is now going up, then we reset the timer
-                    slideTimerInitial = System.currentTimeMillis();
-                }
-                else if (depositBoxState != 1 && System.currentTimeMillis() - slideTimerInitial >= 315) {
-                    depositBoxState = 1;
-                    // if we didn't rotate it out yet and more than 250 ms have passed, then rotate out the outtake thing
-                    setDepositBox();
-                }
-                slideIsUp = true;
                 robot.SlideLeft.setPower(-1.0);
                 robot.SlideRight.setPower(-1.0);
             }

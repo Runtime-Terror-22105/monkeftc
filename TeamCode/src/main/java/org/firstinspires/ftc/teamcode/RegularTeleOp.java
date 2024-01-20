@@ -12,29 +12,29 @@ public class RegularTeleOp extends LinearOpMode  {
     // Initialize robot from another class
     HardwarePushbot robot = new HardwarePushbot();
     public static volatile double SPEED_FAST = 1.0;
-    public static volatile double SPEED_SLOW = 0.5;
-    public static volatile double INTAKEUP = 1.0;
-    public static volatile double INTAKECOLL = 0.6;
+    public static volatile double SPEED_SLOW = 0.3;
+    public static volatile TwoPositions intakePositions = new TwoPositions(1.0, 0.5);
+    public static volatile TwoPositions depositLeftPositions = new TwoPositions(0.0, 0.575);
+    public static volatile TwoPositions depositRightPositions = new TwoPositions(1.0, 0.425);
     public static final double slidesCPR = 384.5;
-    public static DepositPositions depositLeftPositions = new DepositPositions(0.0, 0.75);
-    public static DepositPositions depositRightPositions = new DepositPositions(1.0, 0.25);
 
-    public static class DepositPositions {
+    public static class TwoPositions {
         public double normal;
         public double out;
 
-        public DepositPositions(double n, double o) {
-            normal = n;
-            out = o;
+        public TwoPositions(double normal, double out) {
+            this.normal = normal;
+            this.out = out;
         }
     }
 
     public void runOpMode() {
         robot.init(hardwareMap);
-        int wheelState = 0; // 0 = not intaking, 1 = yes intaking
         int endGameState = 0; // 0 = ready, 1 = plane launched, 2 = measurement tape up, 3 = we are hanged on the truss!
-        int depositBoxState = 0; // 0 = we didn't rotate it, 1 = we rotated it out
+//        int depositBoxState = 0; // 0 = we didn't rotate it, 1 = we rotated it out
         boolean planeReleased = false; // false if we didn't release the plane
+        boolean driveSlow = false;
+        boolean holdingY = false;
 
         /*
         Notes on PID
@@ -71,9 +71,21 @@ public class RegularTeleOp extends LinearOpMode  {
         double lastRightBump = 0.0;
 
 
+        boolean intaking = false;
+
         waitForStart();
 
         while (opModeIsActive()) {
+
+            telemetry.addData("Left Slide Encoder", robot.motorFrontLeft.getCurrentPosition());
+            telemetry.update();
+//            if (gamepad2.y && !holdingY) {
+//                driveSlow = !driveSlow;
+//                holdingY = true;
+//            } else {
+//                holdingY = false;
+//            }
+
             // Drive Train (REUSED CODE), except we cube the motor power to reduce it
             double r = Math.hypot(-gamepad1.left_stick_x, gamepad1.left_stick_y);
             double robotAngle = Math.atan2(gamepad1.left_stick_y, -gamepad1.left_stick_x) - Math.PI / 4;
@@ -84,7 +96,9 @@ public class RegularTeleOp extends LinearOpMode  {
             final double v4 = r * Math.cos(robotAngle) - rightX;
 
             double robotSpeed;
-            if (gamepad1.x) { robotSpeed = SPEED_SLOW; }
+//            if (driveSlow) { robotSpeed = SPEED_SLOW; }
+//            else           { robotSpeed = SPEED_FAST; }
+            if (gamepad2.y) { robotSpeed = SPEED_SLOW; }
             else            { robotSpeed = SPEED_FAST; }
 
             robot.motorFrontLeft.setPower(-v3*robotSpeed); // some of these might need to be negative
@@ -92,76 +106,74 @@ public class RegularTeleOp extends LinearOpMode  {
             robot.motorBackLeft.setPower(v1*robotSpeed);
             robot.motorBackRight.setPower(-v2*robotSpeed);
 
+
+            // Third Segment Intake Power
+            if (gamepad2.x) {
+                // Intake Normal
+                wheelKeepPixel();
+                intaking = true;
+                robot.intake.setPower(-1.0);
+                robot.intakeControl.setPosition(intakePositions.out);
+            }
+            else if (gamepad2.b) {
+                // Reverse Intake spit out
+                // this is just in case we accidentally take 3 pixels
+                intaking = false;
+                robot.intake.setPower(1.0);
+                robot.intakeControl.setPosition(intakePositions.out);
+            }
+            else {
+                // no power intake
+                intaking = false;
+                robot.intake.setPower(0.0);
+              robot.intakeControl.setPosition(intakePositions.normal);
+            }
+
             // First Segment Servo Deposit
             if (gamepad1.left_trigger > 0.2) {
                 //Keep Pixel
-                robot.wheel.setPower(1.0);
+                wheelKeepPixel();
             }
             else if (gamepad1.right_trigger > 0.2) {
                 // spit pixel
-                robot.wheel.setPower(-1.0);
+                wheelSpitPixel();
             }
-            else if (wheelState == 1) {
-                // keep pixel
-                robot.wheel.setPower(1.0);
-            }
-            else {
+            else if (!intaking) {
                 // do nothing
                 robot.wheel.setPower(0.0);
             }
 
-            // Third Segment Intake Power
-            if (gamepad2.x) {
-                // Reverse Intake spit out
-                // this is just in case we accidentally take 3 pixels
-                robot.intake.setPower(-1.0);
-                robot.intakeControl.setPosition(INTAKECOLL);
-            }
-            else if (gamepad2.b) {
-                // Intake Normal
-                wheelState = 1;
-                robot.intake.setPower(1.0);
-                robot.intakeControl.setPosition(INTAKECOLL);
-            }
-            else {
-                // no power intake
-                wheelState = 0;
-                robot.intake.setPower(0.0);
-                robot.intakeControl.setPosition(INTAKEUP);
-            }
-
-
             // 4th segment intake control (THIS IS JUST A BACKUP IN CASE SOMETHING GOES WRONG, TODO: DELETE THIS)
-            if (gamepad2.dpad_up) {
+            if (gamepad2.dpad_right) {
                 // Folded up
 //                robot.intakeControl.setPosition(intakecoll);
-                depositBoxState = 1;
                 setDepositBox();
             }
-            else if (gamepad2.dpad_down) {
+            else if (gamepad2.dpad_left) {
                 // Taking in
 //                robot.intakeControl.setPosition(intakeup);
-                depositBoxState = 0;
+                resetDepositBox();
+            }
+
+            if (gamepad2.a) {
+                // raise the right slide
+                robot.slideLeft.setPower(-0.8);
             }
 
             //5th segment Slides
-            if (gamepad2.left_bumper) {
-                // Slide down
-                robot.SlideLeft.setPower(0.4);  // go down a little slowly
-                robot.SlideRight.setPower(0.6); // go down a little slowly
+            if (gamepad2.dpad_up) {
+                // Slide up
+                robot.slideLeft.setPower(-0.8);
+                robot.slideRight.setPower(0.8);
             }
-            else if (gamepad2.right_bumper) {
-                robot.SlideLeft.setPower(-1.0);
-                robot.SlideRight.setPower(-1.0);
+            else if (gamepad2.dpad_down) {
+                robot.slideLeft.setPower(0.5);
+                robot.slideRight.setPower(-0.5);
             }
             else {
                 // no power
-                robot.SlideLeft.setPower(0.0);
-                robot.SlideRight.setPower(0.0);
-            }
-
-            if (depositBoxState == 0) {
-                resetDepositBox();
+                robot.slideLeft.setPower(0.0);
+                robot.slideRight.setPower(0.0);
             }
 
 
@@ -172,6 +184,7 @@ public class RegularTeleOp extends LinearOpMode  {
 //                    robot.plane.setPosition(1.0);
 //                }
 //            }
+
 
             if ((gamepad1.left_bumper && gamepad1.right_bumper)) {
                 // emergency break
@@ -185,6 +198,7 @@ public class RegularTeleOp extends LinearOpMode  {
         // input in cm, output in degrees (north of x axis)
         return Math.toDegrees(Math.acos(((distance*distance) + (linkage2*linkage2) - (linkage1*linkage1))/(2*distance*linkage2)));
     }
+
     public void FrontDrive(double power){
         robot.motorFrontLeft.setPower(power);
         robot.motorFrontRight.setPower(power);
@@ -210,6 +224,14 @@ public class RegularTeleOp extends LinearOpMode  {
          */
         robot.depositLeft.setPosition(depositLeftPositions.out);
         robot.depositRight.setPosition(depositRightPositions.out);
+    }
+
+    public void wheelKeepPixel() {
+        robot.wheel.setPower(-1.0);
+    }
+
+    public void wheelSpitPixel() {
+        robot.wheel.setPower(1.0);
     }
 
 }

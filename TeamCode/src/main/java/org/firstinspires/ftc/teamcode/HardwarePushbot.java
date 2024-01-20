@@ -2,8 +2,10 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.util.Encoder;
 
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -24,8 +26,8 @@ public class HardwarePushbot {
 
 
     // Slide
-    public DcMotor SlideLeft=null;
-    public DcMotor SlideRight=null;
+    public DcMotor slideLeft =null;
+    public DcMotor slideRight =null;
     // Outtake
     public Servo depositLeft = null;
     public Servo depositRight = null;
@@ -35,8 +37,7 @@ public class HardwarePushbot {
     //plane launcher
     public Servo plane = null;
 
-
-
+    public Encoder slideEncoder = null;
     public WebcamName camera = null;
 
     // local class variables
@@ -53,7 +54,7 @@ public class HardwarePushbot {
         motorBackRight  = hwMap.get(DcMotor.class, "motorBackRight"); //0
         motorBackLeft   = hwMap.get(DcMotor.class, "motorBackLeft"); //3 exp
 
-//        // initialize the other motors
+        // initialize the other motors
         intake          = hwMap.get(DcMotor.class, "intake");
 
         // initialize the LMEC servo stuff
@@ -61,10 +62,10 @@ public class HardwarePushbot {
 
         // initialize the other servos
         intakeControl = hwMap.get(Servo.class, "intakeControl");
-//
-//        //plane
+
+        //plane
 //        plane            = hwMap.get(Servo.class, "plane");
-//        // outatake position
+        // outatake position
 
         wheel = hwMap.get(CRServo.class, "Wheel"); // servo in outtake
         depositLeft = hwMap.get(Servo.class, "depositLeft"); // servo for rotating the outtake thing
@@ -73,11 +74,12 @@ public class HardwarePushbot {
 //
 //
 //        // slides
-        SlideLeft  = hwMap.get(DcMotor.class, "LeftSlide");
-        SlideRight = hwMap.get(DcMotor.class, "RightSlide");
+        slideLeft = hwMap.get(DcMotor.class, "LeftSlide");
+        slideRight = hwMap.get(DcMotor.class, "RightSlide");
+        slideEncoder = new Encoder(hwMap.get(DcMotorEx.class, "motorFrontLeft"));
 
 
         // Camera
-//        camera = hwMap.get(WebcamName.class, "Webcam 1");
+        camera = hwMap.get(WebcamName.class, "Webcam 1");
     }
 }

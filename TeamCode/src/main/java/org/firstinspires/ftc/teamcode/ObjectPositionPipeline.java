@@ -14,7 +14,17 @@ import org.openftc.easyopencv.OpenCvPipeline;
 
 @Config
 public class ObjectPositionPipeline extends OpenCvPipeline {
-    public static boolean DETECT_RED = true;
+    // ROI = region of interest, aka the rectangle we're drawing
+    // you should fine tune this
+    public static final Rect ROI_Left   = new Rect(new Point( 10, 100), new Point(105, 200));
+    public static final Rect ROI_Middle = new Rect(new Point(120, 100), new Point(205, 200));
+    public static final Rect ROI_Right  = new Rect(new Point(220, 100), new Point(310, 200));
+
+    // The two colors we're using
+    public static final Scalar redColor  = new Scalar(  0,   0, 255);
+    public static final Scalar blueColor = new Scalar(  0, 255,   0);
+
+    public boolean DETECT_RED = true;
     public double leftAvg;
     public double middleAvg;
     public double rightAvg;
@@ -37,20 +47,11 @@ public class ObjectPositionPipeline extends OpenCvPipeline {
         MIDDLE,
         RIGHT
     }
-    private Location location = Location.MIDDLE;
+    private Location propLocation = Location.MIDDLE;
 
-    // ROI = region of interest, aka the rectangle we're drawing
-    // you should fine tune this
-    public static final Rect ROI_Left   = new Rect(new Point( 10, 100), new Point(105, 200));
-    public static final Rect ROI_Middle = new Rect(new Point(120, 100), new Point(205, 200));
-    public static final Rect ROI_Right  = new Rect(new Point(220, 100), new Point(310, 200));
-
-    // The two colors we're using
-    public static final Scalar redColor  = new Scalar(  0,   0, 255);
-    public static final Scalar blueColor = new Scalar(  0, 255,   0);
 
     public ObjectPositionPipeline(Telemetry t) {
-        telemetry = t;
+        this.telemetry = t;
     }
 
     @Override
@@ -65,15 +66,15 @@ public class ObjectPositionPipeline extends OpenCvPipeline {
 
         // If something goes wrong, return
         if (mat.empty()) {
-            telemetry.addData("processFrame func", "something wnet wrong");
-            telemetry.update();
+            this.telemetry.addData("processFrame func", "something wnet wrong");
+            this.telemetry.update();
             return input;
         }
 
         // extract either the red or blue color channel
         Mat oneColor = new Mat();
         Scalar propColor;
-        if (DETECT_RED) {
+        if (this.DETECT_RED) {
             propColor = redColor;
             Core.extractChannel(mat, oneColor, 2);
         }
@@ -96,21 +97,21 @@ public class ObjectPositionPipeline extends OpenCvPipeline {
         rightAvg = rightAvgScalar.val[0];
 
         if (leftAvg >= rightAvg && leftAvg >= middleAvg ) {
-            location = Location.LEFT;
+            propLocation = Location.LEFT;
             Imgproc.rectangle(mat, ROI_Left, propColor);
-            telemetry.addData("Prop location:", "left");
+            this.telemetry.addData("Prop location:", "left");
         }
         else if (rightAvg >= middleAvg) {
-            location = Location.RIGHT;
+            propLocation = Location.RIGHT;
             Imgproc.rectangle(mat, ROI_Middle, propColor);
-            telemetry.addData("Prop location:", "right");
+            this.telemetry.addData("Prop location:", "right");
         }
         else {
-            location = Location.MIDDLE;
+            propLocation = Location.MIDDLE;
             Imgproc.rectangle(mat, ROI_Right, propColor);
-            telemetry.addData("Prop location:", "middle");
+            this.telemetry.addData("Prop location:", "middle");
         }
-        telemetry.update();
+        this.telemetry.update();
 
 
 
@@ -187,11 +188,11 @@ public class ObjectPositionPipeline extends OpenCvPipeline {
         return mat;
     }
 
-    public Location getLocation() {
-        return location;
+    public Location getPropLocation() {
+        return propLocation;
     }
 
     public void setDetectRed(boolean shouldDetectRed) {
-        DETECT_RED = shouldDetectRed;
+        this.DETECT_RED = shouldDetectRed;
     }
 }

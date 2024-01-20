@@ -10,7 +10,6 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -119,18 +118,18 @@ public class CenterStageAutonomous {
         visionPortal = new VisionPortal.Builder()
                 .addProcessor(tagProcessor)
 //                .addProcessor(imgProcessor)
-//                .setCamera(robot.camera)
-                .setCamera(BuiltinCameraDirection.BACK)
+                .setCamera(robot.camera)
+//                .setCamera(BuiltinCameraDirection.BACK)
                 .setCameraResolution(new Size(320, 240))
                 .build();
 
     }
 
-    public ObjectPositionPipeline.Location getLocation() {
-        return detector.getLocation();
+    public ObjectPositionPipeline.Location getPropLocation() {
+        return detector.getPropLocation();
     }
 
-    public void stopLocationDetection() {
+    public void stopCameraStreaming() {
         camera.stopStreaming();
     }
 
@@ -148,6 +147,15 @@ public class CenterStageAutonomous {
         FrontDrive(-power);
         sleep(milliseconds);
         CancelPowerRobot();
+    }
+
+    public void moveBackward(int milliseconds, double power) {
+        /**
+         * Move backward for some time.
+         * @param milliseconds - How long to move forward for, in milliseconds
+         * @param power - The power to use for the motors
+         */
+        moveForward(1000, -power);
     }
 
     public void turnLeft(double power) {
@@ -279,6 +287,15 @@ public class CenterStageAutonomous {
         robot.intake.setPower(power);
         robot.intakeControl.setPosition(0.5);
         robot.wheel.setPower(-power);
+    }
+
+    public void reverseIntake(int milliseconds, double power) {
+        /**
+         * Reverse the intake.
+         * @param milliseconds - How long to reverse the intake for, in milliseconds
+         * @param power - The power to use
+         */
+        intake(milliseconds, power);
     }
 
     //    public void outtake(int milliseconds, double power) {

@@ -29,8 +29,8 @@ public class AutoRedFront extends LinearOpMode {
         auto.initCamera(CenterStageAutonomous.WhatColorToDetect.RED);
         waitForStart();
 
-        ObjectPositionPipeline.Location location = auto.getLocation();
-        auto.stopLocationDetection();
+        ObjectPositionPipeline.Location location = auto.getPropLocation();
+        auto.stopCameraStreaming();
 
         // see where the prop is
         switch (location) {

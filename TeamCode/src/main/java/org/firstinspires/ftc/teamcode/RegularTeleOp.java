@@ -1,22 +1,29 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.lang.Math;
 
 @Config
 @TeleOp(name = "Regular Teleop", group = "Concept")
 public class RegularTeleOp extends LinearOpMode  {
-    // Initialize robot from another class
-    HardwarePushbot robot = new HardwarePushbot();
+
+    // Dynamic constants
     public static volatile double SPEED_FAST = 1.0;
     public static volatile double SPEED_SLOW = 0.3;
     public static volatile TwoPositions intakePositions = new TwoPositions(1.0, 0.5);
     public static volatile TwoPositions depositLeftPositions = new TwoPositions(0.0, 0.575);
     public static volatile TwoPositions depositRightPositions = new TwoPositions(1.0, 0.425);
-    public static final double slidesCPR = 384.5;
+
+    // Other classwide items
+    private HardwarePushbot robot = new HardwarePushbot();
+    private FtcDashboard dashboard;
 
     public static class TwoPositions {
         public double normal;
@@ -29,56 +36,30 @@ public class RegularTeleOp extends LinearOpMode  {
     }
 
     public void runOpMode() {
+        // do some initialization
         robot.init(hardwareMap);
+        dashboard = FtcDashboard.getInstance();
+        Telemetry _tele = telemetry;
+        MultipleTelemetry telemetry = new MultipleTelemetry(_tele, dashboard.getTelemetry());
+
+
         int endGameState = 0; // 0 = ready, 1 = plane launched, 2 = measurement tape up, 3 = we are hanged on the truss!
 //        int depositBoxState = 0; // 0 = we didn't rotate it, 1 = we rotated it out
         boolean planeReleased = false; // false if we didn't release the plane
         boolean driveSlow = false;
         boolean holdingY = false;
+        boolean intaking;
 
-        /*
-        Notes on PID
-        position = revolutions * cpr
-        revolutions = desired distance / circumference
-
-        position = desired distance * cpr / circumference
-        */
-        double circumferenceSlides = 3.9; // 3.9 cm, 39mm
-        double[] distanceArray = {0.0, 25.0, 50.0, 75.0}; // in cm
-        double[] vertSlideArray = {0.0, 0.0, 0.0, 0.0}; // is set in the for loop below
-        for(int i = 0; i < 4; i++){
-            vertSlideArray[i] = distanceArray[i] * slidesCPR / circumferenceSlides;
-        }
-        double[] planeArray = {0.0, 1.0}; // TBD, will find exact later
-
-        // Wait for the game to start (driver presses PLAY)
-
-        // PID Initialize for ONE Slide
-
-        // Reset the motor encoder so that it reads zero ticks
-//        robot.slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//
-//        // Sets the starting position of the slide to the down position
-//        robot.slide.setTargetPosition((int) vertSlideArray[0]);
-//        robot.slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-
-        // Sets the starting position of the hang to the down position
-
-
-        double lastYClick = 0.0;
-        double lastLeftBump = 0.0;
-        double lastRightBump = 0.0;
-
-
-        boolean intaking = false;
+        Slides slides = new Slides(
+                telemetry,
+                robot.slideLeft,
+                robot.slideRight,
+                robot.slideEncoder
+            );
 
         waitForStart();
 
         while (opModeIsActive()) {
-
-            telemetry.addData("Left Slide Encoder", robot.motorFrontLeft.getCurrentPosition());
-            telemetry.update();
 //            if (gamepad2.y && !holdingY) {
 //                driveSlow = !driveSlow;
 //                holdingY = true;
@@ -185,6 +166,8 @@ public class RegularTeleOp extends LinearOpMode  {
 //                }
 //            }
 
+            // Fix the slide positions
+//            slides.updateSlides();
 
             if ((gamepad1.left_bumper && gamepad1.right_bumper)) {
                 // emergency break

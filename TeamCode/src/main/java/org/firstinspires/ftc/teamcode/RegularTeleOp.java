@@ -15,8 +15,10 @@ import java.lang.Math;
 public class RegularTeleOp extends LinearOpMode  {
 
     // Dynamic constants
-    public static volatile double SPEED_FAST = 1.0;
-    public static volatile double SPEED_SLOW = 0.3;
+    public static volatile double DRIVESPEED_FAST = 1.0; // between 0 and 1
+    public static volatile double DRIVESPEED_SLOW = 0.3; // between 0 and 1
+    public static volatile double SLIDESPEED_UP = 9.0; // must be whole num
+    public static volatile double SLIDESPEED_DOWN = 6.0; // must be whole num
     public static volatile TwoPositions intakePositions = new TwoPositions(1.0, 0.5);
     public static volatile TwoPositions depositLeftPositions = new TwoPositions(0.0, 0.575);
     public static volatile TwoPositions depositRightPositions = new TwoPositions(1.0, 0.425);
@@ -79,8 +81,8 @@ public class RegularTeleOp extends LinearOpMode  {
             double robotSpeed;
 //            if (driveSlow) { robotSpeed = SPEED_SLOW; }
 //            else           { robotSpeed = SPEED_FAST; }
-            if (gamepad2.y) { robotSpeed = SPEED_SLOW; }
-            else            { robotSpeed = SPEED_FAST; }
+            if (gamepad2.y) { robotSpeed = DRIVESPEED_SLOW; }
+            else            { robotSpeed = DRIVESPEED_FAST; }
 
             robot.motorFrontLeft.setPower(-v3*robotSpeed); // some of these might need to be negative
             robot.motorFrontRight.setPower(v4*robotSpeed);
@@ -136,26 +138,19 @@ public class RegularTeleOp extends LinearOpMode  {
                 resetDepositBox();
             }
 
-            if (gamepad2.a) {
-                // raise the right slide
-                robot.slideLeft.setPower(-0.8);
-            }
-
             //5th segment Slides
             if (gamepad2.dpad_up) {
                 // Slide up
-                robot.slideLeft.setPower(-0.8);
-                robot.slideRight.setPower(0.8);
+                slides.moveUp(SLIDESPEED_UP);
             }
             else if (gamepad2.dpad_down) {
-                robot.slideLeft.setPower(0.5);
-                robot.slideRight.setPower(-0.5);
+                slides.moveDown(SLIDESPEED_DOWN);
             }
-            else {
-                // no power
-                robot.slideLeft.setPower(0.0);
-                robot.slideRight.setPower(0.0);
-            }
+//            else {
+//                // no power
+//                robot.slideLeft.setPower(0.0);
+//                robot.slideRight.setPower(0.0);
+//            }
 
 
 //            if (!planeReleased) {
@@ -167,7 +162,7 @@ public class RegularTeleOp extends LinearOpMode  {
 //            }
 
             // Fix the slide positions
-//            slides.updateSlides();
+            slides.updateSlides();
 
             if ((gamepad1.left_bumper && gamepad1.right_bumper)) {
                 // emergency break

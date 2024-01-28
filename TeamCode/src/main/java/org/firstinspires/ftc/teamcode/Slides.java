@@ -80,9 +80,25 @@ public class Slides {
     public void move(double moveAmt) {
         /**
          * Increase/decrease the position of the slides. This is a **relative** move.
-         * @param moveAmt - The amount to increase/decrease the position by.
+         * @param moveAmt - The amount of clicks to increase/decrease the position by.
          */
         this.targetPosition += moveAmt;
+    }
+
+    public void moveUp(double moveAmt) {
+        /**
+         * Move the slides up by moveAmt clicks. Really just an alias for move(moveAmt).
+         * @param moveAmt - The amount of clicks to move the slides up by.
+         */
+        move(moveAmt);
+    }
+
+    public void moveDown(double moveAmt) {
+        /**
+         * Move the slides down by moveAmt clicks. Really just an alias for move(-moveAmt).
+         * @param moveAmt - The amount of clicks to move the slides down by.
+         */
+        move(-moveAmt);
     }
 
     public double getTargetPosition() {

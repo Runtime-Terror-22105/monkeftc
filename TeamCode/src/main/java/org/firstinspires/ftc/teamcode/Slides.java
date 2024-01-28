@@ -11,6 +11,10 @@ import org.firstinspires.ftc.teamcode.util.Encoder;
 
 @Config
 public class Slides {
+    // slide constants
+    public static double SLIDES_MIN_HEIGHT = 5; // measured in counts
+    public static double SLIDES_MAX_HEIGHT = 4000; // to be determined via experimentation
+
     // pid constants
     public static volatile double Kp = 0.03;
     public static volatile double Ki = 0;
@@ -37,13 +41,14 @@ public class Slides {
         this.slideRight    = slideRight;
         this.slidesEncoder = slidesEncoder;
         this.slidesEncoder.setDirection(REVERSE);
+
         _resetTempVars();
     }
 
     public void updateSlides() {
         /**
-         * NOTE: You must run this function each loop iteration.
-         * It will move the slides to wherever they should be with PID.
+         * NOTE: You must run this function each loop iteration. It will move the slides to
+         * wherever they should be with PID.
          */
         if (Math.abs(error) >= 10) {
             telemetry.addData("reference", targetPosition);
@@ -82,7 +87,7 @@ public class Slides {
          * Increase/decrease the position of the slides. This is a **relative** move.
          * @param moveAmt - The amount of clicks to increase/decrease the position by.
          */
-        this.targetPosition += moveAmt;
+        this.targetPosition = Math.min(Math.max(this.targetPosition + moveAmt, SLIDES_MIN_HEIGHT), SLIDES_MAX_HEIGHT);
     }
 
     public void moveUp(double moveAmt) {

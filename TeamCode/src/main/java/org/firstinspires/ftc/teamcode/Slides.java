@@ -70,6 +70,8 @@ public class Slides {
             double out = (Kp * error) + (Ki * integralSum) + (Kd * derivative);
 
             _setSlidePower(out);
+            telemetry.addData("slide power", out);
+            telemetry.update();
 
             lastError = error;
 

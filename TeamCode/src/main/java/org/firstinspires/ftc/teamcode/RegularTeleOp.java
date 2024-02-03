@@ -18,7 +18,7 @@ public class RegularTeleOp extends LinearOpMode  {
     public static volatile double DRIVESPEED_FAST = 1.0; // between 0 and 1
     public static volatile double DRIVESPEED_SLOW = 0.3; // between 0 and 1
     public static volatile double SLIDESPEED_UP = 9.0; // must be whole num
-    public static volatile double SLIDESPEED_DOWN = 6.0; // must be whole num
+    public static volatile double SLIDESPEED_DOWN = 10.0; // must be whole num
     public static volatile TwoPositions intakePositions = new TwoPositions(1.0, 0.5);
     public static volatile TwoPositions depositLeftPositions = new TwoPositions(0.0, 0.575);
     public static volatile TwoPositions depositRightPositions = new TwoPositions(1.0, 0.425);

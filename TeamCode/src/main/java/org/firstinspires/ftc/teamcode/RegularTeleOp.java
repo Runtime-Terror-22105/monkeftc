@@ -17,8 +17,7 @@ public class RegularTeleOp extends LinearOpMode  {
     // Dynamic constants
     public static volatile double DRIVESPEED_FAST = 1.0; // between 0 and 1
     public static volatile double DRIVESPEED_SLOW = 0.3; // between 0 and 1
-    public static volatile double SLIDESPEED_UP = 9.0; // must be whole num
-    public static volatile double SLIDESPEED_DOWN = 10.0; // must be whole num
+    public static volatile double SLIDESPEED = 16.0; // must be whole num
     public static volatile TwoPositions intakePositions = new TwoPositions(1.0, 0.5);
     public static volatile TwoPositions depositLeftPositions = new TwoPositions(0.0, 0.575);
     public static volatile TwoPositions depositRightPositions = new TwoPositions(1.0, 0.425);
@@ -62,6 +61,8 @@ public class RegularTeleOp extends LinearOpMode  {
         waitForStart();
 
         while (opModeIsActive()) {
+            double loopIterationStartTime = System.currentTimeMillis();
+
 //            if (gamepad2.y && !holdingY) {
 //                driveSlow = !driveSlow;
 //                holdingY = true;
@@ -138,19 +139,25 @@ public class RegularTeleOp extends LinearOpMode  {
                 resetDepositBox();
             }
 
-            //5th segment Slides
-            if (gamepad2.dpad_up) {
-                // Slide up
-                slides.moveUp(SLIDESPEED_UP);
-            }
-            else if (gamepad2.dpad_down) {
-                slides.moveDown(SLIDESPEED_DOWN);
-            }
+//            //5th segment Slides
+//            if (gamepad2.dpad_up) {
+//                // Slide up
+//                slides.moveUp(SLIDESPEED_UP);
+//            }
+//            else if (gamepad2.dpad_down) {
+//                slides.moveDown(SLIDESPEED_DOWN);
+//            }
 //            else {
 //                // no power
 //                robot.slideLeft.setPower(0.0);
 //                robot.slideRight.setPower(0.0);
 //            }
+
+            if (Math.abs(gamepad2.left_stick_y) > 0.05) {
+                // we do negative since our gamepad stick is sus
+                slides.move(-gamepad2.left_stick_y * SLIDESPEED);
+            }
+            if (gamepad2.a) { slides.moveToBottom(); }
 
 
 //            if (!planeReleased) {
@@ -162,13 +169,15 @@ public class RegularTeleOp extends LinearOpMode  {
 //            }
 
             // Fix the slide positions
-            slides.updateSlides();
+            double slidePower = slides.updateSlides();
+            slides.setSlidePower(slidePower);
 
-            if ((gamepad1.left_bumper && gamepad1.right_bumper)) {
-                // emergency break
-                break;
-            }
+            // emergency break
+            if ((gamepad1.left_bumper && gamepad1.right_bumper)) { break; }
 
+            // update all of the telemetry at the end of each loop iteration
+            telemetry.addData("Loop time", System.currentTimeMillis() - loopIterationStartTime);
+            telemetry.update();
         }
     }
     public double slidePosition(double linkage1, double linkage2, double distance){

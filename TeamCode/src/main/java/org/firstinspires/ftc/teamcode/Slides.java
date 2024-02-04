@@ -12,8 +12,8 @@ import org.firstinspires.ftc.teamcode.util.Encoder;
 @Config
 public class Slides {
     // slide constants
-    public static double SLIDES_MIN_HEIGHT = 5; // measured in counts
-    public static double SLIDES_MAX_HEIGHT = 4000; // to be determined via experimentation
+    public static int SLIDES_MIN_HEIGHT = 0; // measured in counts
+    public static int SLIDES_MAX_HEIGHT = 3000; // to be determined via experimentation
 
     // pid constants
     public static volatile double Kp = 0.03;
@@ -21,7 +21,7 @@ public class Slides {
     public static volatile double Kd = 0.0001;
 
     // idk
-    private double targetPosition;
+    private int targetPosition;
     private ElapsedTime timer = new ElapsedTime();
 
     // pid temp vars
@@ -45,7 +45,7 @@ public class Slides {
         _resetTempVars();
     }
 
-    public void updateSlides() {
+    public double updateSlides() {
         /**
          * NOTE: You must run this function each loop iteration. It will move the slides to
          * wherever they should be with PID.
@@ -53,7 +53,6 @@ public class Slides {
         if (Math.abs(error) >= 10) {
             telemetry.addData("reference", targetPosition);
             telemetry.addData("actual pos", slidesEncoder.getCurrentPosition());
-            telemetry.update();
 
             // obtain the encoder position
             this.slidesEncoder.getCurrentPosition();
@@ -67,20 +66,20 @@ public class Slides {
             // sum of all error over time
             integralSum = integralSum + (error * timer.seconds());
 
-            double out = (Kp * error) + (Ki * integralSum) + (Kd * derivative);
-
-            _setSlidePower(out);
+            // calculate the power, limit it between 0 and 1
+            double outUnclamped = (Kp * error) + (Ki * integralSum) + (Kd * derivative);
+            double out = Math.max(Math.min(outUnclamped, 1.0), -1.0); // out has to be between -1 and 1
             telemetry.addData("slide power", out);
-            telemetry.update();
 
             lastError = error;
 
             // reset the timer for next time
             timer.reset();
-
+            return out;
         }
         else {
             _resetTempVars();
+            return 0;
         }
     }
 
@@ -89,7 +88,8 @@ public class Slides {
          * Increase/decrease the position of the slides. This is a **relative** move.
          * @param moveAmt - The amount of clicks to increase/decrease the position by.
          */
-        this.targetPosition = Math.min(Math.max(this.targetPosition + moveAmt, SLIDES_MIN_HEIGHT), SLIDES_MAX_HEIGHT);
+        double newTargetPos = Math.min(Math.max(this.targetPosition + moveAmt, SLIDES_MIN_HEIGHT), SLIDES_MAX_HEIGHT);
+        this.setTargetPosition((int) Math.round(newTargetPos));
     }
 
     public void moveUp(double moveAmt) {
@@ -108,7 +108,14 @@ public class Slides {
         move(-moveAmt);
     }
 
-    public double getTargetPosition() {
+    public void moveToBottom() {
+        /**
+         * Move the slides down to the minimum height.
+         */
+        setTargetPosition(SLIDES_MIN_HEIGHT);
+    }
+
+    public int getTargetPosition() {
         /**
          * Gets the current target position of the slides.
          * @return targetPosition - The target position of the slides.
@@ -116,7 +123,7 @@ public class Slides {
         return this.targetPosition;
     }
 
-    public void setTargetPosition(double targetPosition) {
+    public void setTargetPosition(int targetPosition) {
         /**
          * Sets the **absolute** position of the slides.
          * @param targetPosition - The new target position for the slides.
@@ -130,7 +137,7 @@ public class Slides {
         this.error = 100; // random number
     }
 
-    private void _setSlidePower(double power) {
+    public void setSlidePower(double power) {
         this.slideLeft.setPower(-power);
         this.slideRight.setPower(power);
     }

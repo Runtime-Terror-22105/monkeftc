@@ -40,10 +40,5 @@ public class AutoTest extends LinearOpMode {
                 telemetry.addData("FINAL Location", "Right");
         }
         telemetry.update();
-
-
-        auto.moveForward(1000, 0.5);
-        auto.reverseIntake(400, 0.1);
-        auto.moveBackward(1000, 0.5);
     }
 }

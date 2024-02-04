@@ -76,10 +76,15 @@ public class HardwarePushbot {
 //        // slides
         slideLeft = hwMap.get(DcMotor.class, "LeftSlide");
         slideRight = hwMap.get(DcMotor.class, "RightSlide");
-        slideEncoder = new Encoder(hwMap.get(DcMotorEx.class, "motorFrontLeft"));
 
 
         // Camera
         camera = hwMap.get(WebcamName.class, "Webcam 1");
+
+        // Encoders
+        slideEncoder = new Encoder(hwMap.get(DcMotorEx.class, "motorFrontLeft"));
+        motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); // reset the encoder
+        motorFrontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER); // set the motor back to normal
+
     }
 }

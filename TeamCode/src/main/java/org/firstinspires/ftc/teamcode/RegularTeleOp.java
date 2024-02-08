@@ -19,8 +19,8 @@ public class RegularTeleOp extends LinearOpMode  {
     public static volatile double DRIVESPEED_SLOW = 0.3; // between 0 and 1
     public static volatile double SLIDESPEED = 16.0; // must be whole num
     public static volatile TwoPositions intakePositions = new TwoPositions(1.0, 0.5);
-    public static volatile TwoPositions depositLeftPositions = new TwoPositions(0.0, 0.575);
-    public static volatile TwoPositions depositRightPositions = new TwoPositions(1.0, 0.425);
+    public static volatile TwoPositions depositLeftPositions = new TwoPositions(1.0, 0.0);
+    public static volatile TwoPositions depositRightPositions = new TwoPositions(1.0, 0.0);
 
     // Other classwide items
     private HardwarePushbot robot = new HardwarePushbot();
@@ -130,29 +130,14 @@ public class RegularTeleOp extends LinearOpMode  {
             // 4th segment intake control (THIS IS JUST A BACKUP IN CASE SOMETHING GOES WRONG, TODO: DELETE THIS)
             if (gamepad2.dpad_right) {
                 // Folded up
-//                robot.intakeControl.setPosition(intakecoll);
                 setDepositBox();
             }
             else if (gamepad2.dpad_left) {
                 // Taking in
-//                robot.intakeControl.setPosition(intakeup);
                 resetDepositBox();
             }
 
-//            //5th segment Slides
-//            if (gamepad2.dpad_up) {
-//                // Slide up
-//                slides.moveUp(SLIDESPEED_UP);
-//            }
-//            else if (gamepad2.dpad_down) {
-//                slides.moveDown(SLIDESPEED_DOWN);
-//            }
-//            else {
-//                // no power
-//                robot.slideLeft.setPower(0.0);
-//                robot.slideRight.setPower(0.0);
-//            }
-
+            // Slides
             if (Math.abs(gamepad2.left_stick_y) > 0.05) {
                 // we do negative since our gamepad stick is sus
                 slides.move(-gamepad2.left_stick_y * SLIDESPEED);
@@ -202,7 +187,7 @@ public class RegularTeleOp extends LinearOpMode  {
          * Reset the position of the deposit box thing to default
          */
         robot.depositLeft.setPosition(depositLeftPositions.normal);
-        robot.depositRight.setPosition(depositRightPositions.normal);
+//        robot.depositRight.setPosition(depositRightPositions.normal);
     }
 
     public void setDepositBox() {
@@ -210,7 +195,7 @@ public class RegularTeleOp extends LinearOpMode  {
          * Set the position of the deposit box thing to be moved out and ready for outtaking.
          */
         robot.depositLeft.setPosition(depositLeftPositions.out);
-        robot.depositRight.setPosition(depositRightPositions.out);
+//        robot.depositRight.setPosition(depositRightPositions.out);
     }
 
     public void wheelKeepPixel() {

@@ -85,27 +85,12 @@ public class Slides {
 
     public void move(double moveAmt) {
         /**
-         * Increase/decrease the position of the slides. This is a **relative** move.
+         * Increase/decrease the target position of the slides by some amount of counts. This is a
+         * RELATIVE move.
          * @param moveAmt - The amount of clicks to increase/decrease the position by.
          */
         double newTargetPos = Math.min(Math.max(this.targetPosition + moveAmt, SLIDES_MIN_HEIGHT), SLIDES_MAX_HEIGHT);
         this.setTargetPosition((int) Math.round(newTargetPos));
-    }
-
-    public void moveUp(double moveAmt) {
-        /**
-         * Move the slides up by moveAmt clicks. Really just an alias for move(moveAmt).
-         * @param moveAmt - The amount of clicks to move the slides up by.
-         */
-        move(moveAmt);
-    }
-
-    public void moveDown(double moveAmt) {
-        /**
-         * Move the slides down by moveAmt clicks. Really just an alias for move(-moveAmt).
-         * @param moveAmt - The amount of clicks to move the slides down by.
-         */
-        move(-moveAmt);
     }
 
     public void moveToBottom() {

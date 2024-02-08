@@ -54,8 +54,8 @@ import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kV;
  */
 @Config
 public class SampleMecanumDrive extends MecanumDrive {
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(0, 0, 0);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(0, 0, 0);
+    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(2.9, 0, 1);
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(0, 0, 1);
 
     public static double LATERAL_MULTIPLIER = 1;
 
@@ -95,10 +95,19 @@ public class SampleMecanumDrive extends MecanumDrive {
 
         // TODO: OMG THIS IS GREEN
 
-        leftFront = hardwareMap.get(DcMotorEx.class, "motorFrontLeft");
-        leftRear = hardwareMap.get(DcMotorEx.class, "motorBackLeft");
-        rightRear = hardwareMap.get(DcMotorEx.class, "motorBackRight");
-        rightFront = hardwareMap.get(DcMotorEx.class, "motorFrontRight");
+//        leftFront = hardwareMap.get(DcMotorEx.class, "motorFrontLeft");
+//        leftRear = hardwareMap.get(DcMotorEx.class, "motorBackLeft");
+//        rightRear = hardwareMap.get(DcMotorEx.class, "motorBackRight");
+//        rightFront = hardwareMap.get(DcMotorEx.class, "motorFrontRight");
+
+//        leftFront  = hardwareMap.get(DcMotorEx.class, "motorBackRight");
+//        leftRear   = hardwareMap.get(DcMotorEx.class, "motorFrontRight");
+//        rightRear  = hardwareMap.get(DcMotorEx.class, "motorFrontLeft");
+//        rightFront = hardwareMap.get(DcMotorEx.class, "motorBackLeft");
+        leftFront  = hardwareMap.get(DcMotorEx.class, "motorBackLeft");
+        leftRear   = hardwareMap.get(DcMotorEx.class, "motorFrontLeft");
+        rightRear  = hardwareMap.get(DcMotorEx.class, "motorFrontRight");
+        rightFront = hardwareMap.get(DcMotorEx.class, "motorBackRight");
 
         motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
 

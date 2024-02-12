@@ -7,6 +7,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.util.Encoder;
 
 @Config
@@ -30,12 +31,12 @@ public class Slides {
     private double error;
 
     // instance vars
-    private MultipleTelemetry telemetry;
+    private Telemetry telemetry;
     private DcMotor slideLeft;
     private DcMotor slideRight;
     private Encoder slidesEncoder;
 
-    public Slides(MultipleTelemetry telemetry, DcMotor slideLeft, DcMotor slideRight, Encoder slidesEncoder) {
+    public Slides(Telemetry telemetry, DcMotor slideLeft, DcMotor slideRight, Encoder slidesEncoder) {
         this.telemetry     = telemetry;
         this.slideLeft     = slideLeft;
         this.slideRight    = slideRight;
@@ -81,6 +82,42 @@ public class Slides {
             _resetTempVars();
             return 0;
         }
+    }
+
+
+    public void updateSlidesAuto() {
+        /**
+         * NOTE: You must run this function each loop iteration. It will move the slides to
+         * wherever they should be with PID.
+         */
+        error = 15;
+        while (Math.abs(error) < 12) {
+            telemetry.addData("reference", targetPosition);
+            telemetry.addData("actual pos", slidesEncoder.getCurrentPosition());
+
+            // obtain the encoder position
+            this.slidesEncoder.getCurrentPosition();
+            double encoderPosition = slidesEncoder.getCurrentPosition();
+            // calculate the error
+            error = targetPosition - encoderPosition;
+
+            // rate of change of the error
+            double derivative = (error - lastError) / timer.seconds();
+
+            // sum of all error over time
+            integralSum = integralSum + (error * timer.seconds());
+
+            // calculate the power, limit it between 0 and 1
+            double outUnclamped = (Kp * error) + (Ki * integralSum) + (Kd * derivative);
+            double out = Math.max(Math.min(outUnclamped, 1.0), -1.0); // out has to be between -1 and 1
+            telemetry.addData("slide power", out);
+
+            lastError = error;
+
+            // reset the timer for next time
+            timer.reset();
+        }
+        _resetTempVars();
     }
 
     public void move(double moveAmt) {

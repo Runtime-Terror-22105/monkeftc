@@ -7,6 +7,7 @@ package org.firstinspires.ftc.teamcode;
 import android.util.Size;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -18,9 +19,13 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 
 public class CenterStageAutonomous {
+    public static volatile RegularTeleOp.TwoPositions intakePositions = new RegularTeleOp.TwoPositions(1.0, 0.5);
+    public static volatile RegularTeleOp.TwoPositions depositLeftPositions = new RegularTeleOp.TwoPositions(1.0, 0.0);
+    public static volatile RegularTeleOp.TwoPositions depositRightPositions = new RegularTeleOp.TwoPositions(1.0, 0.0);
     public final int RIGHTANGLETURNTIME = 200;
 
     private RobotSleep theSleep;
+    public Slides slides;
 
     private HardwareMap hardwareMap;
     private HardwarePushbot robot;
@@ -43,6 +48,13 @@ public class CenterStageAutonomous {
         this.telemetry = t;
         this.dashboard = dash;
         this.theSleep = sleepFunc;
+
+        slides = new Slides(
+                this.telemetry,
+                this.robot.slideLeft,
+                this.robot.slideRight,
+                this.robot.slideEncoder
+        );
     }
 
 
@@ -90,7 +102,7 @@ public class CenterStageAutonomous {
             @Override
             public void onOpened() {
                 // when cam opens, start streaming
-                camera.startStreaming(320, 240, OpenCvCameraRotation.UPSIDE_DOWN);
+                camera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
                 dashboard.startCameraStream(camera, 30);
             }
 
@@ -108,30 +120,59 @@ public class CenterStageAutonomous {
 
         //        imgProcessor = new CenterStageProcessor(telemetry);
 //        imgProcessor = new CenterStageProcessor(dashboard, telemetry);
-        tagProcessor = new AprilTagProcessor.Builder()
-                .setDrawAxes(true)
-                .setDrawCubeProjection(true)
-                .setDrawTagID(true)
-                .setDrawTagOutline(true)
-                .build();
-
-        visionPortal = new VisionPortal.Builder()
-                .addProcessor(tagProcessor)
-//                .addProcessor(imgProcessor)
-                .setCamera(robot.camera)
-//                .setCamera(BuiltinCameraDirection.BACK)
-                .setCameraResolution(new Size(320, 240))
-                .build();
+//        tagProcessor = new AprilTagProcessor.Builder()
+//                .setDrawAxes(true)
+//                .setDrawCubeProjection(true)
+//                .setDrawTagID(true)
+//                .setDrawTagOutline(true)
+//                .build();
+//
+//        visionPortal = new VisionPortal.Builder()
+//                .addProcessor(tagProcessor)
+////                .addProcessor(imgProcessor)
+//                .setCamera(robot.camera)
+////                .setCamera(BuiltinCameraDirection.BACK)
+//                .setCameraResolution(new Size(320, 240))
+//                .build();
 
     }
 
     public ObjectPositionPipeline.Location getPropLocation() {
-        return detector.getPropLocation();
+        return this.detector.getPropLocation();
     }
 
     public void stopCameraStreaming() {
-        camera.stopStreaming();
+        this.camera.stopStreaming();
     }
+
+    // endregion
+
+
+    // region outtake stuff
+    public void resetDepositBox() {
+        /**
+         * Reset the position of the deposit box thing to default
+         */
+        robot.depositLeft.setPosition(depositLeftPositions.normal);
+//        robot.depositRight.setPosition(depositRightPositions.normal);
+    }
+
+    public void setDepositBox() {
+        /**
+         * Set the position of the deposit box thing to be moved out and ready for outtaking.
+         */
+        robot.depositLeft.setPosition(depositLeftPositions.out);
+//        robot.depositRight.setPosition(depositRightPositions.out);
+    }
+
+    public void wheelKeepPixel() {
+        robot.wheel.setPower(-1.0);
+    }
+
+    public void wheelSpitPixel() {
+        robot.wheel.setPower(1.0);
+    }
+
 
     // endregion
 
@@ -144,117 +185,149 @@ public class CenterStageAutonomous {
          * @param milliseconds - How long to move forward for, in milliseconds
          * @param power - The power to use for the motors
          */
-        FrontDrive(-power);
-        sleep(milliseconds);
-        CancelPowerRobot();
+        this.moveDrivetrain(
+                power,
+                power,
+                power,
+                power
+        );
+        this.sleep(milliseconds);
+        this.CancelPowerRobot();
     }
 
     public void moveBackward(int milliseconds, double power) {
         /**
-         * Move backward for some time.
-         * @param milliseconds - How long to move forward for, in milliseconds
+         * Move backward for some time. Simply a convenience function which calls moveForward().
+         * @param milliseconds - How long to move backward for, in milliseconds
          * @param power - The power to use for the motors
          */
-        moveForward(1000, -power);
+        this.moveForward(milliseconds, -power);
     }
 
+    public void strafeLeft(int milliseconds, double power) {
+        /**
+         * Strafe left for some time.
+         * @param milliseconds - How long to strafe for, in milliseconds
+         * @param power - The power to use for the motors
+         */
+        this.moveDrivetrain(
+                -power,
+                 power,
+                 power,
+                -power
+        );
+        this.sleep(milliseconds);
+        this.CancelPowerRobot();
+    }
+
+    public void strafeRight(int milliseconds, double power) {
+        /**
+         * Strafe right for some time.
+         * @param milliseconds - How long to strafe for, in milliseconds
+         * @param power - The power to use for the motors
+         */
+        this.strafeLeft(milliseconds, -power);
+    }
+
+
     public void turnLeft(double power) {
-        spinLeft(power);
-        long sleeptime = (long)(RIGHTANGLETURNTIME/power); // tweak this value with trial and error
-        sleep(sleeptime);
-        CancelPowerRobot();
+        this.spinLeft(power);
+        long sleeptime = (long)(this.RIGHTANGLETURNTIME/power); // tweak this value with trial and error
+        this.sleep(sleeptime);
+        this.CancelPowerRobot();
     }
 
     public void turnRight(double power) {
-        spinRight(power);
-        long sleeptime = (long)(RIGHTANGLETURNTIME/power);
-        sleep(sleeptime);
-        CancelPowerRobot();
+        this.spinRight(power);
+        long sleeptime = (long)(this.RIGHTANGLETURNTIME/power);
+        this.sleep(sleeptime);
+        this.CancelPowerRobot();
     }
 
     public void spinLeft(double power) {
 //        power=-power;
-        robot.motorFrontLeft.setPower(-power);
-        robot.motorFrontRight.setPower(-power);
-        robot.motorBackLeft.setPower(power);
-        robot.motorBackRight.setPower(power);
+        this.moveDrivetrain(
+                -power,
+                power,
+                -power,
+                power
+        );
+//        robot.motorFrontLeft.setPower(-power);
+//        robot.motorFrontRight.setPower(-power);
+//        robot.motorBackLeft.setPower(power);
+//        robot.motorBackRight.setPower(power);
+    }
+    public void spinLeft(int milliseconds, double power) {
+        /**
+         * Table for how to turn 90 degrees at different powers
+         * | power | milliseconds
+         * | 1.0   | 229
+         * | .75   | 347
+         * | .50   | 650
+         * | .40   | 932
+         * | .30   | 1540
+         */
+//        power=-power;
+        this.moveDrivetrain(
+                -power,
+                power,
+                -power,
+                power
+        );
+        this.sleep(milliseconds);
+        this.CancelPowerRobot();
     }
 
     public void spinRight(double power) {
 //        power=-power;
-        robot.motorFrontLeft.setPower(power);
-        robot.motorFrontRight.setPower(power);
-        robot.motorBackLeft.setPower(-power);
-        robot.motorBackRight.setPower(-power);
+        this.moveDrivetrain(
+                power,
+                -power,
+                power,
+                -power
+        );
+//        robot.motorFrontLeft.setPower(power);
+//        robot.motorFrontRight.setPower(power);
+//        robot.motorBackLeft.setPower(-power);
+//        robot.motorBackRight.setPower(-power);
     }
 
-    public void FrontDrive(double power) {
-        robot.motorFrontLeft.setPower(-power);
-        robot.motorFrontRight.setPower(power);
-        robot.motorBackLeft.setPower(power);
-        robot.motorBackRight.setPower(-power);
+    public void spinRight(int milliseconds, double power) {
+        spinLeft(milliseconds, -power);
     }
 
-    public void LeftSlantDrive(double power) {
-        power=-power;
-        robot.motorFrontLeft.setPower(0.0);
-        robot.motorFrontRight.setPower(power);
-        robot.motorBackRight.setPower(0.0);
-        robot.motorBackLeft.setPower(power);
-    }
-
-    public void RightSlantDrive(double power) {
-        power = -power;
-        robot.motorFrontLeft.setPower(power);
-        robot.motorFrontRight.setPower(0.0);
-        robot.motorBackRight.setPower(-power);
-        robot.motorBackLeft.setPower(0.0);
-    }
-
-    public void RightSlantRearDrive(double power) {
-        robot.motorFrontLeft.setPower(0.0);
-        robot.motorFrontRight.setPower(power);
-        robot.motorBackRight.setPower(0.0);
-        robot.motorBackLeft.setPower(power);
-    }
-
-    public void LeftSlantRearDrive(double power) {
-        robot.motorFrontLeft.setPower(power);
-        robot.motorFrontRight.setPower(0.0);
-        robot.motorBackRight.setPower(-power);
-        robot.motorBackLeft.setPower(0.0);
-    }
-
-    public void RearDrive(double power) {
-        robot.motorFrontLeft.setPower(power);
-        robot.motorFrontRight.setPower(power);
-        robot.motorBackRight.setPower(-power);
-        robot.motorBackLeft.setPower(power);
-    }
-
-    public void SlideRight(double power) {
+//    public void LeftSlantDrive(double power) {
+//        power=-power;
+//        robot.motorFrontLeft.setPower(0.0);
+//        robot.motorFrontRight.setPower(power);
+//        robot.motorBackRight.setPower(0.0);
+//        robot.motorBackLeft.setPower(power);
+//    }
+//
+//    public void RightSlantDrive(double power) {
 //        power = -power;
-        robot.motorFrontLeft.setPower(-power);
-        robot.motorFrontRight.setPower(-power);
-        robot.motorBackLeft.setPower(-power);
-        robot.motorBackRight.setPower(-power);
-
-    }
-
-    public void SlideLeft(double power) {
-//        power = -power;
-        robot.motorFrontLeft.setPower(power);
-        robot.motorFrontRight.setPower(power);
-        robot.motorBackLeft.setPower(power);
-        robot.motorBackRight.setPower(power);
-    }
+//        robot.motorFrontLeft.setPower(power);
+//        robot.motorFrontRight.setPower(0.0);
+//        robot.motorBackRight.setPower(-power);
+//        robot.motorBackLeft.setPower(0.0);
+//    }
+//
+//    public void RightSlantRearDrive(double power) {
+//        robot.motorFrontLeft.setPower(0.0);
+//        robot.motorFrontRight.setPower(power);
+//        robot.motorBackRight.setPower(0.0);
+//        robot.motorBackLeft.setPower(power);
+//    }
+//
+//    public void LeftSlantRearDrive(double power) {
+//        robot.motorFrontLeft.setPower(power);
+//        robot.motorFrontRight.setPower(0.0);
+//        robot.motorBackRight.setPower(-power);
+//        robot.motorBackLeft.setPower(0.0);
+//    }
 
     public void CancelPowerRobot() {
-        double power = 0.0;
-        robot.motorFrontLeft.setPower(power);
-        robot.motorFrontRight.setPower(power);
-        robot.motorBackRight.setPower(-power);
-        robot.motorBackLeft.setPower(power);
+        this.moveDrivetrain(0, 0, 0, 0);
     }
 
     // endregion
@@ -266,13 +339,7 @@ public class CenterStageAutonomous {
         /**
          * @param milliseconds - How long to intake for, in milliseconds
          */
-        robot.intake.setPower(-1.0);
-        robot.intakeControl.setPosition(0.5);
-        robot.wheel.setPower(1.0);
-        sleep(milliseconds);
-        robot.intake.setPower(1.0);
-        robot.intakeControl.setPosition(0.5);
-        robot.wheel.setPower(-1.0);
+        intake(milliseconds, 1.0);
     }
 
     public void intake(int milliseconds, double power) {
@@ -295,7 +362,31 @@ public class CenterStageAutonomous {
          * @param milliseconds - How long to reverse the intake for, in milliseconds
          * @param power - The power to use
          */
-        intake(milliseconds, power);
+        robot.intake.setPower(-power);
+        robot.intakeControl.setPosition(0.5);
+        sleep(milliseconds);
+        robot.intakeControl.setPosition(1.0);
+    }
+
+    private void moveDrivetrain(
+            double frontLeft,
+            double frontRight,
+            double rearLeft,
+            double rearRight
+    ) {
+        /**
+         * Sets power for the drivetrain motors. This function exists because there is some sus
+         * negative stuff.
+         */
+        telemetry.addData("Front left power", frontLeft);
+        telemetry.addData("Front right power", -frontRight);
+        telemetry.addData("Back left power", -rearLeft);
+        telemetry.addData("Back right power", rearRight);
+        telemetry.update();
+        this.robot.motorFrontLeft.setPower(frontLeft); // some of these might need to be negative
+        this.robot.motorFrontRight.setPower(-frontRight);
+        this.robot.motorBackLeft.setPower(-rearLeft);
+        this.robot.motorBackRight.setPower(rearRight);
     }
 
     //    public void outtake(int milliseconds, double power) {

@@ -26,7 +26,7 @@ public class AutoTest extends LinearOpMode {
                 (milliseconds) -> sleep(milliseconds)
         );
 
-        auto.initCamera(CenterStageAutonomous.WhatColorToDetect.RED);
+        auto.initCamera(CenterStageAutonomous.WhatColorToDetect.BLUE);
         waitForStart();
 
         ObjectPositionPipeline.Location location = auto.getPropLocation();
@@ -40,5 +40,35 @@ public class AutoTest extends LinearOpMode {
                 telemetry.addData("FINAL Location", "Right");
         }
         telemetry.update();
+
+        auto.strafeLeft(850, 0.7);
+        auto.spinLeft(630, 0.5);
+        auto.intake(500, -0.4);
+//        auto.moveForward(500, 0.2);
+
+//        //      Deposit the Purple Pixel       //
+//        auto.strafeLeft(1200, 0.5);
+//        auto.turnLeft(0.5);
+//        auto.intake(300, -0.4); // reverse the intake very slowly
+//
+//        //      Drive to the Backboard      //
+//        auto.turnRight(0.5);
+//        auto.moveForward(2500, 0.5);
+//
+//        //      Park      //
+//        auto.moveForward(500, 0.5);
+
+        auto.slides.setTargetPosition(1100);
+//        auto.slides.updateSlidesAuto();
+//        while (!auto.slides.destinationIsReached()) {
+//            auto.slides.setSlidePower(auto.slides.updateSlides());
+//        }
+        auto.setDepositBox();
+        auto.wheelSpitPixel();
+
+
+
+        auto.slides.moveToBottom();
+
     }
 }

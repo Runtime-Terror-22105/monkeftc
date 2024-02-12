@@ -18,16 +18,15 @@ import com.acmerobotics.roadrunner.trajectory.constraints.ProfileAccelerationCon
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAccelerationConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
 import com.qualcomm.hardware.lynx.LynxModule;
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceRunner;
@@ -54,10 +53,10 @@ import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kV;
  */
 @Config
 public class SampleMecanumDrive extends MecanumDrive {
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(1, 0, 1);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(0.6, 0, 1);
+    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(1, 0, 0);
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(0.6, 0, 0);
 
-    public static double LATERAL_MULTIPLIER = 1;
+    public static double LATERAL_MULTIPLIER = 2.26295541977823;
 
     public static double VX_WEIGHT = 1;
     public static double VY_WEIGHT = 1;
@@ -65,12 +64,13 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     private TrajectorySequenceRunner trajectorySequenceRunner;
 
-    private static final TrajectoryVelocityConstraint VEL_CONSTRAINT =
-            getVelocityConstraint(MAX_VEL, MAX_ANG_VEL, TRACK_WIDTH);
+//    private static final TrajectoryVelocityConstraint VEL_CONSTRAINT =
+//            getVelocityConstraint(MAX_VEL, MAX_ANG_VEL, TRACK_WIDTH);
     private static final TrajectoryAccelerationConstraint ACCEL_CONSTRAINT =
             getAccelerationConstraint(MAX_ACCEL);
 
     private TrajectoryFollower follower;
+    private double l_MAX_VEL = 0;
 
     private DcMotorEx leftFront, leftRear, rightRear, rightFront;
     private List<DcMotorEx> motors;
@@ -81,8 +81,9 @@ public class SampleMecanumDrive extends MecanumDrive {
     private List<Integer> lastEncPositions = new ArrayList<>();
     private List<Integer> lastEncVels = new ArrayList<>();
 
-    public SampleMecanumDrive(HardwareMap hardwareMap) {
+    public SampleMecanumDrive(HardwareMap hardwareMap, double MAX_VEL) {
         super(kV, kA, kStatic, TRACK_WIDTH, TRACK_WIDTH, LATERAL_MULTIPLIER);
+        l_MAX_VEL = MAX_VEL;
 
         follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, TRANSLATIONAL_PID, HEADING_PID,
                 new Pose2d(0.5, 0.5, Math.toRadians(5.0)), 0.5);
@@ -97,19 +98,10 @@ public class SampleMecanumDrive extends MecanumDrive {
 
         // TODO: OMG THIS IS GREEN
 
-//        leftFront = hardwareMap.get(DcMotorEx.class, "motorFrontLeft");
-//        leftRear = hardwareMap.get(DcMotorEx.class, "motorBackLeft");
-//        rightRear = hardwareMap.get(DcMotorEx.class, "motorBackRight");
-//        rightFront = hardwareMap.get(DcMotorEx.class, "motorFrontRight");
-
-//        leftFront  = hardwareMap.get(DcMotorEx.class, "motorBackRight");
-//        leftRear   = hardwareMap.get(DcMotorEx.class, "motorFrontRight");
-//        rightRear  = hardwareMap.get(DcMotorEx.class, "motorFrontLeft");
-//        rightFront = hardwareMap.get(DcMotorEx.class, "motorBackLeft");
-        leftFront  = hardwareMap.get(DcMotorEx.class, "motorBackLeft");
-        leftRear   = hardwareMap.get(DcMotorEx.class, "motorFrontLeft");
-        rightRear  = hardwareMap.get(DcMotorEx.class, "motorFrontRight");
-        rightFront = hardwareMap.get(DcMotorEx.class, "motorBackRight");
+        leftFront = hardwareMap.get(DcMotorEx.class, "motorFrontLeft");
+        leftRear = hardwareMap.get(DcMotorEx.class, "motorBackLeft");
+        rightRear = hardwareMap.get(DcMotorEx.class, "motorBackRight");
+        rightFront = hardwareMap.get(DcMotorEx.class, "motorFrontRight");
 
         motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
 
@@ -130,6 +122,10 @@ public class SampleMecanumDrive extends MecanumDrive {
         }
 
         // TODO: reverse any motors using DcMotor.setDirection()
+        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightRear.setDirection(DcMotorSimple.Direction.REVERSE);
 
         List<Integer> lastTrackingEncPositions = new ArrayList<>();
         List<Integer> lastTrackingEncVels = new ArrayList<>();
@@ -143,19 +139,31 @@ public class SampleMecanumDrive extends MecanumDrive {
         );
     }
 
+    public SampleMecanumDrive(HardwareMap hardwareMap) {
+        this(hardwareMap, MAX_VEL);
+    }
+
     public TrajectoryBuilder trajectoryBuilder(Pose2d startPose) {
+        TrajectoryVelocityConstraint VEL_CONSTRAINT =
+                getVelocityConstraint(l_MAX_VEL, MAX_ANG_VEL, TRACK_WIDTH);
         return new TrajectoryBuilder(startPose, VEL_CONSTRAINT, ACCEL_CONSTRAINT);
     }
 
     public TrajectoryBuilder trajectoryBuilder(Pose2d startPose, boolean reversed) {
+        TrajectoryVelocityConstraint VEL_CONSTRAINT =
+                getVelocityConstraint(l_MAX_VEL, MAX_ANG_VEL, TRACK_WIDTH);
         return new TrajectoryBuilder(startPose, reversed, VEL_CONSTRAINT, ACCEL_CONSTRAINT);
     }
 
     public TrajectoryBuilder trajectoryBuilder(Pose2d startPose, double startHeading) {
+        TrajectoryVelocityConstraint VEL_CONSTRAINT =
+                getVelocityConstraint(l_MAX_VEL, MAX_ANG_VEL, TRACK_WIDTH);
         return new TrajectoryBuilder(startPose, startHeading, VEL_CONSTRAINT, ACCEL_CONSTRAINT);
     }
 
     public TrajectorySequenceBuilder trajectorySequenceBuilder(Pose2d startPose) {
+        TrajectoryVelocityConstraint VEL_CONSTRAINT =
+                getVelocityConstraint(l_MAX_VEL, MAX_ANG_VEL, TRACK_WIDTH);
         return new TrajectorySequenceBuilder(
                 startPose,
                 VEL_CONSTRAINT, ACCEL_CONSTRAINT,

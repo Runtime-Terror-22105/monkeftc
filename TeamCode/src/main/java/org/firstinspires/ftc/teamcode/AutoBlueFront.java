@@ -26,55 +26,69 @@ public class AutoBlueFront extends LinearOpMode {
                 (milliseconds) -> sleep(milliseconds)
         );
 
-        auto.initCamera(CenterStageAutonomous.WhatColorToDetect.BLUE);
+        auto.initCamera(CenterStageAutonomous.WhatColorToDetect.RED);
         waitForStart();
 
         ObjectPositionPipeline.Location location = auto.getPropLocation();
         auto.stopCameraStreaming();
 
+        auto.strafeRight(800, 0.7);
+        auto.spinRight(500, 0.5);
+
         // see where the prop is
         switch (location) {
             case LEFT:
                 //      Deposit the Purple Pixel       //
-                auto.moveForward(1000, 0.5);
-                auto.turnRight(0.5);
-                auto.moveForward(10, 0.5);
-                auto.intake(300, -0.4); // reverse the intake slowly
-
-                //      Drive to the Backboard      //
-                auto.turnLeft(0.5);
-                auto.turnLeft(0.5);
-                auto.moveForward(2500, 0.5);
-
-                //      Park      //
-                auto.moveForward(500, 0.5);
+                auto.spinRight(300, 0.5);
+                auto.reverseIntake(725, -0.5);
+                auto.spinLeft(300, 0.5);
                 break;
             case RIGHT:
-                //      Deposit the Purple Pixel       //
-                auto.moveForward(1000, 0.5);
-                auto.turnLeft(0.5);
-                auto.intake(300, -0.4); // reverse the intake very slowly
-
-                //      Drive to the Backboard      //
-                auto.moveForward(1500, 0.5);
-
-                //      Park      //
-                auto.moveForward(500, 0.5);
+                auto.spinRight(300, -0.5);
+                auto.reverseIntake(725, -0.5);
+                auto.spinLeft(300, -0.5);
                 break;
             case MIDDLE:
-                //      Deposit the Purple Pixel       //
-                auto.moveForward(1200, 0.5);
-                auto.intake(300, -0.4); // reverse the intake very slowly
-
-                //      Drive to the Backboard      //
-                auto.turnLeft(0.5);
-                auto.moveForward(2500, 0.5);
-
-                //      Park      //
-                auto.moveForward(500, 0.5);
+                auto.reverseIntake(725, -0.5);
                 break;
         }
+        auto.spinRight(725, 0.5);
 
+        auto.moveForward(1300, 0.5);
+
+//        auto.slides.setTargetPosition(1200);
+//        auto.slides.updateSlidesAuto();
+////        while (!auto.slides.destinationIsReached()) {
+////            auto.slides.setSlidePower(auto.slides.updateSlides());
+////        }
+//        auto.setDepositBox();
+//        sleep(500);
+//        switch (location){
+//            case LEFT:
+//                auto.strafeRight(300, 0.5);
+//                auto.wheelSpitPixel();
+//                sleep(200);
+//                auto.strafeRight(300, -0.5);
+//                break;
+//            case MIDDLE:
+//                auto.strafeLeft(150, 0.5);
+//                auto.wheelSpitPixel();
+//                sleep(200);
+//                auto.strafeLeft(150, -0.5);
+//                break;
+//            default:
+//                auto.wheelSpitPixel();
+//                sleep(200);
+//                break;
+//        }
+//        auto.resetDepositBox();
+//        sleep(500);
+//        auto.slides.setTargetPosition(0);
+//        auto.slides.updateSlidesAuto();
+
+        sleep(1000);
+        auto.strafeRight(1250, 0.8);
+        sleep(1000);
     }
 
 }

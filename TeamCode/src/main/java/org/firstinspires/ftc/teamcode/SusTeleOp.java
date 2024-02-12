@@ -3,24 +3,29 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 import java.lang.Math;
 
 @Config
-@TeleOp(name = "Slow Teleop, don't use", group = "Concept")
-public class RegularTeleOp extends LinearOpMode  {
+@TeleOp(name = "TeleopFaster", group = "Concept")
+public class SusTeleOp extends LinearOpMode  {
 
     // Dynamic constants
     public static volatile double DRIVESPEED_FAST = 1.0; // between 0 and 1
     public static volatile double DRIVESPEED_SLOW = 0.3; // between 0 and 1
-    public static volatile double SLIDESPEED = 16.0; // must be whole num
+    public static volatile double SLIDESPEED = 21; // must be whole num
+    public static volatile double MAX_TELEOP_VEL = 92.61691602936227;
     public static volatile TwoPositions intakePositions = new TwoPositions(1.0, 0.5);
-    public static volatile TwoPositions depositLeftPositions = new TwoPositions(1.0, 0.0);
-    public static volatile TwoPositions depositRightPositions = new TwoPositions(1.0, 0.0);
+    public static volatile TwoPositions depositLeftPositions = new TwoPositions(1.0, 0.15);
+//    public static volatile TwoPositions depositRightPositions = new TwoPositions(1.0, 0.0);
 
     // Other classwide items
     private HardwarePushbot robot = new HardwarePushbot();
@@ -43,25 +48,60 @@ public class RegularTeleOp extends LinearOpMode  {
         Telemetry _tele = telemetry;
         MultipleTelemetry telemetry = new MultipleTelemetry(_tele, dashboard.getTelemetry());
 
+        // sus driving init
+        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap, MAX_TELEOP_VEL);
+        drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
 
         int endGameState = 0; // 0 = ready, 1 = plane launched, 2 = measurement tape up, 3 = we are hanged on the truss!
 //        int depositBoxState = 0; // 0 = we didn't rotate it, 1 = we rotated it out
         boolean planeReleased = false; // false if we didn't release the plane
         boolean driveSlow = false;
         boolean holdingY = false;
+        boolean weShouldResetTheDepositBox = false;
         boolean intaking;
+        double lastLoopTime = 0;
+
+        ElapsedTime loopTimer = new ElapsedTime();
+        ElapsedTime resetDepositTimer = new ElapsedTime();
 
         Slides slides = new Slides(
                 telemetry,
                 robot.slideLeft,
                 robot.slideRight,
                 robot.slideEncoder
-            );
+        );
 
         waitForStart();
+        resetDepositBox();
 
         while (opModeIsActive()) {
-            double loopIterationStartTime = System.currentTimeMillis();
+            // reset the timer
+            loopTimer.reset();
+
+            // Slides
+            if (Math.abs(gamepad2.left_stick_y) > 0.05) {
+                // we do negative since our gamepad stick is sus
+//                slides.move(-gamepad2.left_stick_y * SLIDESPEED * lastLoopTime);
+                slides.move(-gamepad2.left_stick_y * SLIDESPEED);
+                telemetry.addData("status", "raising slides");
+                telemetry.addData("move amount", -gamepad2.left_stick_y * SLIDESPEED);
+            }
+
+//            if (gamepad2.a) {
+//                resetDepositBox(); // problem was that the slides move too fast
+//                resetDepositTimer.reset();
+//                weShouldResetTheDepositBox = true;
+//            }
+//            if (weShouldResetTheDepositBox && resetDepositTimer.milliseconds() >= 500) {
+//                weShouldResetTheDepositBox = false;
+//                slides.moveToBottom();
+//            }
+            if (gamepad2.a) {
+                slides.moveToBottom();
+            }
+
+
 
 //            if (gamepad2.y && !holdingY) {
 //                driveSlow = !driveSlow;
@@ -71,33 +111,20 @@ public class RegularTeleOp extends LinearOpMode  {
 //            }
 
             // Drive Train (REUSED CODE), except we cube the motor power to reduce it
-//            double r = Math.hypot(-gamepad1.left_stick_x, gamepad1.left_stick_y);
-//            double robotAngle = Math.atan2(gamepad1.left_stick_y, -gamepad1.left_stick_x) - Math.PI / 4;
-//            double rightX = -gamepad1.right_stick_x;
-//            final double v1 = r * Math.cos(robotAngle) + rightX;
-//            final double v2 = r * Math.sin(robotAngle) - rightX;
-//            final double v3 = r * Math.sin(robotAngle) + rightX;
-//            final double v4 = r * Math.cos(robotAngle) - rightX;
-            double y = -gamepad1.left_stick_y;
-            double x = gamepad1.left_stick_x;
-            double rx = gamepad1.right_stick_x;
-
-            double v1 = y + x + rx;
-            double v2 = y - x + rx;
-            double v3 = y - x - rx;
-            double v4 = y + x - rx;
 
             double robotSpeed;
-//            if (driveSlow) { robotSpeed = SPEED_SLOW; }
-//            else           { robotSpeed = SPEED_FAST; }
             if (gamepad2.y) { robotSpeed = DRIVESPEED_SLOW; }
             else            { robotSpeed = DRIVESPEED_FAST; }
 
-            robot.motorFrontLeft.setPower(-v1*robotSpeed); // some of these might need to be negative
-            robot.motorFrontRight.setPower(v3*robotSpeed);
-            robot.motorBackLeft.setPower(v2*robotSpeed);
-            robot.motorBackRight.setPower(-v4*robotSpeed);
-
+            drive.setWeightedDrivePower(
+                    new Pose2d(
+                            -gamepad1.left_stick_y * robotSpeed,
+                            -gamepad1.left_stick_x * robotSpeed,
+                            Math.pow(-gamepad1.right_stick_x, 3) * robotSpeed
+                    )
+            );
+            telemetry.addData("Right stick power", Math.pow(-gamepad1.right_stick_x, 3));
+            drive.update();
 
             // Third Segment Intake Power
             if (gamepad2.x) {
@@ -118,7 +145,7 @@ public class RegularTeleOp extends LinearOpMode  {
                 // no power intake
                 intaking = false;
                 robot.intake.setPower(0.0);
-              robot.intakeControl.setPosition(intakePositions.normal);
+                robot.intakeControl.setPosition(intakePositions.normal);
             }
 
             // First Segment Servo Deposit
@@ -145,13 +172,6 @@ public class RegularTeleOp extends LinearOpMode  {
                 resetDepositBox();
             }
 
-            // Slides
-            if (Math.abs(gamepad2.left_stick_y) > 0.05) {
-                // we do negative since our gamepad stick is sus
-                slides.move(-gamepad2.left_stick_y * SLIDESPEED);
-            }
-            if (gamepad2.a) { slides.moveToBottom(); }
-
 
 //            if (!planeReleased) {
 //                if(gamepad1.b) {
@@ -169,25 +189,10 @@ public class RegularTeleOp extends LinearOpMode  {
             if ((gamepad1.left_bumper && gamepad1.right_bumper)) { break; }
 
             // update all of the telemetry at the end of each loop iteration
-            telemetry.addData("Loop time", System.currentTimeMillis() - loopIterationStartTime);
+            lastLoopTime = loopTimer.milliseconds();
+            telemetry.addData("Loop time", lastLoopTime);
             telemetry.update();
         }
-    }
-    public double slidePosition(double linkage1, double linkage2, double distance){
-        // linkage 1 = opposite of theta, linkage 2 = adjacent, distance = desired distance
-        // input in cm, output in degrees (north of x axis)
-        return Math.toDegrees(Math.acos(((distance*distance) + (linkage2*linkage2) - (linkage1*linkage1))/(2*distance*linkage2)));
-    }
-
-    public void FrontDrive(double power){
-        robot.motorFrontLeft.setPower(power);
-        robot.motorFrontRight.setPower(power);
-        robot.motorBackRight.setPower(power);
-        robot.motorBackLeft.setPower((312.0) * power);
-    }
-
-    public void slides(double Position){
-
     }
 
     public void resetDepositBox() {

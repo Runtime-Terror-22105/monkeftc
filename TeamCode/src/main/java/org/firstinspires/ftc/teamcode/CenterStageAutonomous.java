@@ -42,6 +42,20 @@ public class CenterStageAutonomous {
         BLUE
     }
 
+    public class coord {
+        public double x;
+        public double y;
+        public double heading;
+        public double maxError;
+
+        coord(double x, double y, double heading, double maxError){
+            this.x = x;
+            this.y = y;
+            this.heading = heading;
+            this.maxError = maxError;
+        }
+    }
+
     public CenterStageAutonomous(HardwareMap hwMap, HardwarePushbot bot, Telemetry t, FtcDashboard dash, RobotSleep sleepFunc) {
         this.hardwareMap = hwMap;
         this.robot = bot;

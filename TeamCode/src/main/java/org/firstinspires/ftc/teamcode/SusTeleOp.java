@@ -23,8 +23,9 @@ public class SusTeleOp extends LinearOpMode  {
     public static volatile double DRIVESPEED_SLOW = 0.3; // between 0 and 1
     public static volatile double SLIDESPEED = 21; // must be whole num
     public static volatile double MAX_TELEOP_VEL = 92.61691602936227;
+    public static volatile int DEPOSIT_OUT_HEIGHT = 1000;
     public static volatile TwoPositions intakePositions = new TwoPositions(1.0, 0.5);
-    public static volatile TwoPositions depositLeftPositions = new TwoPositions(1.0, 0.15);
+    public static volatile TwoPositions depositLeftPositions = new TwoPositions(0.67778, 0.0);
 //    public static volatile TwoPositions depositRightPositions = new TwoPositions(1.0, 0.0);
 
     // Other classwide items
@@ -56,20 +57,20 @@ public class SusTeleOp extends LinearOpMode  {
         int endGameState = 0; // 0 = ready, 1 = plane launched, 2 = measurement tape up, 3 = we are hanged on the truss!
 //        int depositBoxState = 0; // 0 = we didn't rotate it, 1 = we rotated it out
         boolean planeReleased = false; // false if we didn't release the plane
-        boolean driveSlow = false;
         boolean holdingY = false;
-        boolean weShouldResetTheDepositBox = false;
+        boolean shouldResetDepositBox = false;
+        ElapsedTime depositBoxTimer = new ElapsedTime();
+        boolean ignore_automatic_depositbox = false;
         boolean intaking;
         double lastLoopTime = 0;
 
         ElapsedTime loopTimer = new ElapsedTime();
-        ElapsedTime resetDepositTimer = new ElapsedTime();
 
         Slides slides = new Slides(
                 telemetry,
                 robot.slideLeft,
                 robot.slideRight,
-                robot.slideEncoder
+                robot.slidesEncoder
         );
 
         waitForStart();
@@ -88,17 +89,41 @@ public class SusTeleOp extends LinearOpMode  {
                 telemetry.addData("move amount", -gamepad2.left_stick_y * SLIDESPEED);
             }
 
-//            if (gamepad2.a) {
-//                resetDepositBox(); // problem was that the slides move too fast
-//                resetDepositTimer.reset();
-//                weShouldResetTheDepositBox = true;
-//            }
-//            if (weShouldResetTheDepositBox && resetDepositTimer.milliseconds() >= 500) {
-//                weShouldResetTheDepositBox = false;
-//                slides.moveToBottom();
-//            }
-            if (gamepad2.a) {
+            if (gamepad2.dpad_left) {
+                slides.moveToLineOne();
+            } else if (gamepad2.dpad_up) {
+                slides.moveToLineTwo();
+            } else if (gamepad2.dpad_right) {
+                slides.moveToLineThree();
+            } else if (gamepad2.dpad_down) {
+                shouldResetDepositBox = true;
+                depositBoxTimer.reset();
+                resetDepositBox();
+            }
+
+            if (shouldResetDepositBox && depositBoxTimer.milliseconds() >= 750) {
                 slides.moveToBottom();
+            }
+
+            double slidePosition = robot.slidesEncoder.getCurrentPosition();
+            if (slidePosition < 15) {
+                shouldResetDepositBox = false;
+            } else if (!shouldResetDepositBox && !ignore_automatic_depositbox && slidePosition >= DEPOSIT_OUT_HEIGHT) {
+                setDepositBox();
+            } else if (!ignore_automatic_depositbox && slidePosition <= DEPOSIT_OUT_HEIGHT) {
+                resetDepositBox();
+            }
+
+            // Setting the Outtake Box
+            if (gamepad2.left_trigger > 0.2) {
+                ignore_automatic_depositbox = true;
+                resetDepositBox();
+            }
+            else if (gamepad2.right_trigger > 0.2) {
+                ignore_automatic_depositbox = true;
+                setDepositBox();
+            } else {
+                ignore_automatic_depositbox = false;
             }
 
 
@@ -161,17 +186,6 @@ public class SusTeleOp extends LinearOpMode  {
                 // do nothing
                 robot.wheel.setPower(0.0);
             }
-
-            // 4th segment intake control (THIS IS JUST A BACKUP IN CASE SOMETHING GOES WRONG, TODO: DELETE THIS)
-            if (gamepad2.dpad_right) {
-                // Folded up
-                setDepositBox();
-            }
-            else if (gamepad2.dpad_left) {
-                // Taking in
-                resetDepositBox();
-            }
-
 
 //            if (!planeReleased) {
 //                if(gamepad1.b) {

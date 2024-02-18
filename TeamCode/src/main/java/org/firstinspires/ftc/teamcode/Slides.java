@@ -13,8 +13,11 @@ import org.firstinspires.ftc.teamcode.util.Encoder;
 @Config
 public class Slides {
     // slide constants
-    public static int SLIDES_MIN_HEIGHT = 0; // measured in counts
-    public static int SLIDES_MAX_HEIGHT = 3000; // to be determined via experimentation
+    public static int MIN_HEIGHT        = 0; // measured in counts
+    public static int LINE_ONE_HEIGHT   = 1000;
+    public static int LINE_TWO_HEIGHT   = 2000;
+    public static int LINE_THREE_HEIGHT = 2600;
+    public static int MAX_HEIGHT        = 2650; // to be determined via experimentation
 
     // pid constants
     public static volatile double Kp = 0.03;
@@ -56,7 +59,6 @@ public class Slides {
             telemetry.addData("actual pos", slidesEncoder.getCurrentPosition());
 
             // obtain the encoder position
-            this.slidesEncoder.getCurrentPosition();
             double encoderPosition = slidesEncoder.getCurrentPosition();
             // calculate the error
             error = targetPosition - encoderPosition;
@@ -120,13 +122,15 @@ public class Slides {
         _resetTempVars();
     }
 
+    // region moving the slides
+
     public void move(double moveAmt) {
         /**
          * Increase/decrease the target position of the slides by some amount of counts. This is a
          * RELATIVE move.
          * @param moveAmt - The amount of clicks to increase/decrease the position by.
          */
-        double newTargetPos = Math.min(Math.max(this.targetPosition + moveAmt, SLIDES_MIN_HEIGHT), SLIDES_MAX_HEIGHT);
+        double newTargetPos = Math.min(Math.max(this.targetPosition + moveAmt, MIN_HEIGHT), MAX_HEIGHT);
         this.setTargetPosition((int) Math.round(newTargetPos));
     }
 
@@ -134,7 +138,28 @@ public class Slides {
         /**
          * Move the slides down to the minimum height.
          */
-        setTargetPosition(SLIDES_MIN_HEIGHT);
+        setTargetPosition(MIN_HEIGHT);
+    }
+
+    public void moveToLineOne() {
+        /**
+         * Move the slides to line one.
+         */
+        setTargetPosition(LINE_ONE_HEIGHT);
+    }
+
+    public void moveToLineTwo() {
+        /**
+         * Move the slides to line two.
+         */
+        setTargetPosition(LINE_TWO_HEIGHT);
+    }
+
+    public void moveToLineThree() {
+        /**
+         * Move the slides to line two.
+         */
+        setTargetPosition(LINE_THREE_HEIGHT);
     }
 
     public int getTargetPosition() {

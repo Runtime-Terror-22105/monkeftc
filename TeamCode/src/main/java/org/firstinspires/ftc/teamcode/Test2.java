@@ -11,7 +11,7 @@ public class Test2 extends LinearOpMode {
         robot.init(hardwareMap);
         waitForStart();
         while (opModeIsActive()) {
-            telemetry.addData("Encoder value", robot.slideEncoder.getCurrentPosition());
+            telemetry.addData("Encoder value", robot.slidesEncoder.getCurrentPosition());
             telemetry.update();
         }
     }

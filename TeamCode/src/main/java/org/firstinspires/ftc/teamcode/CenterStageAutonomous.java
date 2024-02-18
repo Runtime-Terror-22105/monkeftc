@@ -4,10 +4,7 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import android.util.Size;
-
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -19,9 +16,9 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 
 public class CenterStageAutonomous {
-    public static volatile RegularTeleOp.TwoPositions intakePositions = new RegularTeleOp.TwoPositions(1.0, 0.5);
-    public static volatile RegularTeleOp.TwoPositions depositLeftPositions = new RegularTeleOp.TwoPositions(1.0, 0.0);
-    public static volatile RegularTeleOp.TwoPositions depositRightPositions = new RegularTeleOp.TwoPositions(1.0, 0.0);
+    public static volatile SusTeleOp.TwoPositions intakePositions = new SusTeleOp.TwoPositions(1.0, 0.5);
+    public static volatile SusTeleOp.TwoPositions depositLeftPositions = new SusTeleOp.TwoPositions(1.0, 0.0);
+    public static volatile SusTeleOp.TwoPositions depositRightPositions = new SusTeleOp.TwoPositions(1.0, 0.0);
     public final int RIGHTANGLETURNTIME = 200;
 
     private RobotSleep theSleep;
@@ -67,7 +64,7 @@ public class CenterStageAutonomous {
                 this.telemetry,
                 this.robot.slideLeft,
                 this.robot.slideRight,
-                this.robot.slideEncoder
+                this.robot.slidesEncoder
         );
     }
 

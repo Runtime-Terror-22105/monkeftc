@@ -37,7 +37,7 @@ public class PidToPoint extends LinearOpMode {
                 telemetry,
                 robot.slideLeft,
                 robot.slideRight,
-                robot.slideEncoder
+                robot.slidesEncoder
         );
         PidDriveTrain follower = new PidDriveTrain(
                 hardwareMap,

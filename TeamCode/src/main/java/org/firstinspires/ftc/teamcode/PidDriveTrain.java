@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -11,13 +12,13 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 @Config
 public class PidDriveTrain {
     // pid constants - x
-    public static volatile double KpX = 0;
-    public static volatile double KiX = 0;
-    public static volatile double KdX = 0;
+    public static volatile double KpX = -0.035;
+    public static volatile double KiX = 0.001;
+    public static volatile double KdX = -0.00255;
     // pid constants - y
-    public static volatile double KpY = 0;
-    public static volatile double KiY = 0;
-    public static volatile double KdY = 0;
+    public static volatile double KpY = -0.15;
+    public static volatile double KiY = -0.0005;
+    public static volatile double KdY = -0.01;
     // pid constants - heading
     public static volatile double KpH = 0;
     public static volatile double KiH = 0;
@@ -35,15 +36,15 @@ public class PidDriveTrain {
     // PID Variables - x
     private double integralSumX;
     private double lastErrorX;
-    private double errorX;
+    public double errorX;
     // PID Variables - y
     private double integralSumY;
     private double lastErrorY;
-    private double errorY;
+    public double errorY;
     // PID Variables - heading
     private double integralSumH;
     private double lastErrorH;
-    private double errorH;
+    public double errorH;
 
     // instance vars
     private Telemetry telemetry;
@@ -74,6 +75,7 @@ public class PidDriveTrain {
     public PidDriveTrain(HardwareMap hardwareMap, Telemetry telemetry) {
         this.telemetry = telemetry;
         this.drive = new SampleMecanumDrive(hardwareMap);
+        this.drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         _resetTempVars();
     }
@@ -91,7 +93,7 @@ public class PidDriveTrain {
         boolean yReached = false;
         boolean hReached = false;
         // calculate x power needed
-        if (errorX >= maxErrorX) {
+        if (Math.abs(errorX) >= maxErrorX) {
             // calculate the error
             // error = targetPosition - encoderPosition; commented cause i call calculateError();
 
@@ -102,7 +104,8 @@ public class PidDriveTrain {
             integralSumX = integralSumX + (errorX * timerX.seconds());
 
             double outUnclamped = (KpX * errorX) + (KiX * integralSumX) + (KdX * derivativeX);
-            double out = Math.max(Math.min(outUnclamped, 1.0), -1.0); // out has to be between -1 and 1
+            double out = outUnclamped;
+//            double out = Math.max(Math.min(outUnclamped, 1.0), -1.0); // out has to be between -1 and 1
             telemetry.addData("x powerr", out);
 
             lastErrorX = errorX;
@@ -116,7 +119,7 @@ public class PidDriveTrain {
         }
 
         // calculate y power needed
-        if (errorY >= maxErrorY) {
+        if (Math.abs(errorY) >= maxErrorY) {
             // calculate the error
             // error = targetPosition - encoderPosition; commented cause i call calculateError();
 
@@ -141,7 +144,7 @@ public class PidDriveTrain {
         }
 
         // calculate heading power needed
-        if (errorH >= maxErrorH) {
+        if (Math.abs(errorH) >= maxErrorH) {
             // calculate the error
             // error = targetPosition - encoderPosition; commented cause i call calculateError();
 
@@ -184,7 +187,7 @@ public class PidDriveTrain {
     public double powerX(){
         return x;
     }
-    public double powerY(){
+    public double powerY() {
         return y;
     }
     public double powerH(){
@@ -195,13 +198,9 @@ public class PidDriveTrain {
         return reachedX && reachedY && reachedH;
     }
 
-    public void updatePos(){
+    public void updatePos() {
+        drive.update();
         Pose2d poseEstimate = drive.getPoseEstimate();
-        telemetry.addData("x", poseEstimate.getX());
-        telemetry.addData("y", poseEstimate.getY());
-        telemetry.addData("heading", poseEstimate.getHeading());
-        telemetry.update();
-
         curX = poseEstimate.getX();
         curY = poseEstimate.getY();
         curH = poseEstimate.getHeading();
@@ -220,14 +219,19 @@ public class PidDriveTrain {
         this.maxErrorY = yError; // i.e placing purple
         this.maxErrorH = hError; // but some more accurate like for yellow
         calculateError();
+        updatePower();
+    }
 
-    }
-    public void calculateError(){
+    public void calculateError() {
         updatePos(); // update position on field
-        errorX = Math.abs(targetPositionX - curX);
-        errorY = Math.abs(targetPositionY - curY);
-        errorH = Math.abs(targetPositionH - curH);
+        telemetry.addData("curX", curX);
+        telemetry.addData("curY", curY);
+        telemetry.addData("curHeading", curH);
+        errorX = targetPositionX - curX;
+        errorY = targetPositionY - curY;
+        errorH = targetPositionH - curH;
     }
+
     private void _resetTempVars() {
         // PID Variables - x
         this.integralSumX = 0;

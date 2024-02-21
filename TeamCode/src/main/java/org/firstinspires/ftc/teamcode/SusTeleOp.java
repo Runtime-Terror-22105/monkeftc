@@ -32,6 +32,10 @@ public class SusTeleOp extends LinearOpMode  {
     private HardwarePushbot robot = new HardwarePushbot();
     private FtcDashboard dashboard;
 
+    // idk why this is classwide
+    boolean depositBoxIsOut = false;
+    int wheelState = 0; // 0 is not spinning, 1 is keeping, -1 is spitting
+
     public static class TwoPositions {
         public double normal;
         public double out;
@@ -54,15 +58,13 @@ public class SusTeleOp extends LinearOpMode  {
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 
-        int endGameState = 0; // 0 = ready, 1 = plane launched, 2 = measurement tape up, 3 = we are hanged on the truss!
-//        int depositBoxState = 0; // 0 = we didn't rotate it, 1 = we rotated it out
-        boolean planeReleased = false; // false if we didn't release the plane
-        boolean holdingY = false;
+        wheelState = 0;
+        depositBoxIsOut = false;
         boolean shouldResetDepositBox = false;
         ElapsedTime depositBoxTimer = new ElapsedTime();
         boolean ignore_automatic_depositbox = false;
         boolean intaking;
-        double lastLoopTime = 0;
+//        double lastLoopTime = 0;
 
         ElapsedTime loopTimer = new ElapsedTime();
 
@@ -80,13 +82,12 @@ public class SusTeleOp extends LinearOpMode  {
             // reset the timer
             loopTimer.reset();
 
-            // Slides
+            // region Update Slide Positions
             if (Math.abs(gamepad2.left_stick_y) > 0.05) {
                 // we do negative since our gamepad stick is sus
 //                slides.move(-gamepad2.left_stick_y * SLIDESPEED * lastLoopTime);
                 slides.move(-gamepad2.left_stick_y * SLIDESPEED);
-                telemetry.addData("status", "raising slides");
-                telemetry.addData("move amount", -gamepad2.left_stick_y * SLIDESPEED);
+//                telemetry.addData("move amount", -gamepad2.left_stick_y * SLIDESPEED);
             }
 
             if (gamepad2.dpad_left) {
@@ -96,6 +97,7 @@ public class SusTeleOp extends LinearOpMode  {
             } else if (gamepad2.dpad_right) {
                 slides.moveToLineThree();
             } else if (gamepad2.dpad_down) {
+                // start timer to move to the bottom
                 shouldResetDepositBox = true;
                 depositBoxTimer.reset();
                 resetDepositBox();
@@ -110,11 +112,13 @@ public class SusTeleOp extends LinearOpMode  {
                 shouldResetDepositBox = false;
             } else if (!shouldResetDepositBox && !ignore_automatic_depositbox && slidePosition >= DEPOSIT_OUT_HEIGHT) {
                 setDepositBox();
-            } else if (!ignore_automatic_depositbox && slidePosition <= DEPOSIT_OUT_HEIGHT) {
+            } else if (depositBoxIsOut && !ignore_automatic_depositbox && slidePosition <= DEPOSIT_OUT_HEIGHT) {
                 resetDepositBox();
             }
 
-            // Setting the Outtake Box
+            // endregion
+
+            // region Outtake Box
             if (gamepad2.left_trigger > 0.2) {
                 ignore_automatic_depositbox = true;
                 resetDepositBox();
@@ -125,17 +129,9 @@ public class SusTeleOp extends LinearOpMode  {
             } else {
                 ignore_automatic_depositbox = false;
             }
+            // endregion
 
-
-
-//            if (gamepad2.y && !holdingY) {
-//                driveSlow = !driveSlow;
-//                holdingY = true;
-//            } else {
-//                holdingY = false;
-//            }
-
-            // Drive Train (REUSED CODE), except we cube the motor power to reduce it
+            // region Driving
 
             double robotSpeed;
             if (gamepad2.y) { robotSpeed = DRIVESPEED_SLOW; }
@@ -148,13 +144,12 @@ public class SusTeleOp extends LinearOpMode  {
                             Math.pow(-gamepad1.right_stick_x, 3) * robotSpeed
                     )
             );
-            telemetry.addData("Right stick power", Math.pow(-gamepad1.right_stick_x, 3));
-            drive.update();
 
-            // Third Segment Intake Power
+            // endregion
+
+            // region Intake
             if (gamepad2.x) {
                 // Intake Normal
-                wheelKeepPixel();
                 intaking = true;
                 robot.intake.setPower(-1.0);
                 robot.intakeControl.setPosition(intakePositions.out);
@@ -172,9 +167,10 @@ public class SusTeleOp extends LinearOpMode  {
                 robot.intake.setPower(0.0);
                 robot.intakeControl.setPosition(intakePositions.normal);
             }
+            // endregion
 
-            // First Segment Servo Deposit
-            if (gamepad1.left_trigger > 0.2) {
+            // region Outtake Box Wheel
+            if (intaking || gamepad1.left_trigger > 0.2) {
                 //Keep Pixel
                 wheelKeepPixel();
             }
@@ -182,11 +178,14 @@ public class SusTeleOp extends LinearOpMode  {
                 // spit pixel
                 wheelSpitPixel();
             }
-            else if (!intaking) {
+            else if ((wheelState != 0) || !intaking) {
                 // do nothing
+                wheelState = 0;
                 robot.wheel.setPower(0.0);
             }
+            // endregion
 
+            // region Plane
 //            if (!planeReleased) {
 //                if(gamepad1.b) {
 //                    // rlease the plane
@@ -194,18 +193,20 @@ public class SusTeleOp extends LinearOpMode  {
 //                    robot.plane.setPosition(1.0);
 //                }
 //            }
+            // endregion
 
-            // Fix the slide positions
+            // region Set Power to Slides
             double slidePower = slides.updateSlides();
             slides.setSlidePower(slidePower);
+            // endregion
 
-            // emergency break
+            // region Emergency Break
             if ((gamepad1.left_bumper && gamepad1.right_bumper)) { break; }
+            // endregion
 
             // update all of the telemetry at the end of each loop iteration
-            lastLoopTime = loopTimer.milliseconds();
-            telemetry.addData("Loop time", lastLoopTime);
-            telemetry.update();
+//            telemetry.addData("Loop time", loopTimer.milliseconds());
+//            telemetry.update();
         }
     }
 
@@ -213,24 +214,34 @@ public class SusTeleOp extends LinearOpMode  {
         /**
          * Reset the position of the deposit box thing to default
          */
-        robot.depositLeft.setPosition(depositLeftPositions.normal);
-//        robot.depositRight.setPosition(depositRightPositions.normal);
+        if (depositBoxIsOut) {
+            depositBoxIsOut = false;
+            robot.depositLeft.setPosition(depositLeftPositions.normal);
+//            robot.depositRight.setPosition(depositRightPositions.normal);
+        }
     }
 
     public void setDepositBox() {
         /**
          * Set the position of the deposit box thing to be moved out and ready for outtaking.
          */
+        depositBoxIsOut = true;
         robot.depositLeft.setPosition(depositLeftPositions.out);
 //        robot.depositRight.setPosition(depositRightPositions.out);
     }
 
     public void wheelKeepPixel() {
-        robot.wheel.setPower(-1.0);
+        if (wheelState != 1) {
+            wheelState = 1;
+            robot.wheel.setPower(-1.0);
+        }
     }
 
     public void wheelSpitPixel() {
-        robot.wheel.setPower(1.0);
+        if (wheelState != -1) {
+            wheelState = -1;
+            robot.wheel.setPower(1.0);
+        }
     }
 
 }

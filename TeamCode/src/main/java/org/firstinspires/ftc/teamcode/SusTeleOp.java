@@ -25,7 +25,7 @@ public class SusTeleOp extends LinearOpMode  {
     public static volatile double MAX_TELEOP_VEL = 92.61691602936227;
     public static volatile int DEPOSIT_OUT_HEIGHT = 1000;
     public static volatile TwoPositions intakePositions = new TwoPositions(1.0, 0.5);
-    public static volatile TwoPositions depositLeftPositions = new TwoPositions(0.67778, 0.0);
+    public static volatile TwoPositions depositLeftPositions = new TwoPositions(1.0, 0.36);
 //    public static volatile TwoPositions depositRightPositions = new TwoPositions(1.0, 0.0);
 
     // Other classwide items
@@ -206,7 +206,8 @@ public class SusTeleOp extends LinearOpMode  {
 
             // update all of the telemetry at the end of each loop iteration
 //            telemetry.addData("Loop time", loopTimer.milliseconds());
-//            telemetry.update();
+            telemetry.addData("Deposit left position", robot.depositLeft.getPosition());
+            telemetry.update();
         }
     }
 
@@ -225,9 +226,11 @@ public class SusTeleOp extends LinearOpMode  {
         /**
          * Set the position of the deposit box thing to be moved out and ready for outtaking.
          */
-        depositBoxIsOut = true;
-        robot.depositLeft.setPosition(depositLeftPositions.out);
+        if (!depositBoxIsOut) {
+            depositBoxIsOut = true;
+            robot.depositLeft.setPosition(depositLeftPositions.out);
 //        robot.depositRight.setPosition(depositRightPositions.out);
+        }
     }
 
     public void wheelKeepPixel() {

@@ -25,8 +25,8 @@ public class SusTeleOp extends LinearOpMode  {
     public static volatile double MAX_TELEOP_VEL = 92.61691602936227;
     public static volatile int DEPOSIT_OUT_HEIGHT = 1000;
     public static volatile TwoPositions intakePositions = new TwoPositions(1.0, 0.5);
-    public static volatile TwoPositions depositLeftPositions = new TwoPositions(1.0, 0.36);
-//    public static volatile TwoPositions depositRightPositions = new TwoPositions(1.0, 0.0);
+    public static volatile TwoPositions depositLeftPositions = new TwoPositions(0.86, 0.0);
+    public static volatile TwoPositions depositRightPositions = new TwoPositions(0.14, 1.0);
 
     // Other classwide items
     private HardwarePushbot robot = new HardwarePushbot();
@@ -218,7 +218,8 @@ public class SusTeleOp extends LinearOpMode  {
         if (depositBoxIsOut) {
             depositBoxIsOut = false;
             robot.depositLeft.setPosition(depositLeftPositions.normal);
-//            robot.depositRight.setPosition(depositRightPositions.normal);
+
+            robot.depositRight.setPosition(depositRightPositions.normal);
         }
     }
 
@@ -229,7 +230,7 @@ public class SusTeleOp extends LinearOpMode  {
         if (!depositBoxIsOut) {
             depositBoxIsOut = true;
             robot.depositLeft.setPosition(depositLeftPositions.out);
-//        robot.depositRight.setPosition(depositRightPositions.out);
+            robot.depositRight.setPosition(depositRightPositions.out);
         }
     }
 

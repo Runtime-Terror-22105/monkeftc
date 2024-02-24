@@ -25,8 +25,8 @@ public class SusTeleOp extends LinearOpMode  {
     public static volatile double MAX_TELEOP_VEL = 92.61691602936227;
     public static volatile int DEPOSIT_OUT_HEIGHT = 1000;
     public static volatile TwoPositions intakePositions = new TwoPositions(1.0, 0.5);
-    public static volatile TwoPositions depositLeftPositions = new TwoPositions(0.86, 0.0);
-    public static volatile TwoPositions depositRightPositions = new TwoPositions(0.14, 1.0);
+    public static volatile TwoPositions depositLeftPositions = new TwoPositions(0.86, 0.1);
+    public static volatile TwoPositions depositRightPositions = new TwoPositions(0.14, 0.9);
 
     // Other classwide items
     private HardwarePushbot robot = new HardwarePushbot();
@@ -56,7 +56,10 @@ public class SusTeleOp extends LinearOpMode  {
         // sus driving init
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap, MAX_TELEOP_VEL);
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
+        PidDriveTrain follower = new PidDriveTrain(
+                hardwareMap,
+                telemetry
+        );
 
         wheelState = 0;
         depositBoxIsOut = false;
@@ -64,6 +67,7 @@ public class SusTeleOp extends LinearOpMode  {
         ElapsedTime depositBoxTimer = new ElapsedTime();
         boolean ignore_automatic_depositbox = false;
         boolean intaking;
+        boolean planeReleased = false;
 //        double lastLoopTime = 0;
 
         ElapsedTime loopTimer = new ElapsedTime();
@@ -137,13 +141,30 @@ public class SusTeleOp extends LinearOpMode  {
             if (gamepad2.y) { robotSpeed = DRIVESPEED_SLOW; }
             else            { robotSpeed = DRIVESPEED_FAST; }
 
-            drive.setWeightedDrivePower(
-                    new Pose2d(
-                            -gamepad1.left_stick_y * robotSpeed,
-                            -gamepad1.left_stick_x * robotSpeed,
-                            Math.pow(-gamepad1.right_stick_x, 3) * robotSpeed
-                    )
-            );
+            if(gamepad2.right_bumper) {
+                // HEADING LOCK!!! cool backdrop stuff
+                follower.setTargetPosition(0, 0, 0, 1000000, 1000000, 0.02);
+                // 0.5 degrees max off, 0.01 rad = 0.5 deg.
+                drive.setWeightedDrivePower(
+                        new Pose2d(
+                                -gamepad1.left_stick_y * robotSpeed,
+                                -gamepad1.left_stick_x * robotSpeed,
+                                follower.powerH()
+                        )
+                );
+            }
+            else {
+                // Regular driving
+                drive.setWeightedDrivePower(
+                        new Pose2d(
+                                -gamepad1.left_stick_y * robotSpeed,
+                                -gamepad1.left_stick_x * robotSpeed,
+                                Math.pow(-gamepad1.right_stick_x, 3) * robotSpeed
+                        )
+                );
+            }
+
+
 
             // endregion
 
@@ -186,13 +207,13 @@ public class SusTeleOp extends LinearOpMode  {
             // endregion
 
             // region Plane
-//            if (!planeReleased) {
-//                if(gamepad1.b) {
-//                    // rlease the plane
-//                    planeReleased = true;
-//                    robot.plane.setPosition(1.0);
-//                }
-//            }
+            if (!planeReleased) {
+                if(gamepad2.a) {
+                    // rlease the plane
+                    planeReleased = true;
+                    robot.plane.setPosition(1.0);
+                }
+            }
             // endregion
 
             // region Set Power to Slides

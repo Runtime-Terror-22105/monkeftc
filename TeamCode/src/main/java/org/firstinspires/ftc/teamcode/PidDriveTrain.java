@@ -20,9 +20,9 @@ public class PidDriveTrain {
     public static volatile double KiY = -0.0005;
     public static volatile double KdY = -0.01;
     // pid constants - heading
-    public static volatile double KpH = 0;
+    public static volatile double KpH = -2.05;
     public static volatile double KiH = 0;
-    public static volatile double KdH = 0;
+    public static volatile double KdH = -0.1;
 
     // target positions
     private double targetPositionX;
@@ -204,6 +204,10 @@ public class PidDriveTrain {
         curX = poseEstimate.getX();
         curY = poseEstimate.getY();
         curH = poseEstimate.getHeading();
+
+        while(curH > Math.toRadians(360)){
+            curH -= Math.toRadians(360);
+        }
     }
 
 
@@ -229,7 +233,14 @@ public class PidDriveTrain {
         telemetry.addData("curHeading", curH);
         errorX = targetPositionX - curX;
         errorY = targetPositionY - curY;
+
+        // For error h, there are 2 ways: either we can turn clockwise or counter clockwise
+        // Always just take the fastest way cause that's best!
+        // if its less than -180 just increase by 360 deg
         errorH = targetPositionH - curH;
+        if(errorH < -1 * Math.toRadians(180)){
+            errorH += Math.toRadians(360);
+        }
     }
 
     private void _resetTempVars() {

@@ -68,10 +68,10 @@ public class PidToPoint extends LinearOpMode {
                 double y = follower.powerY();
                 double rx = follower.powerH();
                 // update power based on PID, similar method to telop
-                robot.motorFrontLeft.setPower(y + x + rx);
+                robot.motorFrontLeft.setPower(-(y + x + rx));
                 robot.motorBackLeft.setPower(y - x + rx);
                 robot.motorFrontRight.setPower(y - x - rx);
-                robot.motorBackRight.setPower(y + x - rx);
+                robot.motorBackRight.setPower(-(y + x - rx));
 
             }
 

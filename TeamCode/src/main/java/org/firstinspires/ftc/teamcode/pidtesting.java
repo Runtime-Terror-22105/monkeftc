@@ -49,9 +49,8 @@ public class pidtesting extends LinearOpMode {
             follower.setTargetPosition(x, y, heading, maxError, maxError, maxError);
 
             if(follower.reached()) {
-                telemetry.addData("status", "done");
+                telemetry.addData("status", "reached");
                 telemetry.update();
-                break;
             }
             else {
                 double x = follower.powerY();

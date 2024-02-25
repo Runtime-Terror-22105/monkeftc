@@ -11,36 +11,46 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 @Config
 public class PidDriveTrain {
-    // pid constants - x
+    // region pid constants - x
     public static volatile double KpX = -0.035;
-    public static volatile double KiX = 0.001;
+    public static volatile double KiX = -0.001;
     public static volatile double KdX = -0.00255;
-    // pid constants - y
-    public static volatile double KpY = -0.15;
-    public static volatile double KiY = -0.0005;
-    public static volatile double KdY = -0.01;
-    // pid constants - heading
+    // endregion
+
+    // region pid constants - y
+    public static volatile double KpY = 0.15;
+    public static volatile double KiY = 0.0005;
+    public static volatile double KdY = 0.01;
+    // endregion
+
+    // region pid constants - heading
     public static volatile double KpH = -2.05;
     public static volatile double KiH = 0;
     public static volatile double KdH = -0.1;
+    // endregion
 
-    // target positions
+    // region target positions
     private double targetPositionX;
     private double targetPositionY;
     private double targetPositionH;
+    // endregion
 
+    // region timers
     private ElapsedTime timerX = new ElapsedTime();
     private ElapsedTime timerY = new ElapsedTime();
     private ElapsedTime timerH = new ElapsedTime();
+    // endregion
 
     // PID Variables - x
     private double integralSumX;
     private double lastErrorX;
     public double errorX;
+
     // PID Variables - y
     private double integralSumY;
     private double lastErrorY;
     public double errorY;
+
     // PID Variables - heading
     private double integralSumH;
     private double lastErrorH;

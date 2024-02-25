@@ -31,13 +31,13 @@ public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer 
     public static double WHEEL_RADIUS = (35.0/2.0)/25.4; // divide mm by 25.4 to get inches, 35mm is diameter
     public static double GEAR_RATIO = 63.5/57.63009780235938; // output (wheel) speed / input (encoder) speed
 
-    public static double LATERAL_DISTANCE = 12.0144116; // in; distance between the left and right wheels, divide 312mm by 25.4 to get in
-    public static double FORWARD_OFFSET = -5.97; // in; offset of the lateral wheel, divide 15.5cm by 2.54 to get in
+    public static double LATERAL_DISTANCE = 12.103; // in; distance between the left and right wheels, divide 312mm by 25.4 to get in
+    public static double FORWARD_OFFSET = -6.102362204724409; // in; offset of the lateral wheel, divide 15.5cm by 2.54 to get in
 
     private Encoder leftEncoder, rightEncoder, frontEncoder;
     /* Lines 37-38 in StandardTrackingWheelLocalizer.java */
-    public static double X_MULTIPLIER = 1.002477832543349; // Multiplier in the X direction
-    public static double Y_MULTIPLIER = 1.028467927960435; // Multiplier in the Y direction
+    public static double X_MULTIPLIER = 0.9057064609686999; // Multiplier in the X direction
+    public static double Y_MULTIPLIER = 0.9228126322291248; // Multiplier in the Y direction
 
     private List<Integer> lastEncPositions, lastEncVels;
 

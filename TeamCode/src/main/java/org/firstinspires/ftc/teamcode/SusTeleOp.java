@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.sussyteleop.TeleopMecanumDrive;
 
 import java.lang.Math;
 
@@ -24,7 +24,7 @@ public class SusTeleOp extends LinearOpMode  {
     public static volatile double SLIDESPEED = 21; // must be whole num
     public static volatile double MAX_TELEOP_VEL = 92.61691602936227;
     public static volatile int DEPOSIT_OUT_HEIGHT = 1000;
-    public static volatile TwoPositions intakePositions = new TwoPositions(1.0, 0.5);
+    public static volatile TwoPositions intakePositions = new TwoPositions(1.0, 0.65);
     public static volatile TwoPositions depositLeftPositions = new TwoPositions(0.86, 0.1);
     public static volatile TwoPositions depositRightPositions = new TwoPositions(0.14, 0.9);
 
@@ -54,7 +54,7 @@ public class SusTeleOp extends LinearOpMode  {
         MultipleTelemetry telemetry = new MultipleTelemetry(_tele, dashboard.getTelemetry());
 
         // sus driving init
-        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap, MAX_TELEOP_VEL);
+        TeleopMecanumDrive drive = new TeleopMecanumDrive(hardwareMap, MAX_TELEOP_VEL);
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         PidDriveTrain follower = new PidDriveTrain(
                 hardwareMap,
@@ -138,31 +138,27 @@ public class SusTeleOp extends LinearOpMode  {
             // region Driving
 
             double robotSpeed;
-            if (gamepad2.y) { robotSpeed = DRIVESPEED_SLOW; }
-            else            { robotSpeed = DRIVESPEED_FAST; }
+            if (gamepad2.y || gamepad1.y) { robotSpeed = DRIVESPEED_SLOW; }
+            else                          { robotSpeed = DRIVESPEED_FAST; }
 
+            double heading_power;
             if(gamepad2.right_bumper) {
                 // HEADING LOCK!!! cool backdrop stuff
                 follower.setTargetPosition(0, 0, 0, 1000000, 1000000, 0.02);
                 // 0.5 degrees max off, 0.01 rad = 0.5 deg.
-                drive.setWeightedDrivePower(
-                        new Pose2d(
-                                -gamepad1.left_stick_y * robotSpeed,
-                                -gamepad1.left_stick_x * robotSpeed,
-                                follower.powerH()
-                        )
-                );
+                heading_power = follower.powerH();
             }
             else {
-                // Regular driving
-                drive.setWeightedDrivePower(
-                        new Pose2d(
-                                -gamepad1.left_stick_y * robotSpeed,
-                                -gamepad1.left_stick_x * robotSpeed,
-                                Math.pow(-gamepad1.right_stick_x, 3) * robotSpeed
-                        )
-                );
+                heading_power = Math.pow(-gamepad1.right_stick_x, 3) * robotSpeed;
             }
+
+            drive.setWeightedDrivePower(
+                    new Pose2d(
+                            -gamepad1.left_stick_y * robotSpeed,
+                            -gamepad1.left_stick_x * robotSpeed,
+                            heading_power
+                    )
+            );
 
 
 
@@ -226,8 +222,7 @@ public class SusTeleOp extends LinearOpMode  {
             // endregion
 
             // update all of the telemetry at the end of each loop iteration
-//            telemetry.addData("Loop time", loopTimer.milliseconds());
-            telemetry.addData("Deposit left position", robot.depositLeft.getPosition());
+            telemetry.addData("Loop time", loopTimer.milliseconds());
             telemetry.update();
         }
     }
@@ -239,7 +234,6 @@ public class SusTeleOp extends LinearOpMode  {
         if (depositBoxIsOut) {
             depositBoxIsOut = false;
             robot.depositLeft.setPosition(depositLeftPositions.normal);
-
             robot.depositRight.setPosition(depositRightPositions.normal);
         }
     }

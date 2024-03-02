@@ -211,13 +211,14 @@ public class PidDriveTrain {
     public void updatePos() {
         drive.update();
         Pose2d poseEstimate = drive.getPoseEstimate();
-        curX = poseEstimate.getX();
-        curY = poseEstimate.getY();
+        curX = -poseEstimate.getX();
+        curY = -poseEstimate.getY();
         curH = poseEstimate.getHeading();
 
-        while(curH > Math.toRadians(360)){
-            curH -= Math.toRadians(360);
+        while (curH < -Math.toRadians(360)) {
+            curH += Math.toRadians(360);
         }
+
     }
 
 
@@ -248,7 +249,9 @@ public class PidDriveTrain {
         // Always just take the fastest way cause that's best!
         // if its less than -180 just increase by 360 deg
         errorH = targetPositionH - curH;
-        if(errorH < -1 * Math.toRadians(180)){
+        if (errorH > Math.toRadians(180)) {
+            errorH -= Math.toRadians(360);
+        } else if (errorH < -Math.toRadians(180)) {
             errorH += Math.toRadians(360);
         }
     }

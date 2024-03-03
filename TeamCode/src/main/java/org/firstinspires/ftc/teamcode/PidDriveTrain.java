@@ -220,12 +220,13 @@ public class PidDriveTrain {
 
     public void updatePos() {
         drive.update();
+//        drive.updatePoseEstimate();
         Pose2d poseEstimate = drive.getPoseEstimate();
         curX = -poseEstimate.getX();
         curY = -poseEstimate.getY();
         curH = poseEstimate.getHeading();
 
-        curH = curH % Math.toRadians(360);
+//        curH = curH % Math.toRadians(360);
 
     }
 

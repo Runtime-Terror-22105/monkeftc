@@ -87,7 +87,9 @@ public class PidDriveTrain {
         this.drive = new SampleMecanumDrive(hardwareMap);
         this.drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        _resetTempVars();
+        _resetTempXVars();
+        _resetTempYVars();
+        _resetTempHVars();
     }
 
     public void updatePower() {
@@ -99,9 +101,9 @@ public class PidDriveTrain {
         double xPower = 0.0;
         double yPower = 0.0;
         double hPower = 0.0;
-        boolean xReached = false;
-        boolean yReached = false;
-        boolean hReached = false;
+//        boolean xReached = false;
+//        boolean yReached = false;
+//        boolean hReached = false;
         // calculate x power needed
         if (Math.abs(errorX) >= maxErrorX) {
             // calculate the error
@@ -125,7 +127,9 @@ public class PidDriveTrain {
             xPower = out;
         }
         else {
-            xReached = true;
+//            xReached = true;
+            reachedX = true;
+            _resetTempXVars();
         }
 
         // calculate y power needed
@@ -140,7 +144,8 @@ public class PidDriveTrain {
             integralSumY = integralSumY + (errorY * timerY.seconds());
 
             double outUnclamped = (KpY * errorY) + (KiY * integralSumY) + (KdY * derivativeY);
-            double out = Math.max(Math.min(outUnclamped, 1.0), -1.0); // out has to be between -1 and 1
+            double out = outUnclamped;
+//            double out = Math.max(Math.min(outUnclamped, 1.0), -1.0); // out has to be between -1 and 1
             telemetry.addData("y power", out);
 
             lastErrorY = errorY;
@@ -150,7 +155,9 @@ public class PidDriveTrain {
             yPower = out;
         }
         else {
-            yReached = true;
+//            yReached = true;
+            reachedY = true;
+            _resetTempYVars();
         }
 
         // calculate heading power needed
@@ -165,7 +172,8 @@ public class PidDriveTrain {
             integralSumH = integralSumH + (errorH * timerH.seconds());
 
             double outUnclamped = (KpH * errorH) + (KiH * integralSumH) + (KdH * derivativeH);
-            double out = Math.max(Math.min(outUnclamped, 1.0), -1.0); // out has to be between -1 and 1
+            double out = outUnclamped;
+//            double out = Math.max(Math.min(outUnclamped, 1.0), -1.0); // out has to be between -1 and 1
             telemetry.addData("h power", out);
 
             lastErrorH = errorH;
@@ -175,19 +183,21 @@ public class PidDriveTrain {
             hPower = out;
         }
         else {
-            hReached = true;
+//            hReached = true;
+            reachedH = true;
+            _resetTempHVars();
         }
-        reachedX = xReached;
-        reachedY = yReached;
-        reachedH = hReached;
+//        reachedX = xReached;
+//        reachedY = yReached;
+//        reachedH = hReached;
 
-        if(reachedX && reachedY && reachedH){
+//        if(reachedX && reachedY && reachedH){
             // we reached the position we wanted to get to
             // not sure if we should do this if all positions are reached
             // or when each individual position is reached
             // may need to change
-            _resetTempVars();
-        }
+            // _resetTempVars();
+//        }
 
         x = xPower;
         y = yPower;
@@ -215,9 +225,7 @@ public class PidDriveTrain {
         curY = -poseEstimate.getY();
         curH = poseEstimate.getHeading();
 
-        while (curH < -Math.toRadians(360)) {
-            curH += Math.toRadians(360);
-        }
+        curH = curH % Math.toRadians(360);
 
     }
 
@@ -248,45 +256,85 @@ public class PidDriveTrain {
         // For error h, there are 2 ways: either we can turn clockwise or counter clockwise
         // Always just take the fastest way cause that's best!
         // if its less than -180 just increase by 360 deg
-        errorH = targetPositionH - curH;
+        errorH = curH - targetPositionH;
         if (errorH > Math.toRadians(180)) {
             errorH -= Math.toRadians(360);
         } else if (errorH < -Math.toRadians(180)) {
             errorH += Math.toRadians(360);
         }
+
     }
 
-    private void _resetTempVars() {
+//    private void _resetTempVars() {
+//        // PID Variables - x
+//        this.integralSumX = 0;
+//        this.lastErrorX = 0;
+//        this.errorX = 0;
+//        // PID Variables - y
+//        this.integralSumY = 0;
+//        this.lastErrorY = 0;
+//        this.errorY = 0;
+//        // PID Variables - heading
+//        this.integralSumH = 0;
+//        this.lastErrorH = 0;
+//        this.errorH = 0;
+//
+//        this.maxErrorX = 0;
+//        this.maxErrorY = 0;
+//        this.maxErrorH = 0;
+//
+//        // reached the positions??
+//        this.reachedX = false;
+//        this.reachedY = false;
+//        this.reachedH = false;
+//
+//        // power required
+//        this.x = 0.0;
+//        this.y = 0.0;
+//        this.h = 0.0;
+//        // NOTE:
+//        // before, in slides we set error to random value but that's sus
+//        // I hoped to fix this with calculate error function.
+//        // If that doesn't work we can do this
+//    }
+
+    private void _resetTempXVars() {
         // PID Variables - x
         this.integralSumX = 0;
         this.lastErrorX = 0;
         this.errorX = 0;
-        // PID Variables - y
+
+        // reached the positions??
+//        this.reachedX = true;
+
+        // power required
+        this.x = 0.0;
+    }
+
+    private void _resetTempYVars() {
+        // PID Variables - x
         this.integralSumY = 0;
         this.lastErrorY = 0;
         this.errorY = 0;
-        // PID Variables - heading
+
+        // reached the positions??
+//        this.reachedY = true;
+
+        // power required
+        this.y = 0.0;
+    }
+
+    private void _resetTempHVars() {
+        // PID Variables - x
         this.integralSumH = 0;
         this.lastErrorH = 0;
         this.errorH = 0;
 
-        this.maxErrorX = 0;
-        this.maxErrorY = 0;
-        this.maxErrorH = 0;
-
         // reached the positions??
-        this.reachedX = false;
-        this.reachedY = false;
-        this.reachedH = false;
+//        this.reachedH = true;
 
         // power required
-        this.x = 0.0;
-        this.y = 0.0;
         this.h = 0.0;
-        // NOTE:
-        // before, in slides we set error to random value but that's sus
-        // I hoped to fix this with calculate error function.
-        // If that doesn't work we can do this
     }
 
 }

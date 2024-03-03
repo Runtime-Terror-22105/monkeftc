@@ -26,24 +26,23 @@ public class pidtesting extends LinearOpMode {
 
         dashboard = FtcDashboard.getInstance();
         telemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
-        auto = new CenterStageAutonomous(
-                hardwareMap,
-                robot,
-                telemetry,
-                dashboard,
-                (milliseconds) -> sleep(milliseconds)
-        );
+//        auto = new CenterStageAutonomous(
+//                hardwareMap,
+//                robot,
+//                telemetry,
+//                dashboard,
+//                (milliseconds) -> sleep(milliseconds)
+//        );
 
-        auto.initCamera(CenterStageAutonomous.WhatColorToDetect.RED);
+//        auto.initCamera(CenterStageAutonomous.WhatColorToDetect.RED);
         waitForStart();
 
-        ObjectPositionPipeline.Location location = auto.getPropLocation();
-        auto.stopCameraStreaming(); // camera stuff, copied from earlier
+//        ObjectPositionPipeline.Location location = auto.getPropLocation();
+//        auto.stopCameraStreaming(); // camera stuff, copied from earlier
         PidDriveTrain follower = new PidDriveTrain(
                 hardwareMap,
                 telemetry
         );
-//        int p = 0;
 
         while(opModeIsActive()) {
             follower.setTargetPosition(x, y, heading, maxError, maxError, maxError);
@@ -56,11 +55,12 @@ public class pidtesting extends LinearOpMode {
                 double x = follower.powerY();
                 double y = follower.powerX();
                 double rx = follower.powerH();
+                double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
                 // update power based on PID, similar method to telop
-                robot.motorFrontLeft.setPower(-(y + x + rx));
-                robot.motorBackLeft.setPower(y - x + rx);
-                robot.motorFrontRight.setPower(y - x - rx);
-                robot.motorBackRight.setPower(-(y + x - rx));
+                robot.motorFrontLeft.setPower(-(y + x + rx) / denominator);
+                robot.motorBackLeft.setPower( (y - x + rx) / denominator);
+                robot.motorFrontRight.setPower((y - x - rx) / denominator);
+                robot.motorBackRight.setPower(-(y + x - rx) / denominator);
 
             }
             telemetry.addData("errorX", follower.errorX);

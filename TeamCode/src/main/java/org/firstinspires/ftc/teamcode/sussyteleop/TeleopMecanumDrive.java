@@ -37,10 +37,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MAX_ACCEL;
 import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MAX_ANG_ACCEL;
 import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MAX_ANG_VEL;
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MAX_VEL;
 import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MOTOR_VELO_PID;
 import static org.firstinspires.ftc.teamcode.drive.DriveConstants.RUN_USING_ENCODER;
 import static org.firstinspires.ftc.teamcode.drive.DriveConstants.TRACK_WIDTH;
@@ -67,11 +65,10 @@ public class TeleopMecanumDrive extends MecanumDrive {
 
 //    private static final TrajectoryVelocityConstraint VEL_CONSTRAINT =
 //            getVelocityConstraint(MAX_VEL, MAX_ANG_VEL, TRACK_WIDTH);
-    private static final TrajectoryAccelerationConstraint ACCEL_CONSTRAINT =
-            getAccelerationConstraint(MAX_ACCEL);
 
     private TrajectoryFollower follower;
-    private double l_MAX_VEL = 0;
+    private double l_MAX_VEL;
+    private double l_MAX_ACCEL;
 
     private DcMotorEx leftFront, leftRear, rightRear, rightFront;
     private List<DcMotorEx> motors;
@@ -82,9 +79,10 @@ public class TeleopMecanumDrive extends MecanumDrive {
     private List<Integer> lastEncPositions = new ArrayList<>();
     private List<Integer> lastEncVels = new ArrayList<>();
 
-    public TeleopMecanumDrive(HardwareMap hardwareMap, double MAX_VEL) {
+    public TeleopMecanumDrive(HardwareMap hardwareMap, double MAX_VEL, double MAX_ACCEL) {
         super(kV, kA, kStatic, TRACK_WIDTH, TRACK_WIDTH, LATERAL_MULTIPLIER);
-        l_MAX_VEL = MAX_VEL;
+        l_MAX_VEL   = MAX_VEL;
+        l_MAX_ACCEL = MAX_ACCEL;
 
         follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, TRANSLATIONAL_PID, HEADING_PID,
                 new Pose2d(0.5, 0.5, Math.toRadians(5.0)), 0.5);
@@ -140,31 +138,35 @@ public class TeleopMecanumDrive extends MecanumDrive {
         );
     }
 
-    public TeleopMecanumDrive(HardwareMap hardwareMap) {
-        this(hardwareMap, MAX_VEL);
-    }
-
     public TrajectoryBuilder trajectoryBuilder(Pose2d startPose) {
         TrajectoryVelocityConstraint VEL_CONSTRAINT =
                 getVelocityConstraint(l_MAX_VEL, MAX_ANG_VEL, TRACK_WIDTH);
+        TrajectoryAccelerationConstraint ACCEL_CONSTRAINT =
+                getAccelerationConstraint(l_MAX_ACCEL);
         return new TrajectoryBuilder(startPose, VEL_CONSTRAINT, ACCEL_CONSTRAINT);
     }
 
     public TrajectoryBuilder trajectoryBuilder(Pose2d startPose, boolean reversed) {
         TrajectoryVelocityConstraint VEL_CONSTRAINT =
                 getVelocityConstraint(l_MAX_VEL, MAX_ANG_VEL, TRACK_WIDTH);
+        TrajectoryAccelerationConstraint ACCEL_CONSTRAINT =
+                getAccelerationConstraint(l_MAX_ACCEL);
         return new TrajectoryBuilder(startPose, reversed, VEL_CONSTRAINT, ACCEL_CONSTRAINT);
     }
 
     public TrajectoryBuilder trajectoryBuilder(Pose2d startPose, double startHeading) {
         TrajectoryVelocityConstraint VEL_CONSTRAINT =
                 getVelocityConstraint(l_MAX_VEL, MAX_ANG_VEL, TRACK_WIDTH);
+        TrajectoryAccelerationConstraint ACCEL_CONSTRAINT =
+                getAccelerationConstraint(l_MAX_ACCEL);
         return new TrajectoryBuilder(startPose, startHeading, VEL_CONSTRAINT, ACCEL_CONSTRAINT);
     }
 
     public TrajectorySequenceBuilder trajectorySequenceBuilder(Pose2d startPose) {
         TrajectoryVelocityConstraint VEL_CONSTRAINT =
                 getVelocityConstraint(l_MAX_VEL, MAX_ANG_VEL, TRACK_WIDTH);
+        TrajectoryAccelerationConstraint ACCEL_CONSTRAINT =
+                getAccelerationConstraint(l_MAX_ACCEL);
         return new TrajectorySequenceBuilder(
                 startPose,
                 VEL_CONSTRAINT, ACCEL_CONSTRAINT,

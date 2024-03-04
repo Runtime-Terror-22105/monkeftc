@@ -12,21 +12,21 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 @Config
 public class PidDriveTrain {
     // region pid constants - x
-    public static volatile double KpX = 0.035;
-    public static volatile double KiX = 0.001;
-    public static volatile double KdX = 0.00255;
+    public static volatile double KpX = 0.14;
+    public static volatile double KiX = 0;
+    public static volatile double KdX = 0.015;
     // endregion
 
     // region pid constants - y
-    public static volatile double KpY = -0.15;
-    public static volatile double KiY = -0.0005;
-    public static volatile double KdY = -0.01;
+    public static volatile double KpY = 0.15;
+    public static volatile double KiY = 0.0005;
+    public static volatile double KdY = 0.01;
     // endregion
 
     // region pid constants - heading
-    public static volatile double KpH = 2.05;
+    public static volatile double KpH = -2.05;
     public static volatile double KiH = 0;
-    public static volatile double KdH = 0.1;
+    public static volatile double KdH = -0.1;
     // endregion
 
     // region target positions
@@ -41,45 +41,52 @@ public class PidDriveTrain {
     private ElapsedTime timerH = new ElapsedTime();
     // endregion
 
-    // PID Variables - x
+    // region PID Variables - x
     private double integralSumX;
     private double lastErrorX;
     public double errorX;
+    // endregion
 
-    // PID Variables - y
+    // region PID Variables - y
     private double integralSumY;
     private double lastErrorY;
     public double errorY;
+    // endregion
 
-    // PID Variables - heading
+    // region PID Variables - heading
     private double integralSumH;
     private double lastErrorH;
     public double errorH;
+    // endregion
 
-    // instance vars
+    // region instance vars
     private Telemetry telemetry;
     private SampleMecanumDrive drive;
+    // endregion
 
-    // error required. depending on how accurate we want each point to be
+    //region maximum errors
     private double maxErrorX;
     private double maxErrorY;
     private double maxErrorH;
+    //endregion
 
-
-    // reached the positions??
+    //region reached the positions?
     public boolean reachedX;
     public boolean reachedY;
     public boolean reachedH;
+    //endregion
 
-    // power required
+    //region power required for each direction
     public double x;
     public double y;
     public double h;
+    //endregion
 
-    // current position on field
+    //region current position on field
     public double curX;
     public double curY;
     public double curH;
+    //endregion
 
 
     public PidDriveTrain(HardwareMap hardwareMap, Telemetry telemetry) {

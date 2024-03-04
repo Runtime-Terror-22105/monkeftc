@@ -22,7 +22,8 @@ public class SusTeleOp extends LinearOpMode  {
     public static volatile double DRIVESPEED_FAST = 1.0; // between 0 and 1
     public static volatile double DRIVESPEED_SLOW = 0.3; // between 0 and 1
     public static volatile double SLIDESPEED = 21; // must be whole num
-    public static volatile double MAX_TELEOP_VEL = 92.61691602936227;
+    public static volatile double MAX_TELEOP_VEL = Math.pow(10, 6); // 92.61691602936227
+    public static volatile double MAX_TELEOP_ACCEL = Math.pow(10, 6); // 92.61691602936227
     public static volatile int DEPOSIT_OUT_HEIGHT = 1000;
     public static volatile TwoPositions intakePositions = new TwoPositions(1.0, 0.65);
     public static volatile TwoPositions depositLeftPositions = new TwoPositions(0.79, 0.0);
@@ -54,12 +55,13 @@ public class SusTeleOp extends LinearOpMode  {
         MultipleTelemetry telemetry = new MultipleTelemetry(_tele, dashboard.getTelemetry());
 
         // sus driving init
-        TeleopMecanumDrive drive = new TeleopMecanumDrive(hardwareMap, MAX_TELEOP_VEL);
+        TeleopMecanumDrive drive = new TeleopMecanumDrive(hardwareMap, MAX_TELEOP_VEL, MAX_TELEOP_ACCEL);
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         PidDriveTrain follower = new PidDriveTrain(
                 hardwareMap,
                 telemetry
         );
+        follower.updatePos();
 
         wheelState = 0;
         depositBoxIsOut = false;
@@ -142,10 +144,10 @@ public class SusTeleOp extends LinearOpMode  {
             else                          { robotSpeed = DRIVESPEED_FAST; }
 
             double heading_power;
+            telemetry.addData("heading lock position", headingLockPosition);
             if (gamepad1.left_bumper || gamepad2.right_bumper) {
                 // HEADING LOCK!!! cool backdrop stuff
-                headingLockPosition += Math.toRadians(Math.pow(-gamepad1.right_stick_x,3));
-                telemetry.addData("heading lock position", headingLockPosition);
+                headingLockPosition += Math.toRadians(-gamepad1.right_stick_x);
                 follower.setTargetPosition(0, 0, headingLockPosition, 1000000, 1000000, 0.025);
                 // 0.5 degrees max off, 0.01 rad = 0.5 deg.
                 heading_power = follower.powerH();

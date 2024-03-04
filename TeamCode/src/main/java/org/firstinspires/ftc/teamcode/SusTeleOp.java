@@ -142,7 +142,7 @@ public class SusTeleOp extends LinearOpMode  {
             else                          { robotSpeed = DRIVESPEED_FAST; }
 
             double heading_power;
-            if(gamepad2.right_bumper) {
+            if (gamepad1.left_bumper || gamepad2.right_bumper) {
                 // HEADING LOCK!!! cool backdrop stuff
                 headingLockPosition += Math.toRadians(Math.pow(-gamepad1.right_stick_x,3));
                 telemetry.addData("heading lock position", headingLockPosition);

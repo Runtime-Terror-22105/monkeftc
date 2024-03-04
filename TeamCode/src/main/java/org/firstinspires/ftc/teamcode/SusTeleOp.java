@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import org.firstinspires.ftc.teamcode.util.TwoPositions;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.sussyteleop.TeleopMecanumDrive;
@@ -36,16 +37,6 @@ public class SusTeleOp extends LinearOpMode  {
     // idk why this is classwide
     boolean depositBoxIsOut = false;
     int wheelState = 0; // 0 is not spinning, 1 is keeping, -1 is spitting
-
-    public static class TwoPositions {
-        public double normal;
-        public double out;
-
-        public TwoPositions(double normal, double out) {
-            this.normal = normal;
-            this.out = out;
-        }
-    }
 
     public void runOpMode() {
         // do some initialization
@@ -148,7 +139,7 @@ public class SusTeleOp extends LinearOpMode  {
             if (gamepad1.left_bumper || gamepad2.right_bumper) {
                 // HEADING LOCK!!! cool backdrop stuff
                 headingLockPosition += Math.toRadians(-gamepad1.right_stick_x);
-                follower.setTargetPosition(0, 0, headingLockPosition, 1000000, 1000000, 0.025);
+                follower.setTargetPosition(0, 0, headingLockPosition, 1000000, 1000000, 0);
                 // 0.5 degrees max off, 0.01 rad = 0.5 deg.
                 heading_power = follower.powerH();
             }

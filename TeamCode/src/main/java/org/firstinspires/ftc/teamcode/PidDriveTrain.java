@@ -108,6 +108,9 @@ public class PidDriveTrain {
         double xPower = 0.0;
         double yPower = 0.0;
         double hPower = 0.0;
+        reachedX = false;
+        reachedY = false;
+        reachedH = false;
 //        boolean xReached = false;
 //        boolean yReached = false;
 //        boolean hReached = false;
@@ -221,7 +224,7 @@ public class PidDriveTrain {
         return h;
     }
 
-    public boolean reached(){
+    public boolean reached() {
         return reachedX && reachedY && reachedH;
     }
 

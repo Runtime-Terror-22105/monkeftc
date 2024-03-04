@@ -14,11 +14,12 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
+import org.firstinspires.ftc.teamcode.util.TwoPositions;
 
 public class CenterStageAutonomous {
-    public static volatile SusTeleOp.TwoPositions intakePositions = new SusTeleOp.TwoPositions(1.0, 0.5);
-    public static volatile SusTeleOp.TwoPositions depositLeftPositions = new SusTeleOp.TwoPositions(1.0, 0.0);
-    public static volatile SusTeleOp.TwoPositions depositRightPositions = new SusTeleOp.TwoPositions(1.0, 0.0);
+    public static volatile TwoPositions intakePositions = new TwoPositions(1.0, 0.5);
+    public static volatile TwoPositions depositLeftPositions = new TwoPositions(1.0, 0.0);
+    public static volatile TwoPositions depositRightPositions = new TwoPositions(1.0, 0.0);
     public final int RIGHTANGLETURNTIME = 200;
 
     private RobotSleep theSleep;
@@ -39,17 +40,21 @@ public class CenterStageAutonomous {
         BLUE
     }
 
-    public class coord {
+    public static class coord {
         public double x;
         public double y;
         public double heading;
-        public double maxError;
+        public double maxErrorX;
+        public double maxErrorY;
+        public double maxErrorH;
 
-        coord(double x, double y, double heading, double maxError){
+        coord(double x, double y, double heading, double maxErrorX, double maxErrorY, double maxErrorH) {
             this.x = x;
             this.y = y;
             this.heading = heading;
-            this.maxError = maxError;
+            this.maxErrorX = maxErrorX;
+            this.maxErrorY = maxErrorY;
+            this.maxErrorH = maxErrorH;
         }
     }
 

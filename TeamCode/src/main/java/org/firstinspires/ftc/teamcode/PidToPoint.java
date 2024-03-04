@@ -46,8 +46,8 @@ public class PidToPoint extends LinearOpMode {
         int numPoints = 0;
         int p = 0;
 
-        while(opModeIsActive()){ // continuous while loop for program
-            follower.setTargetPosition(points[p].x, points[p].y, points[p].heading, points[p].maxError, points[p].maxError, points[p].maxError);
+        while(opModeIsActive()) { // continuous while loop for program
+            follower.setTargetPosition(points[p].x, points[p].y, points[p].heading, points[p].maxErrorX, points[p].maxErrorY, points[p].maxErrorH);
 
             if(follower.reached()){
                 // reached position;

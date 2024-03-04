@@ -12,21 +12,21 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 @Config
 public class PidDriveTrain {
     // region pid constants - x
-    public static volatile double KpX = -0.035;
-    public static volatile double KiX = -0.001;
-    public static volatile double KdX = -0.00255;
+    public static volatile double KpX = 0.035;
+    public static volatile double KiX = 0.001;
+    public static volatile double KdX = 0.00255;
     // endregion
 
     // region pid constants - y
-    public static volatile double KpY = 0.15;
-    public static volatile double KiY = 0.0005;
-    public static volatile double KdY = 0.01;
+    public static volatile double KpY = -0.15;
+    public static volatile double KiY = -0.0005;
+    public static volatile double KdY = -0.01;
     // endregion
 
     // region pid constants - heading
-    public static volatile double KpH = -2.05;
+    public static volatile double KpH = 2.05;
     public static volatile double KiH = 0;
-    public static volatile double KdH = -0.1;
+    public static volatile double KdH = 0.1;
     // endregion
 
     // region target positions
@@ -192,11 +192,11 @@ public class PidDriveTrain {
 //        reachedH = hReached;
 
 //        if(reachedX && reachedY && reachedH){
-            // we reached the position we wanted to get to
-            // not sure if we should do this if all positions are reached
-            // or when each individual position is reached
-            // may need to change
-            // _resetTempVars();
+        // we reached the position we wanted to get to
+        // not sure if we should do this if all positions are reached
+        // or when each individual position is reached
+        // may need to change
+        // _resetTempVars();
 //        }
 
         x = xPower;
@@ -218,6 +218,18 @@ public class PidDriveTrain {
         return reachedX && reachedY && reachedH;
     }
 
+    public double angleWrap(double radians) {
+        while (radians > Math.PI) {
+            radians -= 2 * Math.PI;
+        }
+        while (radians < -Math.PI) {
+            radians += 2 * Math.PI;
+        }
+
+        // keep in mind that the result is in radians
+        return radians;
+    }
+
     public void updatePos() {
         drive.update();
 //        drive.updatePoseEstimate();
@@ -226,8 +238,14 @@ public class PidDriveTrain {
         curY = -poseEstimate.getY();
         curH = poseEstimate.getHeading();
 
-//        curH = curH % Math.toRadians(360);
+        curH = angleWrap(curH);
 
+    }
+
+    public double getCurrentHeading(){
+        // this should only be called after we've updated powers
+        // so like its fine cause curH won't be sus
+        return curH;
     }
 
 
@@ -257,12 +275,7 @@ public class PidDriveTrain {
         // For error h, there are 2 ways: either we can turn clockwise or counter clockwise
         // Always just take the fastest way cause that's best!
         // if its less than -180 just increase by 360 deg
-        errorH = curH - targetPositionH;
-        if (errorH > Math.toRadians(180)) {
-            errorH -= Math.toRadians(360);
-        } else if (errorH < -Math.toRadians(180)) {
-            errorH += Math.toRadians(360);
-        }
+        errorH = angleWrap(targetPositionH - curH);
 
     }
 

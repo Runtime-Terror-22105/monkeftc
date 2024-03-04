@@ -52,14 +52,20 @@ public class pidtesting extends LinearOpMode {
                 telemetry.update();
             }
             else {
-                double x = follower.powerY();
-                double y = follower.powerX();
+                double xTemp = follower.powerY();
+                double yTemp = follower.powerX();
                 double rx = follower.powerH();
+                double angle = follower.curH;
+                // Ok I don't know if we should x and y here, so let's try this first
+                // If it doesn't work, switch the sins and cosines
+                double x = xTemp * Math.cos(angle) - yTemp * Math.sin(angle);
+                double y = xTemp * Math.sin(angle) + yTemp * Math.cos(angle);
+
                 double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
                 // update power based on PID, similar method to telop
-                robot.motorFrontLeft.setPower(-(y + x + rx) / denominator);
-                robot.motorBackLeft.setPower( (y - x + rx) / denominator);
-                robot.motorFrontRight.setPower((y - x - rx) / denominator);
+                robot.motorFrontLeft.setPower(   -(y + x + rx) / denominator);
+                robot.motorBackLeft.setPower(    (y - x + rx) / denominator);
+                robot.motorFrontRight.setPower( (y - x - rx) / denominator);
                 robot.motorBackRight.setPower(-(y + x - rx) / denominator);
 
             }

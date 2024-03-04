@@ -25,9 +25,9 @@ public class SusTeleOp extends LinearOpMode  {
     public static volatile double MAX_TELEOP_VEL = 92.61691602936227;
     public static volatile int DEPOSIT_OUT_HEIGHT = 1000;
     public static volatile TwoPositions intakePositions = new TwoPositions(1.0, 0.65);
-    public static volatile TwoPositions depositLeftPositions = new TwoPositions(0.86, 0.1);
-    public static volatile TwoPositions depositRightPositions = new TwoPositions(0.14, 0.9);
-
+    public static volatile TwoPositions depositLeftPositions = new TwoPositions(0.79, 0.0);
+    public static volatile TwoPositions depositRightPositions = new TwoPositions(0.21, 1.0);
+    public static volatile double headingLockPosition = 0.0;
     // Other classwide items
     private HardwarePushbot robot = new HardwarePushbot();
     private FtcDashboard dashboard;
@@ -63,7 +63,7 @@ public class SusTeleOp extends LinearOpMode  {
 
         wheelState = 0;
         depositBoxIsOut = false;
-        boolean shouldResetDepositBox = false;
+        boolean shouldResetDepositBox = true;
         ElapsedTime depositBoxTimer = new ElapsedTime();
         boolean ignore_automatic_depositbox = false;
         boolean intaking;
@@ -107,7 +107,7 @@ public class SusTeleOp extends LinearOpMode  {
                 resetDepositBox();
             }
 
-            if (shouldResetDepositBox && depositBoxTimer.milliseconds() >= 750) {
+            if (shouldResetDepositBox && depositBoxTimer.milliseconds() >= 575) {
                 slides.moveToBottom();
             }
 
@@ -144,7 +144,9 @@ public class SusTeleOp extends LinearOpMode  {
             double heading_power;
             if(gamepad2.right_bumper) {
                 // HEADING LOCK!!! cool backdrop stuff
-                follower.setTargetPosition(0, 0, 0, 1000000, 1000000, 0.02);
+                headingLockPosition += Math.toRadians(Math.pow(-gamepad1.right_stick_x,3));
+                telemetry.addData("heading lock position", headingLockPosition);
+                follower.setTargetPosition(0, 0, headingLockPosition, 1000000, 1000000, 0.025);
                 // 0.5 degrees max off, 0.01 rad = 0.5 deg.
                 heading_power = follower.powerH();
             }

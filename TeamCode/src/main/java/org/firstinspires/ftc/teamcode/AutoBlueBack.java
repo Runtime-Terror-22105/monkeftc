@@ -20,6 +20,11 @@ public class AutoBlueBack extends LinearOpMode {
     public static double intakeHeight2 = 0.75;
     public static double intakeHeight3 = 0.72;
 
+    public coord[] points = new coord[100];
+    public coord leftDepo = new coord(-80, 12.045, 4.71239, 2, 1.25, Math.toRadians(3));
+    public coord rightDepo = new coord(-80, 25.938, 4.71239, 2, 1.25, Math.toRadians(3));
+    public coord centerDepo = new coord(-80, 19.381, 4.71239, 2, 1.25, Math.toRadians(3));
+
     // may need to adjust these intake positions
     @Override
     public void runOpMode() {
@@ -34,16 +39,22 @@ public class AutoBlueBack extends LinearOpMode {
                 dashboard,
                 (milliseconds) -> sleep(milliseconds)
         );
+        Slides slides = new Slides(
+                telemetry,
+                robot.slideLeft,
+                robot.slideRight,
+                robot.slidesEncoder
+        );
+        PidDriveTrain follower = new PidDriveTrain(
+                hardwareMap,
+                telemetry
+        );
 
         auto.initCamera(CenterStageAutonomous.WhatColorToDetect.RED);
         waitForStart();
 
         ObjectPositionPipeline.Location location = auto.getPropLocation();
         auto.stopCameraStreaming(); // camera stuff, copied from earlier
-        coord[] points = new coord[100];
-        coord leftDepo = new coord(-80, 12.045, 4.71239, 2, 1.25, Math.toRadians(3));
-        coord rightDepo = new coord(-80, 25.938, 4.71239, 2, 1.25, Math.toRadians(3));
-        coord centerDepo = new coord(-80, 19.381, 4.71239, 2, 1.25, Math.toRadians(3));
         int[] code = new int[100];
         /*
         Code represents action to do for that position
@@ -57,33 +68,19 @@ public class AutoBlueBack extends LinearOpMode {
         7: Deposit pixel (wait), outatke in, and slides down.
         8: Sleep for a little bit.
         */
-        Slides slides = new Slides(
-                telemetry,
-                robot.slideLeft,
-                robot.slideRight,
-                robot.slidesEncoder
-        );
-        PidDriveTrain follower = new PidDriveTrain(
-                hardwareMap,
-                telemetry
-        );
-
 
         int p = 0;
         int c = 0;
-        int cur = 0;
         switch(location) {
             case LEFT:
                 points[0] = new coord(-6.4503, 28.3385466, 5.465502567, 2, 2, Math.toRadians(3)); // place on purple pixel mark
                 points[1] = new coord(-0.28603, 19.313, 0, 2, 2, Math.toRadians(5)); // move back a little to reset
                 break;
             case MIDDLE:
-                cur = 1;
                 points[0] = new coord(-0.17, 29, 0, 2, 2, Math.toRadians(3)); // place on purple pixel mark
                 points[1] = new coord(-0.28603, 19.313, 0, 2, 2, Math.toRadians(5)); // move back a little to reset
                 break;
             case RIGHT:
-                cur = 2;
                 points[0] = new coord(10.3336, 25.514, 0, 2, 2, Math.toRadians(3)); // place on purple pixel mark
                 points[1] = new coord(-0.28603, 19.313, 0, 2, 2, Math.toRadians(5)); // move back a little to reset
                 points[2] = new coord(-0.2177, 50.84, 0, 2, 2, Math.toRadians(3)); // move back a little to reset
@@ -108,7 +105,7 @@ public class AutoBlueBack extends LinearOpMode {
         // Now, code cycles!
         // Number of i loops = number of cycles
         // i = 0, 2+1, i = 1, 2+3, i = 2, 2+5!!!
-        for (int i = 0; i <= 2; i++){
+        for (int i = 0; i <= 2; i++) {
             // First do the path  to get to the backdrop.
             // First go to under the stage door (USE HIGH ERROR)
             points[c] = new coord(-59.5049, 43.588, 4.71239, 2, 2, Math.toRadians(3));
@@ -117,8 +114,8 @@ public class AutoBlueBack extends LinearOpMode {
             // Then, you crossed the stage door, so change the desired position.
             // Depending on positions, change deposit.
             if(i == 0){ // first location, so need to be careful
-                switch(cur){
-                    case 0:
+                switch (location) {
+                    case LEFT:
                         points[c] = rightDepo;
                         code[c] = 6;
                         c++;
@@ -126,7 +123,7 @@ public class AutoBlueBack extends LinearOpMode {
                         code[c] = 11;
                         c++;
                         break;
-                    case 1:
+                    case MIDDLE:
                         points[c] = rightDepo;
                         code[c] = 6;
                         c++;
@@ -134,7 +131,7 @@ public class AutoBlueBack extends LinearOpMode {
                         code[c] = 11;
                         c++;
                         break;
-                    case 2:
+                    case RIGHT:
                         points[c] = centerDepo;
                         code[c] = 6;
                         c++;
@@ -144,7 +141,7 @@ public class AutoBlueBack extends LinearOpMode {
                         break;
                 }
             }
-            else{
+            else {
                 // just do right depot as fastest
                 points[c] = rightDepo;
                 code[c] = 7;

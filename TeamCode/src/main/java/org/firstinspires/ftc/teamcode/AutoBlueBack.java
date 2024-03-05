@@ -16,7 +16,7 @@ public class AutoBlueBack extends LinearOpMode {
     public static volatile TwoPositions depositLeftPositions = new TwoPositions(0.79, 0.0);
     public static volatile TwoPositions depositRightPositions = new TwoPositions(0.21, 1.0);
     public static double resetIntakeHeight = 1.0;
-    public static double intakeHeight1 = 0.81;
+    public static double intakeHeight1 = 0.795;
     public static double intakeHeight2 = 0.75;
     public static double intakeHeight3 = 0.72;
 
@@ -41,9 +41,9 @@ public class AutoBlueBack extends LinearOpMode {
         ObjectPositionPipeline.Location location = auto.getPropLocation();
         auto.stopCameraStreaming(); // camera stuff, copied from earlier
         coord[] points = new coord[100];
-        coord leftDepo = new coord(-79.819, 17.045, 4.71239, 2, 2, Math.toRadians(3));
-        coord rightDepo = new coord(-79.819, 30.938, 4.71239, 2, 2, Math.toRadians(3));
-        coord centerDepo = new coord(-79.819, 24.381, 4.71239, 2, 2, Math.toRadians(3));
+        coord leftDepo = new coord(-80, 12.045, 4.71239, 2, 1.25, Math.toRadians(3));
+        coord rightDepo = new coord(-80, 25.938, 4.71239, 2, 1.25, Math.toRadians(3));
+        coord centerDepo = new coord(-80, 19.381, 4.71239, 2, 1.25, Math.toRadians(3));
         int[] code = new int[100];
         /*
         Code represents action to do for that position
@@ -71,16 +71,19 @@ public class AutoBlueBack extends LinearOpMode {
 
         int p = 0;
         int c = 0;
+        int cur = 0;
         switch(location) {
             case LEFT:
                 points[0] = new coord(-6.4503, 28.3385466, 5.465502567, 2, 2, Math.toRadians(3)); // place on purple pixel mark
                 points[1] = new coord(-0.28603, 19.313, 0, 2, 2, Math.toRadians(5)); // move back a little to reset
                 break;
             case MIDDLE:
+                cur = 1;
                 points[0] = new coord(-0.17, 29, 0, 2, 2, Math.toRadians(3)); // place on purple pixel mark
                 points[1] = new coord(-0.28603, 19.313, 0, 2, 2, Math.toRadians(5)); // move back a little to reset
                 break;
             case RIGHT:
+                cur = 2;
                 points[0] = new coord(10.3336, 25.514, 0, 2, 2, Math.toRadians(3)); // place on purple pixel mark
                 points[1] = new coord(-0.28603, 19.313, 0, 2, 2, Math.toRadians(5)); // move back a little to reset
                 points[2] = new coord(-0.2177, 50.84, 0, 2, 2, Math.toRadians(3)); // move back a little to reset
@@ -98,7 +101,7 @@ public class AutoBlueBack extends LinearOpMode {
         points[c] = new coord(12, 50.68, 4.71239, 2, 2, Math.toRadians(3));
         code[c] = 10; // Start intake as we have reached the stack
         c++;
-        points[c] = new coord(20.5397, 50.68, 4.71239, 2, 2, Math.toRadians(3));
+        points[c] = new coord(19.5397, 50.68, 4.71239, 2, 2, Math.toRadians(3));
         code[c] = 1; // Start intake as we have reached the stack
         c++;
 
@@ -109,34 +112,34 @@ public class AutoBlueBack extends LinearOpMode {
             // First do the path  to get to the backdrop.
             // First go to under the stage door (USE HIGH ERROR)
             points[c] = new coord(-59.5049, 43.588, 4.71239, 2, 2, Math.toRadians(3));
-            code[c] = 4; // Slides up and down
+            code[c] = 5; // Slides up and down
             c++;
             // Then, you crossed the stage door, so change the desired position.
             // Depending on positions, change deposit.
             if(i == 0){ // first location, so need to be careful
-                switch(location){
-                    case LEFT:
+                switch(cur){
+                    case 0:
                         points[c] = rightDepo;
                         code[c] = 6;
                         c++;
                         points[c] = leftDepo;
-                        code[c] = 6;
+                        code[c] = 11;
                         c++;
                         break;
-                    case MIDDLE:
+                    case 1:
                         points[c] = rightDepo;
                         code[c] = 6;
                         c++;
                         points[c] = centerDepo;
-                        code[c] = 6;
+                        code[c] = 11;
                         c++;
                         break;
-                    case RIGHT:
+                    case 2:
                         points[c] = centerDepo;
                         code[c] = 6;
                         c++;
                         points[c] = rightDepo;
-                        code[c] = 6;
+                        code[c] = 11;
                         c++;
                         break;
                 }
@@ -148,7 +151,7 @@ public class AutoBlueBack extends LinearOpMode {
                 c++;
             }
 
-            if(i == 3){
+            if(i == 2){
                 break;
             }
 
@@ -164,8 +167,8 @@ public class AutoBlueBack extends LinearOpMode {
             points[c] = new coord(12, 50.68, 4.71239, 2, 2, Math.toRadians(3));
             code[c] = 10; // Start intake as we have reached the stack
             c++;
-            points[c] = new coord(20.5397, 50.68, 4.71239, 2, 2, Math.toRadians(3));
-            code[c] = 1; // Start intake as we have reached the stack
+            points[c] = new coord(19.5397, 50.68, 4.71239, 2, 2, Math.toRadians(3));
+            code[c] = i + 1; // Start intake as we have reached the stack
             c++;
             // REPEAT
         }
@@ -205,6 +208,7 @@ public class AutoBlueBack extends LinearOpMode {
             */
                 switch(code[p]) { // will code this after
                     case 0:
+                        intakeOff();
                         break;
                     case 1:
                         intakeOn(1);
@@ -221,27 +225,27 @@ public class AutoBlueBack extends LinearOpMode {
                         break;
                     case 5:
                         intakeOff();
-                        slides.moveToLineTwo();
+                        slides.moveToLineOne();
                         break;
                     case 6:
                         setDepositBox();
-                        sleep(500);
+                        sleep(700);
                         wheelSpitPixel(300);
-                        sleep(300);
+                        sleep(1000);
                         break;
                     case 7:
                         setDepositBox();
-                        sleep(600);
+                        sleep(700);
                         wheelSpitPixel(300);
-                        sleep(300);
+                        sleep(500);
                         resetDepositBox();
-                        sleep(575);
+                        sleep(1000);
                         slides.moveToBottom();
                         resetDepositBox();
                         break;
-                        // Aadit pls code this later on to make it proper
-                        // Later on we can just make it so it resets while raising I was too lazy rn to do it
-                        // To optimize for time
+                    // Aadit pls code this later on to make it proper
+                    // Later on we can just make it so it resets while raising I was too lazy rn to do it
+                    // To optimize for time
                     case 8:
                         sleep(300);
                         break;
@@ -249,6 +253,16 @@ public class AutoBlueBack extends LinearOpMode {
                     case 10:
                         robot.intakeControl.setPosition(resetIntakeHeight);
                         break;
+                    case 11:
+                        setDepositBox();
+                        sleep(700);
+                        wheelSpitPixel(300);
+                        sleep(500);
+                        resetDepositBox();
+                        resetDepositBox();
+                        sleep(800);
+                        slides.moveToBottom();
+                        resetDepositBox();
                 }
                 p++;
             }
@@ -289,6 +303,7 @@ public class AutoBlueBack extends LinearOpMode {
 
     public void intakeOn(int mode) {
         robot.wheel.setPower(-1.0);
+        resetDepositBox();
         if(mode == 1){
             robot.intakeControl.setPosition(intakeHeight1);
         }
@@ -298,11 +313,11 @@ public class AutoBlueBack extends LinearOpMode {
         if(mode == 3){
             robot.intakeControl.setPosition(intakeHeight3);
         }
-        sleep(600);
+        sleep(700);
 
         robot.intake.setPower(-1.0);
-        sleep(1000);
-        robot.intake.setPower(0.0);
+        sleep(2000);
+
     }
     public void intakeOff() {
         robot.intakeControl.setPosition(resetIntakeHeight);

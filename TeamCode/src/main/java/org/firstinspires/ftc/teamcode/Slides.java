@@ -14,8 +14,8 @@ import org.firstinspires.ftc.teamcode.util.Encoder;
 public class Slides {
     // slide constants
     public static int MIN_HEIGHT        = 0; // measured in counts
-    public static int LINE_ONE_HEIGHT   = 1000;
-    public static int LINE_TWO_HEIGHT   = 2000;
+    public static int LINE_ONE_HEIGHT   = 1450;
+    public static int LINE_TWO_HEIGHT   = 1800;
     public static int LINE_THREE_HEIGHT = 2600;
     public static int MAX_HEIGHT        = 2650; // to be determined via experimentation
 

@@ -14,7 +14,7 @@ import org.openftc.easyopencv.OpenCvPipeline;
 
 @Config
 public class ObjectPositionPipeline extends OpenCvPipeline {
-    public static volatile double DETECTION_THRESHOLD = 0.5;
+    // public static volatile double DETECTION_THRESHOLD = 0.5;
     // ROI = region of interest, aka the rectangle we're drawing
     // you should fine tune this
     public static volatile Rect ROI_Left   = new Rect(new Point( 0, 0), new Point(107, 240));
@@ -35,15 +35,22 @@ public class ObjectPositionPipeline extends OpenCvPipeline {
     public static double MAX_VALUES = 255;
     public static double MIN_SATURATION = 100;
     public static double MAX_SATURATION = 255;
-    public static double MIN_BLUE_HUE = 100;
-    public static double MAX_BLUE_HUE = 115;
+    public static double MIN_BLUE_HUE = 180;
+    public static double MAX_BLUE_HUE = 240;
     public static double MIN_RED_LOW_HUE = 0;
-    public static double MAX_RED_LOW_HUE = 25;
-    public static double MIN_RED_HIGH_HUE = 160;
-    public static double MAX_RED_HIGH_HUE = 255;
+    public static double MAX_RED_LOW_HUE = 30;
+    public static double MIN_RED_HIGH_HUE = 336;
+    public static double MAX_RED_HIGH_HUE = 360;
+    // opencv uses hue from 0-180 instead of 0-360 for some reason so I divide by 2
+    static Scalar MIN_BLUE     = new Scalar(MIN_BLUE_HUE/2,     MIN_SATURATION, MIN_VALUES);
+    static Scalar MAX_BLUE     = new Scalar(MAX_BLUE_HUE/2,     MAX_SATURATION, MAX_VALUES);
+    static Scalar MIN_RED_LOW  = new Scalar(MIN_RED_LOW_HUE/2,  MIN_SATURATION, MIN_VALUES);
+    static Scalar MAX_RED_LOW  = new Scalar(MAX_RED_LOW_HUE/2,  MAX_SATURATION, MAX_VALUES);
+    static Scalar MIN_RED_HIGH = new Scalar(MIN_RED_HIGH_HUE/2, MIN_SATURATION, MIN_VALUES);
+    static Scalar MAX_RED_HIGH = new Scalar(MAX_RED_HIGH_HUE/2, MAX_SATURATION, MAX_VALUES);
 
 
-    public enum Location {
+    public static enum Location {
         LEFT,
         MIDDLE,
         RIGHT
@@ -126,15 +133,6 @@ public class ObjectPositionPipeline extends OpenCvPipeline {
 //        this.telemetry.update();
 //
 
-
-        // create s
-        Scalar MIN_BLUE = new Scalar(MIN_BLUE_HUE, MIN_SATURATION, MIN_VALUES);
-        Scalar MAX_BLUE = new Scalar(MAX_BLUE_HUE, MAX_SATURATION, MAX_VALUES);
-        Scalar MIN_RED_LOW = new Scalar(MIN_RED_LOW_HUE, MIN_SATURATION, MIN_VALUES);
-        Scalar MAX_RED_LOW = new Scalar(MAX_RED_LOW_HUE, MAX_SATURATION, MAX_VALUES);
-        Scalar MIN_RED_HIGH = new Scalar(MIN_RED_HIGH_HUE, MIN_SATURATION, MIN_VALUES);
-        Scalar MAX_RED_HIGH = new Scalar(MAX_RED_HIGH_HUE, MAX_SATURATION, MAX_VALUES);
-
         if (DETECT_RED) {
             // check if red one is there, check both high and low range in spectrum
             Mat mat1 = mat.clone();
@@ -148,14 +146,12 @@ public class ObjectPositionPipeline extends OpenCvPipeline {
             Core.inRange(mat, MIN_BLUE, MAX_BLUE, mat);
         }
 
-        // make submatrices, I don't understand this part yet
+        // make submatrices for each ROI
         Mat left = mat.submat(ROI_Left);
         Mat middle = mat.submat(ROI_Middle);
         Mat right = mat.submat(ROI_Right);
 
-        // I don't yet understand this but
-        // % white can be determined by adding props, dividing by area
-        // grayscale image only has one channel so we take [0] only
+        // Find which area has the most stuff captured by the mask
         double leftValue = Core.sumElems(left).val[0];
         double middleValue = Core.sumElems(middle).val[0];
         double rightValue = Core.sumElems(right).val[0];

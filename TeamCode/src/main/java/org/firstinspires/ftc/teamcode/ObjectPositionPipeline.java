@@ -1,4 +1,19 @@
-// basics of opencv: https://docs.opencv.org/3.4/d6/d6d/tutorial_mat_the_basic_image_container.html
+/* Notes
+
+Basics of OpenCV: https://docs.opencv.org/3.4/d6/d6d/tutorial_mat_the_basic_image_container.html
+Example of filtering: https://stackoverflow.com/questions/36693348/java-opencv-core-inrange-input-parameters
+Example code: https://github.com/FTCLib/FTCLib/blob/master/core/vision/src/main/java/com/arcrobotics/ftclib/vision/UGContourRingPipeline.kt
+
+The reason why the camera detection was not working well was likely that the color to detect 
+for the team prop was not tuned well, so it was detecting too many different colors and getting 
+confused about which section had the most of the correct blue/red color since how it works is 
+that it simply filters sections that have the correct range of colors.
+
+Two fixes:
+- Tune the color ranges to detect
+- Do a Gaussian blur at the start since if the image is blurred/smoothed out then the colors 
+  might be more obvious (it seems that this is used a lot in computer vision)
+*/
 package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.config.Config;
@@ -71,67 +86,13 @@ public class ObjectPositionPipeline extends OpenCvPipeline {
         //          we check for value since it is "brightness", we don't want to accidentally detect black or white or something else
         Mat mat = new Mat(); // our working copy of the image, mat = matrix
         Imgproc.cvtColor(input, mat, Imgproc.COLOR_RGB2HSV);
-//        Imgproc.cvtColor(input, mat, Imgproc.COLOR_RGB2YCrCb);
 
         // If something goes wrong, return
         if (mat.empty()) {
-            this.telemetry.addData("processFrame func", "something wnet wrong");
+            this.telemetry.addData("processFrame func", "something went wrong");
             this.telemetry.update();
             return input;
         }
-
-//        // extract either the red or blue color channel
-//        Mat oneColor = new Mat();
-//        Scalar propColor;
-//        if (this.DETECT_RED) {
-//            propColor = redColor;
-//            Core.extractChannel(mat, oneColor, 2);
-//        }
-//        else {
-//            propColor = blueColor;
-//            Core.extractChannel(mat, oneColor, 1);
-//        }
-//
-//        // split the matrix into submatrices
-//        Mat leftMat = oneColor.submat(ROI_Left);
-//        Mat middleMat = oneColor.submat(ROI_Middle);
-//        Mat rightMat = oneColor.submat(ROI_Right);
-//
-//        Scalar leftAvgScalar = Core.mean(leftMat);
-//        Scalar middleAvgScalar = Core.mean(middleMat);
-//        Scalar rightAvgScalar = Core.mean(rightMat);
-//
-//        leftAvg = leftAvgScalar.val[0];
-//        middleAvg = middleAvgScalar.val[0];
-//        rightAvg = rightAvgScalar.val[0];
-//
-////        // camera can't see right when robot is on the blue side and camera can't see left on red side
-////        if (leftAvg <= DETECTION_THRESHOLD && middleAvg <= DETECTION_THRESHOLD && rightAvg <= DETECTION_THRESHOLD) {
-////            if (DETECT_RED) { leftAvg  = 100000; }
-////            else            { rightAvg = 100000; }
-////            this.telemetry.addData("Prop did not meet detection threshold", "cri");
-////        }
-//
-//        this.telemetry.addData("leftAvg", leftAvg);
-//        this.telemetry.addData("middleAvg", middleAvg);
-//        this.telemetry.addData("rightAvg", rightAvg);
-//        if (leftAvg >= rightAvg && leftAvg >= middleAvg) {
-//            propLocation = Location.LEFT;
-//            Imgproc.rectangle(mat, ROI_Left, propColor);
-//            this.telemetry.addData("Prop location:", "left");
-//        }
-//        else if (rightAvg >= middleAvg) {
-//            propLocation = Location.RIGHT;
-//            Imgproc.rectangle(mat, ROI_Right, propColor);
-//            this.telemetry.addData("Prop location:", "right");
-//        }
-//        else {
-//            propLocation = Location.MIDDLE;
-//            Imgproc.rectangle(mat, ROI_Middle, propColor);
-//            this.telemetry.addData("Prop location:", "middle");
-//        }
-//        this.telemetry.update();
-//
 
         if (DETECT_RED) {
             // check if red one is there, check both high and low range in spectrum
@@ -152,6 +113,7 @@ public class ObjectPositionPipeline extends OpenCvPipeline {
         Mat right = mat.submat(ROI_Right);
 
         // Find which area has the most stuff captured by the mask
+        // We do the [0] since the image is grayscale now
         double leftValue = Core.sumElems(left).val[0];
         double middleValue = Core.sumElems(middle).val[0];
         double rightValue = Core.sumElems(right).val[0];

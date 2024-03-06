@@ -1,4 +1,19 @@
-// basics of opencv: https://docs.opencv.org/3.4/d6/d6d/tutorial_mat_the_basic_image_container.html
+/* Notes
+
+Basics of OpenCV: https://docs.opencv.org/3.4/d6/d6d/tutorial_mat_the_basic_image_container.html
+Example of filtering: https://stackoverflow.com/questions/36693348/java-opencv-core-inrange-input-parameters
+Example code: https://github.com/FTCLib/FTCLib/blob/master/core/vision/src/main/java/com/arcrobotics/ftclib/vision/UGContourRingPipeline.kt
+
+The reason why the camera detection was not working well was likely that the color to detect 
+for the team prop was not tuned well, so it was detecting too many different colors and getting 
+confused about which section had the most of the correct blue/red color since how it works is 
+that it simply filters sections that have the correct range of colors.
+
+Two fixes:
+- Tune the color ranges to detect
+- Do a Gaussian blur at the start since if the image is blurred/smoothed out then the colors 
+  might be more obvious (it seems that this is used a lot in computer vision)
+*/
 package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.config.Config;
@@ -14,7 +29,7 @@ import org.openftc.easyopencv.OpenCvPipeline;
 
 @Config
 public class ObjectPositionPipeline extends OpenCvPipeline {
-    public static volatile double DETECTION_THRESHOLD = 0.5;
+    // public static volatile double DETECTION_THRESHOLD = 0.5;
     // ROI = region of interest, aka the rectangle we're drawing
     // you should fine tune this
     public static volatile Rect ROI_Left   = new Rect(new Point( 0, 0), new Point(107, 240));
@@ -35,15 +50,22 @@ public class ObjectPositionPipeline extends OpenCvPipeline {
     public static double MAX_VALUES = 255;
     public static double MIN_SATURATION = 100;
     public static double MAX_SATURATION = 255;
-    public static double MIN_BLUE_HUE = 100;
-    public static double MAX_BLUE_HUE = 115;
+    public static double MIN_BLUE_HUE = 180;
+    public static double MAX_BLUE_HUE = 240;
     public static double MIN_RED_LOW_HUE = 0;
-    public static double MAX_RED_LOW_HUE = 25;
-    public static double MIN_RED_HIGH_HUE = 160;
-    public static double MAX_RED_HIGH_HUE = 255;
+    public static double MAX_RED_LOW_HUE = 30;
+    public static double MIN_RED_HIGH_HUE = 336;
+    public static double MAX_RED_HIGH_HUE = 360;
+    // opencv uses hue from 0-180 instead of 0-360 for some reason so I divide by 2
+    static Scalar MIN_BLUE     = new Scalar(MIN_BLUE_HUE/2,     MIN_SATURATION, MIN_VALUES);
+    static Scalar MAX_BLUE     = new Scalar(MAX_BLUE_HUE/2,     MAX_SATURATION, MAX_VALUES);
+    static Scalar MIN_RED_LOW  = new Scalar(MIN_RED_LOW_HUE/2,  MIN_SATURATION, MIN_VALUES);
+    static Scalar MAX_RED_LOW  = new Scalar(MAX_RED_LOW_HUE/2,  MAX_SATURATION, MAX_VALUES);
+    static Scalar MIN_RED_HIGH = new Scalar(MIN_RED_HIGH_HUE/2, MIN_SATURATION, MIN_VALUES);
+    static Scalar MAX_RED_HIGH = new Scalar(MAX_RED_HIGH_HUE/2, MAX_SATURATION, MAX_VALUES);
 
 
-    public enum Location {
+    public static enum Location {
         LEFT,
         MIDDLE,
         RIGHT
@@ -64,76 +86,13 @@ public class ObjectPositionPipeline extends OpenCvPipeline {
         //          we check for value since it is "brightness", we don't want to accidentally detect black or white or something else
         Mat mat = new Mat(); // our working copy of the image, mat = matrix
         Imgproc.cvtColor(input, mat, Imgproc.COLOR_RGB2HSV);
-//        Imgproc.cvtColor(input, mat, Imgproc.COLOR_RGB2YCrCb);
 
         // If something goes wrong, return
         if (mat.empty()) {
-            this.telemetry.addData("processFrame func", "something wnet wrong");
+            this.telemetry.addData("processFrame func", "something went wrong");
             this.telemetry.update();
             return input;
         }
-
-//        // extract either the red or blue color channel
-//        Mat oneColor = new Mat();
-//        Scalar propColor;
-//        if (this.DETECT_RED) {
-//            propColor = redColor;
-//            Core.extractChannel(mat, oneColor, 2);
-//        }
-//        else {
-//            propColor = blueColor;
-//            Core.extractChannel(mat, oneColor, 1);
-//        }
-//
-//        // split the matrix into submatrices
-//        Mat leftMat = oneColor.submat(ROI_Left);
-//        Mat middleMat = oneColor.submat(ROI_Middle);
-//        Mat rightMat = oneColor.submat(ROI_Right);
-//
-//        Scalar leftAvgScalar = Core.mean(leftMat);
-//        Scalar middleAvgScalar = Core.mean(middleMat);
-//        Scalar rightAvgScalar = Core.mean(rightMat);
-//
-//        leftAvg = leftAvgScalar.val[0];
-//        middleAvg = middleAvgScalar.val[0];
-//        rightAvg = rightAvgScalar.val[0];
-//
-////        // camera can't see right when robot is on the blue side and camera can't see left on red side
-////        if (leftAvg <= DETECTION_THRESHOLD && middleAvg <= DETECTION_THRESHOLD && rightAvg <= DETECTION_THRESHOLD) {
-////            if (DETECT_RED) { leftAvg  = 100000; }
-////            else            { rightAvg = 100000; }
-////            this.telemetry.addData("Prop did not meet detection threshold", "cri");
-////        }
-//
-//        this.telemetry.addData("leftAvg", leftAvg);
-//        this.telemetry.addData("middleAvg", middleAvg);
-//        this.telemetry.addData("rightAvg", rightAvg);
-//        if (leftAvg >= rightAvg && leftAvg >= middleAvg) {
-//            propLocation = Location.LEFT;
-//            Imgproc.rectangle(mat, ROI_Left, propColor);
-//            this.telemetry.addData("Prop location:", "left");
-//        }
-//        else if (rightAvg >= middleAvg) {
-//            propLocation = Location.RIGHT;
-//            Imgproc.rectangle(mat, ROI_Right, propColor);
-//            this.telemetry.addData("Prop location:", "right");
-//        }
-//        else {
-//            propLocation = Location.MIDDLE;
-//            Imgproc.rectangle(mat, ROI_Middle, propColor);
-//            this.telemetry.addData("Prop location:", "middle");
-//        }
-//        this.telemetry.update();
-//
-
-
-        // create s
-        Scalar MIN_BLUE = new Scalar(MIN_BLUE_HUE, MIN_SATURATION, MIN_VALUES);
-        Scalar MAX_BLUE = new Scalar(MAX_BLUE_HUE, MAX_SATURATION, MAX_VALUES);
-        Scalar MIN_RED_LOW = new Scalar(MIN_RED_LOW_HUE, MIN_SATURATION, MIN_VALUES);
-        Scalar MAX_RED_LOW = new Scalar(MAX_RED_LOW_HUE, MAX_SATURATION, MAX_VALUES);
-        Scalar MIN_RED_HIGH = new Scalar(MIN_RED_HIGH_HUE, MIN_SATURATION, MIN_VALUES);
-        Scalar MAX_RED_HIGH = new Scalar(MAX_RED_HIGH_HUE, MAX_SATURATION, MAX_VALUES);
 
         if (DETECT_RED) {
             // check if red one is there, check both high and low range in spectrum
@@ -148,14 +107,13 @@ public class ObjectPositionPipeline extends OpenCvPipeline {
             Core.inRange(mat, MIN_BLUE, MAX_BLUE, mat);
         }
 
-        // make submatrices, I don't understand this part yet
+        // make submatrices for each ROI
         Mat left = mat.submat(ROI_Left);
         Mat middle = mat.submat(ROI_Middle);
         Mat right = mat.submat(ROI_Right);
 
-        // I don't yet understand this but
-        // % white can be determined by adding props, dividing by area
-        // grayscale image only has one channel so we take [0] only
+        // Find which area has the most stuff captured by the mask
+        // We do the [0] since the image is grayscale now
         double leftValue = Core.sumElems(left).val[0];
         double middleValue = Core.sumElems(middle).val[0];
         double rightValue = Core.sumElems(right).val[0];

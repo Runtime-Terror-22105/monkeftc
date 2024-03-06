@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.util.Encoder;
 public class Slides {
     // slide constants
     public static int MIN_HEIGHT        = 0; // measured in counts
-    public static int LINE_ONE_HEIGHT   = 1450;
+    public static int LINE_ONE_HEIGHT   = 1200;
     public static int LINE_TWO_HEIGHT   = 1800;
     public static int LINE_THREE_HEIGHT = 2600;
     public static int MAX_HEIGHT        = 2650; // to be determined via experimentation
@@ -39,6 +39,7 @@ public class Slides {
     private DcMotor slideRight;
     private Encoder slidesEncoder;
 
+    public boolean reached = false;
     public Slides(Telemetry telemetry, DcMotor slideLeft, DcMotor slideRight, Encoder slidesEncoder) {
         this.telemetry     = telemetry;
         this.slideLeft     = slideLeft;
@@ -78,10 +79,12 @@ public class Slides {
 
             // reset the timer for next time
             timer.reset();
+            reached = false;
             return out;
         }
         else {
             _resetTempVars();
+            reached = true;
             return 0;
         }
     }

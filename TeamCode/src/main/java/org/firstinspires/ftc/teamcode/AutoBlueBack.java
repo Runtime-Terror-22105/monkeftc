@@ -25,9 +25,9 @@ public class AutoBlueBack extends LinearOpMode {
     public static int depositOnePixel = 400;
 
     public coord[] points = new coord[100];
-    public coord leftDepo = new coord(-80, 12.045, 4.71239, 2, 1, Math.toRadians(3));
-    public coord rightDepo = new coord(-80, 25.938, 4.71239, 2, 1, Math.toRadians(3));
-    public coord centerDepo = new coord(-80, 19.381, 4.71239, 2, 1, Math.toRadians(3));
+    public coord leftDepo = new coord(-83.47697, 31.702, 4.71239, 2, 1, Math.toRadians(3));
+    public coord rightDepo = new coord(-83.47697, 25.938, 4.71239, 2, 1, Math.toRadians(3));
+    public coord centerDepo = new coord(-83.47697, 20.01, 4.71239, 2, 1, Math.toRadians(3));
 
     // may need to adjust these intake positions
     @Override

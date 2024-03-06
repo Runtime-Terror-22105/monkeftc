@@ -25,9 +25,9 @@ public class AutoBlueBack extends LinearOpMode {
     public static int depositOnePixel = 400;
 
     public coord[] points = new coord[100];
-    public coord leftDepo = new coord(-83.47697, 31.702, 4.71239, 2, 1, Math.toRadians(3));
-    public coord rightDepo = new coord(-83.47697, 25.938, 4.71239, 2, 1, Math.toRadians(3));
-    public coord centerDepo = new coord(-83.47697, 20.01, 4.71239, 2, 1, Math.toRadians(3));
+    public coord leftDepo = new coord(-83.07697, 31.702, 4.71239, 2, 1, Math.toRadians(3));
+    public coord rightDepo = new coord(-83.07697, 25.938, 4.71239, 2, 1, Math.toRadians(3));
+    public coord centerDepo = new coord(-83.07697, 20.01, 4.71239, 2, 1, Math.toRadians(3));
 
     // may need to adjust these intake positions
     @Override
@@ -110,7 +110,7 @@ public class AutoBlueBack extends LinearOpMode {
         // Now, code cycles!
         // Number of i loops = number of cycles
         // i = 0, 2+1, i = 1, 2+3, i = 2, 2+5!!!
-        for (int i = 0; i <= 2; i++) {
+        for (int i = 0; i <= 3; i++) {
             // First do the path  to get to the backdrop.
             // First go to under the stage door (USE HIGH ERROR)
             points[c] = new coord(-59.5049, 48, 4.71239, 10, 3, Math.toRadians(3));
@@ -153,7 +153,7 @@ public class AutoBlueBack extends LinearOpMode {
                 c++;
             }
 
-            if(i == 2){
+            if(i == 3){
                 break;
             }
 
@@ -165,13 +165,25 @@ public class AutoBlueBack extends LinearOpMode {
             c++;
 
             // Now turn on intake and go to stack!
-
-            points[c] = new coord(12, 50.68, 4.71239, 2, 2, Math.toRadians(3));
-            code[c] = 0;
-            c++;
-            points[c] = new coord(19.5397, 50.68, 4.71239, 2, 2, Math.toRadians(3));
-            code[c] = i + 1; // Start intake as we have reached the stack
-            c++;
+            if(i != 2) {
+                points[c] = new coord(12, 50.68, 4.71239, 2, 2, Math.toRadians(3));
+                code[c] = 0;
+                c++;
+                points[c] = new coord(19.5397, 50.68, 4.71239, 2, 2, Math.toRadians(3));
+                code[c] = i + 1; // Start intake as we have reached the stack
+                c++;
+            }
+            else{
+                points[c] = new coord(19.5397, 50.68, 4.71239, 2, 2, Math.toRadians(3));
+                code[c] = 0;
+                c++;
+                points[c] = new coord(19.5397, -38.61, 4.71239, 2, 2, Math.toRadians(3));
+                code[c] = 1; // Start intake as we have reached the stack
+                c++;
+                points[c] = new coord(19.5397, 50.68, 4.71239, 2, 2, Math.toRadians(3));
+                code[c] = 1; // Start intake as we have reached the stack
+                c++;
+            }
             // REPEAT
         }
 

@@ -18,16 +18,16 @@ public class AutoBlueBack extends LinearOpMode {
     public static volatile TwoPositions depositLeftPositions = new TwoPositions(0.79, 0.0);
     public static volatile TwoPositions depositRightPositions = new TwoPositions(0.21, 1.0);
     public static double resetIntakeHeight = 1.0;
-    public static double intakeHeight1 = 0.795;
-    public static double intakeHeight2 = 0.75;
-    public static double intakeHeight3 = 0.72;
+    public static double intakeHeight1 = 0.80;
+    public static double intakeHeight2 = 0.73;
+    public static double intakeHeight3 = 0.71;
 
-    public static int depositOnePixel = 400;
+    public static int depositOnePixel = 590;
 
     public coord[] points = new coord[100];
-    public coord leftDepo = new coord(-83.07697, 31.702, 4.71239, 2, 1, Math.toRadians(3));
-    public coord rightDepo = new coord(-83.07697, 25.938, 4.71239, 2, 1, Math.toRadians(3));
-    public coord centerDepo = new coord(-83.07697, 20.01, 4.71239, 2, 1, Math.toRadians(3));
+    public coord leftDepo = new coord(-82.07697, 15.01, 4.71239, 2, 0.8, Math.toRadians(3));
+    public coord rightDepo = new coord(-82.07697, 26.702, 4.71239, 2, 0.8, Math.toRadians(3));
+    public coord centerDepo = new coord(-82.07697, 20.9381, 4.71239, 2, 0.8, Math.toRadians(3));
 
     // may need to adjust these intake positions
     @Override
@@ -103,7 +103,7 @@ public class AutoBlueBack extends LinearOpMode {
         points[c] = new coord(12, 50.68, 4.71239, 2, 2, Math.toRadians(3));
         code[c] = 0; // Nothing new
         c++;
-        points[c] = new coord(19.5397, 50.68, 4.71239, 2, 2, Math.toRadians(3));
+        points[c] = new coord(19.2397, 50.68, 4.71239, 2, 0.8, Math.toRadians(3));
         code[c] = 1; // Start intake as we have reached the stack
         c++;
 
@@ -160,7 +160,7 @@ public class AutoBlueBack extends LinearOpMode {
             // Now we have placed pixels. We must go back to stack.
             // First get to parallel, use large error for no slow down
 
-            points[c] = new coord(-45.4, 69.002, 4.71239, 6, 6, Math.toRadians(6));
+            points[c] = new coord(-40.4, 69.002, 4.71239, 6, 6, Math.toRadians(6));
             code[c] = -1; // Nothing to change
             c++;
 
@@ -169,18 +169,18 @@ public class AutoBlueBack extends LinearOpMode {
                 points[c] = new coord(12, 50.68, 4.71239, 2, 2, Math.toRadians(3));
                 code[c] = 0;
                 c++;
-                points[c] = new coord(19.5397, 50.68, 4.71239, 2, 2, Math.toRadians(3));
+                points[c] = new coord(19.2397, 50.68, 4.71239, 2, 0.8, Math.toRadians(3));
                 code[c] = i + 1; // Start intake as we have reached the stack
                 c++;
             }
             else{
-                points[c] = new coord(19.5397, 50.68, 4.71239, 2, 2, Math.toRadians(3));
+                points[c] = new coord(19.7397, 50.68, 4.71239, 2, 2, Math.toRadians(3));
                 code[c] = 0;
                 c++;
-                points[c] = new coord(19.5397, -38.61, 4.71239, 2, 2, Math.toRadians(3));
+                points[c] = new coord(19.2397, 38.61, 4.71239, 1, 0.8, Math.toRadians(3));
                 code[c] = 1; // Start intake as we have reached the stack
                 c++;
-                points[c] = new coord(19.5397, 50.68, 4.71239, 2, 2, Math.toRadians(3));
+                points[c] = new coord(19.7397, 50.68, 4.71239, 2, 2, Math.toRadians(3));
                 code[c] = 1; // Start intake as we have reached the stack
                 c++;
             }
@@ -191,18 +191,20 @@ public class AutoBlueBack extends LinearOpMode {
         boolean goingDown = false;
         boolean startedGoingDown = false;
         int isSus = 2;
+        boolean override = false;
         while (opModeIsActive()) { // continuous while loop for program
             double slidePower = slides.updateSlides();
             slides.setSlidePower(slidePower); // also update slides power, copied from teleop
-            if(isSus == 1 && slides.reached){
+            if(!override && isSus == 1 && slides.reached){
                 goingDown = true;
             }
 
-            if(!goingDown && robot.slidesEncoder.getCurrentPosition() >= 1000){
+            if(isSus == 2 && !goingDown && robot.slidesEncoder.getCurrentPosition() >= 1000 && slides.getTargetPosition() != 0){
                 setDepositBox();
             }
             if(goingDown && !startedGoingDown){
                 depositBoxTimer.reset();
+                resetDepositBox();
                 startedGoingDown = true;
             }
             if(goingDown && startedGoingDown && depositBoxTimer.milliseconds() >= 575){
@@ -210,7 +212,10 @@ public class AutoBlueBack extends LinearOpMode {
                 isSus = 2;
                 goingDown = false;
                 startedGoingDown = false;
+                override = true;
             }
+
+
 
             if (p != numPoints) {
                 follower.setTargetPosition(
@@ -279,7 +284,7 @@ public class AutoBlueBack extends LinearOpMode {
                         break;
                     case 5:
                         wheelSpitPixel(depositOnePixel);
-                        slides.setTargetPosition(600);
+                        slides.setTargetPosition(1000);
                         // approximate height for proper yellow pixel placement
                         break;
                     case 6:
@@ -345,7 +350,7 @@ public class AutoBlueBack extends LinearOpMode {
         sleep(550);
 
         robot.intake.setPower(-1.0);
-        sleep(750);
+        sleep(1500);
 
     }
     public void intakeOff() {
@@ -358,7 +363,5 @@ public class AutoBlueBack extends LinearOpMode {
         sleep(milliseconds);
         robot.wheel.setPower(0.0);
     }
-
-
 
 }

@@ -18,9 +18,9 @@ public class AutoBlueBack extends LinearOpMode {
     public static volatile TwoPositions depositLeftPositions = new TwoPositions(0.79, 0.0);
     public static volatile TwoPositions depositRightPositions = new TwoPositions(0.21, 1.0);
     public static double resetIntakeHeight = 1.0;
-    public static double intakeHeight1 = 0.80;
-    public static double intakeHeight2 = 0.73;
-    public static double intakeHeight3 = 0.71;
+    public static double intakeHeight1 = 0.79;
+    public static double intakeHeight2 = 0.72;
+    public static double intakeHeight3 = 0.70;
 
     public static int depositOnePixel = 590;
 
@@ -103,7 +103,7 @@ public class AutoBlueBack extends LinearOpMode {
         points[c] = new coord(12, 50.68, 4.71239, 2, 2, Math.toRadians(3));
         code[c] = 0; // Nothing new
         c++;
-        points[c] = new coord(19.2397, 50.68, 4.71239, 2, 0.8, Math.toRadians(3));
+        points[c] = new coord(18.2397, 50.68, 4.71239, 2, 0.8, Math.toRadians(3));
         code[c] = 1; // Start intake as we have reached the stack
         c++;
 
@@ -113,7 +113,7 @@ public class AutoBlueBack extends LinearOpMode {
         for (int i = 0; i <= 3; i++) {
             // First do the path  to get to the backdrop.
             // First go to under the stage door (USE HIGH ERROR)
-            points[c] = new coord(-59.5049, 48, 4.71239, 10, 3, Math.toRadians(3));
+            points[c] = new coord(-59.5049, 45, 4.71239, 10, 3, Math.toRadians(3));
             code[c] = 4; // Slides up and down
             c++;
             // Then, you crossed the stage door, so change the desired position.
@@ -160,7 +160,7 @@ public class AutoBlueBack extends LinearOpMode {
             // Now we have placed pixels. We must go back to stack.
             // First get to parallel, use large error for no slow down
 
-            points[c] = new coord(-40.4, 69.002, 4.71239, 6, 6, Math.toRadians(6));
+            points[c] = new coord(-59.5049, 45, 4.71239, 10, 3, Math.toRadians(3));
             code[c] = -1; // Nothing to change
             c++;
 
@@ -169,19 +169,19 @@ public class AutoBlueBack extends LinearOpMode {
                 points[c] = new coord(12, 50.68, 4.71239, 2, 2, Math.toRadians(3));
                 code[c] = 0;
                 c++;
-                points[c] = new coord(19.2397, 50.68, 4.71239, 2, 0.8, Math.toRadians(3));
+                points[c] = new coord(18.2397, 50.68, 4.71239, 2, 0.8, Math.toRadians(3));
                 code[c] = i + 1; // Start intake as we have reached the stack
                 c++;
             }
             else{
-                points[c] = new coord(19.7397, 50.68, 4.71239, 2, 2, Math.toRadians(3));
+                points[c] = new coord(18.7397, 50.68, 4.71239, 2, 2, Math.toRadians(3));
                 code[c] = 0;
                 c++;
-                points[c] = new coord(19.2397, 38.61, 4.71239, 1, 0.8, Math.toRadians(3));
+                points[c] = new coord(18.2397, 38.61, 4.71239, 1, 0.8, Math.toRadians(3));
                 code[c] = 1; // Start intake as we have reached the stack
                 c++;
-                points[c] = new coord(19.7397, 50.68, 4.71239, 2, 2, Math.toRadians(3));
-                code[c] = 1; // Start intake as we have reached the stack
+                points[c] = new coord(18.7397, 50.68, 4.71239, 2, 2, Math.toRadians(3));
+                code[c] = -5; // Start intake as we have reached the stack
                 c++;
             }
             // REPEAT

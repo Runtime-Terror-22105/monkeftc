@@ -79,6 +79,7 @@ public class ObjectPositionPipeline extends OpenCvPipeline {
 
     @Override
     public Mat processFrame(Mat input) {
+        // return mat; // uncomment this line if you want to see the raw image
         // convert rgb image to hsv (hue, saturation, value) image
         // why hsv? hsv makes it easy to differentiate colors in different lighting conditions.
         //          we basically ignore saturation since it is the "intensity"
@@ -86,6 +87,7 @@ public class ObjectPositionPipeline extends OpenCvPipeline {
         //          we check for value since it is "brightness", we don't want to accidentally detect black or white or something else
         Mat mat = new Mat(); // our working copy of the image, mat = matrix
         Imgproc.cvtColor(input, mat, Imgproc.COLOR_RGB2HSV);
+
 
         // If something goes wrong, return
         if (mat.empty()) {
@@ -106,7 +108,14 @@ public class ObjectPositionPipeline extends OpenCvPipeline {
             // check if blue one is there
             Core.inRange(mat, MIN_BLUE, MAX_BLUE, mat);
         }
+        // return mat; // uncomment this line to be able to see the thresholding
+        
+        // applying GaussianBlur to reduce noise when finding contours (yes, we will be doing 
+        // contour detection)
+        Imgproc.GaussianBlur(mat, mat, Size(5.0, 15.0), 0.00)
 
+        // return mat; // uncomment this line to be able to see the thresholding before blur
+        
         // make submatrices for each ROI
         Mat left = mat.submat(ROI_Left);
         Mat middle = mat.submat(ROI_Middle);

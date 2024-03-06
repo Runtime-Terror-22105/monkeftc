@@ -55,7 +55,7 @@ public class AutoBlueBack extends LinearOpMode {
         );
         ElapsedTime depositBoxTimer = new ElapsedTime();
 
-        auto.initCamera(CenterStageAutonomous.WhatColorToDetect.RED);
+        auto.initCamera(CenterStageAutonomous.WhatColorToDetect.BLUE);
         waitForStart();
 
         ObjectPositionPipeline.Location location = auto.getPropLocation();

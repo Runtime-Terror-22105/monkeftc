@@ -18,16 +18,16 @@ public class AutoBlueBack extends LinearOpMode {
     public static volatile TwoPositions depositLeftPositions = new TwoPositions(0.79, 0.0);
     public static volatile TwoPositions depositRightPositions = new TwoPositions(0.21, 1.0);
     public static double resetIntakeHeight = 1.0;
-    public static double intakeHeight1 = 0.79;
-    public static double intakeHeight2 = 0.72;
-    public static double intakeHeight3 = 0.70;
+    public static double intakeHeight1 = 0.795;
+    public static double intakeHeight2 = 0.7;
+    public static double intakeHeight3 = 0.66;
 
     public static int depositOnePixel = 590;
 
     public coord[] points = new coord[100];
-    public coord leftDepo = new coord(-82.07697, 15.01, 4.71239, 2, 0.8, Math.toRadians(3));
-    public coord rightDepo = new coord(-82.07697, 26.702, 4.71239, 2, 0.8, Math.toRadians(3));
-    public coord centerDepo = new coord(-82.07697, 20.9381, 4.71239, 2, 0.8, Math.toRadians(3));
+    public coord leftDepo = new coord(-83.2, 12.01, 4.71239, 0.8, 0.8, Math.toRadians(3));
+    public coord rightDepo = new coord(-83.2, 28.702, 4.71239, 2, 0.8, Math.toRadians(3));
+    public coord centerDepo = new coord(-83.2, 20.9381, 4.71239, 2, 0.8, Math.toRadians(3));
 
     // may need to adjust these intake positions
     @Override
@@ -110,15 +110,15 @@ public class AutoBlueBack extends LinearOpMode {
         // Now, code cycles!
         // Number of i loops = number of cycles
         // i = 0, 2+1, i = 1, 2+3, i = 2, 2+5!!!
-        for (int i = 0; i <= 3; i++) {
+        for (int i = 0; i <= 2; i++) {
             // First do the path  to get to the backdrop.
             // First go to under the stage door (USE HIGH ERROR)
-            points[c] = new coord(-59.5049, 45, 4.71239, 10, 3, Math.toRadians(3));
+            points[c] = new coord(-59.5049, 52, 4.71239, 10, 3, Math.toRadians(3));
             code[c] = 4; // Slides up and down
             c++;
             // Then, you crossed the stage door, so change the desired position.
             // Depending on positions, change deposit.
-            if(i == 0){ // first location, so need to be careful
+            if(i == 0) { // first location, so need to be careful
                 switch (location) {
                     case LEFT:
                         points[c] = rightDepo;
@@ -153,37 +153,27 @@ public class AutoBlueBack extends LinearOpMode {
                 c++;
             }
 
-            if(i == 3){
+            if(i == 2){
                 break;
             }
 
             // Now we have placed pixels. We must go back to stack.
             // First get to parallel, use large error for no slow down
 
-            points[c] = new coord(-59.5049, 45, 4.71239, 10, 3, Math.toRadians(3));
+            points[c] = new coord(-59.5049, 52, 4.71239, 10, 3, Math.toRadians(3));
             code[c] = -1; // Nothing to change
             c++;
 
             // Now turn on intake and go to stack!
-            if(i != 2) {
+            if(true) {
                 points[c] = new coord(12, 50.68, 4.71239, 2, 2, Math.toRadians(3));
                 code[c] = 0;
                 c++;
-                points[c] = new coord(18.2397, 50.68, 4.71239, 2, 0.8, Math.toRadians(3));
+                points[c] = new coord(15, 50.68, 4.71239, 2, 0.8, Math.toRadians(3));
                 code[c] = i + 1; // Start intake as we have reached the stack
                 c++;
             }
-            else{
-                points[c] = new coord(18.7397, 50.68, 4.71239, 2, 2, Math.toRadians(3));
-                code[c] = 0;
-                c++;
-                points[c] = new coord(18.2397, 38.61, 4.71239, 1, 0.8, Math.toRadians(3));
-                code[c] = 1; // Start intake as we have reached the stack
-                c++;
-                points[c] = new coord(18.7397, 50.68, 4.71239, 2, 2, Math.toRadians(3));
-                code[c] = -5; // Start intake as we have reached the stack
-                c++;
-            }
+
             // REPEAT
         }
 

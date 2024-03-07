@@ -23,6 +23,7 @@ import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.Rect;
+import org.opencv.core.Size;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
@@ -65,7 +66,7 @@ public class ObjectPositionPipeline extends OpenCvPipeline {
     static Scalar MAX_RED_HIGH = new Scalar(MAX_RED_HIGH_HUE/2, MAX_SATURATION, MAX_VALUES);
 
 
-    public static enum Location {
+    public enum Location {
         LEFT,
         MIDDLE,
         RIGHT
@@ -79,8 +80,8 @@ public class ObjectPositionPipeline extends OpenCvPipeline {
 
     @Override
     public Mat processFrame(Mat input) {
-        // return mat; // uncomment this line if you want to see the raw image
-        // convert rgb image to hsv (hue, saturation, value) image
+         return input; // uncomment this line if you want to see the raw image
+        /*// convert rgb image to hsv (hue, saturation, value) image
         // why hsv? hsv makes it easy to differentiate colors in different lighting conditions.
         //          we basically ignore saturation since it is the "intensity"
         //          we check for what the hue is since it is the "type" of color
@@ -112,7 +113,7 @@ public class ObjectPositionPipeline extends OpenCvPipeline {
         
         // applying GaussianBlur to reduce noise when finding contours (yes, we will be doing 
         // contour detection)
-        Imgproc.GaussianBlur(mat, mat, Size(5.0, 15.0), 0.00)
+//        Imgproc.GaussianBlur(mat, mat, Size(5.0, 15.0), 0.00);
 
         // return mat; // uncomment this line to be able to see the thresholding before blur
         
@@ -151,7 +152,7 @@ public class ObjectPositionPipeline extends OpenCvPipeline {
         telemetry.update();
 
 
-        /* Draw rectangles to visualize prop location. */
+        // Draw rectangles to visualize prop location. //
         // grayscale to rgb
         Imgproc.cvtColor(mat, mat, Imgproc.COLOR_GRAY2RGB);
         Scalar pixelColor = new Scalar(255, 255, 255);
@@ -163,6 +164,7 @@ public class ObjectPositionPipeline extends OpenCvPipeline {
 
 
         return mat;
+         */
     }
 
     public Location getPropLocation() {

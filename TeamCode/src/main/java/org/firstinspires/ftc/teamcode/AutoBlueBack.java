@@ -78,7 +78,7 @@ public class AutoBlueBack extends LinearOpMode {
         int c = 0;
         switch(location) {
             case LEFT:
-                points[0] = new coord(-6.4503, 27.3385466, 5.465502567, 2, 2, Math.toRadians(3)); // place on purple pixel mark
+                points[0] = new coord(-8.4503, 27.3385466, 5.465502567, 2, 2, Math.toRadians(3)); // place on purple pixel mark
                 points[1] = new coord(-0.28603, 19.313, 0, 2, 2, Math.toRadians(5)); // move back a little to reset
                 break;
             case MIDDLE:

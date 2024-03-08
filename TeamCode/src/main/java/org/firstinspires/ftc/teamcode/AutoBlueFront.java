@@ -88,10 +88,10 @@ public class AutoBlueFront extends LinearOpMode {
                 break;
         }
 
-        code[c] = 0;
+        code[c] = 12;
         c++;
         points[c] = new coord(-1.8901, 8.865, 0, 2, 2, Math.toRadians(3)); // place on purple pixel marknew coord(0, 29.8979, 0, 2, 2, Math.toRadians(3)); // place on purple pixel mark
-        code[c] = 4;
+        code[c] = 20;
         c++;
 
         switch(location) {
@@ -105,20 +105,14 @@ public class AutoBlueFront extends LinearOpMode {
                 points[c] = rightDepo;
                 break;
         }
-        code[c] = 7;
+        code[c] = 6;
         c++;
-        switch(location) {
-            case LEFT:
-                points[c] = leftDepo;
-                break;
-            case MIDDLE:
-                points[c] = centerDepo;
-                break;
-            case RIGHT:
-                points[c] = rightDepo;
-                break;
-        }
-        code[c] = -1;
+
+        points[c] = new coord(-32.22, -0.489, 4.71239, 0.5, 0.5, Math.toRadians(1));
+        code[c] = -100;
+        c++;
+
+
         int numPoints = c;
         boolean goingDown = false;
         boolean startedGoingDown = false;
@@ -154,8 +148,8 @@ public class AutoBlueFront extends LinearOpMode {
                         points[p].y,
                         points[p].x,
                         points[p].heading,
-                        points[p].maxErrorX,
-                        points[p].maxErrorY,
+                        0.5,
+                        0.5,
                         points[p].maxErrorH
                 );
             }
@@ -165,14 +159,12 @@ public class AutoBlueFront extends LinearOpMode {
             if (isSus == 2 && p != numPoints && follower.reached()) {
                 // I did this to try and be fast
                 // If note, we can just do it always
-                if(!(code[c] == -1 || code[c] == 4) || !slides.reached) {
                     robot.motorBackLeft.setPower(0);
                     robot.motorBackRight.setPower(0);
                     robot.motorFrontLeft.setPower(0);
                     robot.motorFrontRight.setPower(0);
-                    // sometimes, we don't want to slow down. This is in like cases where
-                    //
-                }
+
+
 
                 if(!slides.reached){
                     continue; // we don't want to move to the next point while slides are still moving
@@ -195,6 +187,10 @@ public class AutoBlueFront extends LinearOpMode {
             */
                 isSus = 2;
                 switch(code[p]) { // will code this after
+                    case 12:
+                        slides.moveToLineOne();
+                    case 20:
+                        slides.setTargetPosition(1000);
                     case -1:
                         intakeOff();
                         break;

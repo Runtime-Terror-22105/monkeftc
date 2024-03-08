@@ -25,9 +25,9 @@ public class AutoBlueBack extends LinearOpMode {
     public static int depositOnePixel = 590;
 
     public coord[] points = new coord[100];
-    public coord leftDepo = new coord(-83.2, 12.01, 4.71239, 0.8, 0.8, Math.toRadians(3));
-    public coord rightDepo = new coord(-83.2, 28.702, 4.71239, 2, 0.8, Math.toRadians(3));
-    public coord centerDepo = new coord(-83.2, 20.9381, 4.71239, 2, 0.8, Math.toRadians(3));
+    public coord leftDepo = new coord(-83, 13.01, 4.71239, 0.8, 0.8, Math.toRadians(3));
+    public coord rightDepo = new coord(-83, 25.702, 4.71239, 2, 0.8, Math.toRadians(3));
+    public coord centerDepo = new coord(-83, 20.9381, 4.71239, 2, 0.8, Math.toRadians(3));
 
     // may need to adjust these intake positions
     @Override
@@ -113,7 +113,7 @@ public class AutoBlueBack extends LinearOpMode {
         for (int i = 0; i <= 2; i++) {
             // First do the path  to get to the backdrop.
             // First go to under the stage door (USE HIGH ERROR)
-            points[c] = new coord(-59.5049, 52, 4.71239, 10, 3, Math.toRadians(3));
+            points[c] = new coord(-59.5049, 53, 4.71239, 10, 2, Math.toRadians(3));
             code[c] = 4; // Slides up and down
             c++;
             // Then, you crossed the stage door, so change the desired position.
@@ -160,16 +160,16 @@ public class AutoBlueBack extends LinearOpMode {
             // Now we have placed pixels. We must go back to stack.
             // First get to parallel, use large error for no slow down
 
-            points[c] = new coord(-59.5049, 52, 4.71239, 10, 3, Math.toRadians(3));
+            points[c] = new coord(-59.5049, 53, 4.71239, 10, 2, Math.toRadians(3));
             code[c] = -1; // Nothing to change
             c++;
 
             // Now turn on intake and go to stack!
             if(true) {
-                points[c] = new coord(12, 50.68, 4.71239, 2, 2, Math.toRadians(3));
+                points[c] = new coord(12, 49.68, 4.71239, 2, 2, Math.toRadians(3));
                 code[c] = 0;
                 c++;
-                points[c] = new coord(15, 50.68, 4.71239, 2, 0.8, Math.toRadians(3));
+                points[c] = new coord(18.7, 49.68, 4.71239, 2, 0.8, Math.toRadians(3));
                 code[c] = i + 1; // Start intake as we have reached the stack
                 c++;
             }
@@ -212,8 +212,8 @@ public class AutoBlueBack extends LinearOpMode {
                         points[p].y,
                         points[p].x,
                         points[p].heading,
-                        points[p].maxErrorX,
-                        points[p].maxErrorY,
+                        0.5,
+                        0.5,
                         points[p].maxErrorH
                 );
             }
@@ -223,13 +223,12 @@ public class AutoBlueBack extends LinearOpMode {
             if (isSus == 2 && p != numPoints && follower.reached()) {
                 // I did this to try and be fast
                 // If note, we can just do it always
-                if(!(code[c] == -1 || code[c] == 4) || !slides.reached) {
+                if(!(code[c] == 4) || !slides.reached) {
                     robot.motorBackLeft.setPower(0);
                     robot.motorBackRight.setPower(0);
                     robot.motorFrontLeft.setPower(0);
                     robot.motorFrontRight.setPower(0);
-                    // sometimes, we don't want to slow down. This is in like cases where
-                    //
+                    // sometimes, we don't want to slow down. This is in like cases wher
                 }
 
                 if(!slides.reached){

@@ -134,7 +134,7 @@ public class PidDriveTrain {
 
             // reset the timer for next time
             timerX.reset();
-            xPower = out;
+            xPower = normalizePower(out);
         }
         else {
 //            xReached = true;
@@ -162,7 +162,7 @@ public class PidDriveTrain {
 
             // reset the timer for next time
             timerY.reset();
-            yPower = out;
+            yPower = normalizePower(out);
         }
         else {
 //            yReached = true;
@@ -190,7 +190,7 @@ public class PidDriveTrain {
 
             // reset the timer for next time
             timerH.reset();
-            hPower = out;
+            hPower = normalizePower(out);
         }
         else {
 //            hReached = true;
@@ -256,6 +256,18 @@ public class PidDriveTrain {
         // this should only be called after we've updated powers
         // so like its fine cause curH won't be sus
         return curH;
+    }
+
+    public double normalizePower(double p){
+        if(Math.abs(p) < 0.2){
+            if(p < 0){
+                return -0.2;
+            }
+            else{
+                return 0.2;
+            }
+        }
+        return p;
     }
 
 

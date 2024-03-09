@@ -19,9 +19,9 @@ public class AutoBlueBack extends LinearOpMode {
     public static int depositOnePixel = 369;
 
     public coord[] points = new coord[100];
-    public static double fromBack = -83;
-    public static coord leftDepo = new coord(fromBack, 15.9, 4.71239, 0.8, 0.8, Math.toRadians(3));
-    public static coord rightDepo = new coord(fromBack, 30.702, 4.71239, 2, 0.8, Math.toRadians(3));
+    public static double fromBack = -83.2;
+    public static coord leftDepo = new coord(fromBack, 20.3, 4.71239, 0.8, 0.8, Math.toRadians(3));
+    public static coord rightDepo = new coord(fromBack, 34.0, 4.71239, 2, 0.8, Math.toRadians(3));
     public static coord centerDepo = new coord(fromBack, 23.9381, 4.71239, 2, 0.8, Math.toRadians(3));
     public static coord centerDepo2 = new coord(fromBack, 21.9381, 4.71239, 2, 0.8, Math.toRadians(3));
 
@@ -144,7 +144,7 @@ public class AutoBlueBack extends LinearOpMode {
                         c++;
                         break;
                 }
-                points[c - 1].x -= 3;
+                points[c - 1].x -= 1.5;
             }
             else {
                 // just do center depot cause it requires least accuracy

@@ -25,9 +25,10 @@ public class AutoBlueFront extends LinearOpMode {
     public static int depositOnePixel = 590;
 
     public coord[] points = new coord[100];
-    public coord leftDepo = new coord(-34.8236, 19.536, 4.71239, 1, 0.8, Math.toRadians(3));
-    public coord rightDepo = new coord(-34.8236, 31.3456, 4.71239, 1, 0.8, Math.toRadians(3));
-    public coord centerDepo = new coord(-34.8236, 26.351, 4.71239, 1, 0.8, Math.toRadians(3));
+    public static double backDistance = -36;
+    public coord leftDepo = new coord(backDistance, 19.536, 4.71239, 1, 0.8, Math.toRadians(3));
+    public coord rightDepo = new coord(backDistance, 31.3456, 4.71239, 1, 0.8, Math.toRadians(3));
+    public coord centerDepo = new coord(backDistance, 26.351, 4.71239, 1, 0.8, Math.toRadians(3));
 
     // may need to adjust these intake positions
     @Override
@@ -78,7 +79,7 @@ public class AutoBlueFront extends LinearOpMode {
         int c = 0;
         switch(location) {
             case LEFT:
-                points[0] = new coord(-7.565, 23.941, 5.83376302, 2, 2, Math.toRadians(3)); // place on purple pixel mark
+                points[0] = new coord(-2, 23.941, 5.83376302, 2, 2, Math.toRadians(3)); // place on purple pixel mark
                 break;
             case MIDDLE:
                 points[0] = new coord(0, 29.8979, 0, 2, 2, Math.toRadians(3)); // place on purple pixel mark
@@ -148,8 +149,8 @@ public class AutoBlueFront extends LinearOpMode {
                         points[p].y,
                         points[p].x,
                         points[p].heading,
-                        0.5,
-                        0.5,
+                        1.2,
+                        1.2,
                         points[p].maxErrorH
                 );
             }

@@ -112,7 +112,7 @@ public class ObjectPositionPipeline extends OpenCvPipeline {
         // return mat; // uncomment this line to be able to see the thresholding
 
         // applying GaussianBlur to reduce noise when finding contours (yes, we will be doing
-        // contour detection)
+        // contour detection actually nevermind we don't really need to do this)
         // Imgproc.GaussianBlur(mat, mat, new Size(5.0, 15.0), 0.00);
 
         // return mat; // uncomment this line to be able to see the thresholding before blur

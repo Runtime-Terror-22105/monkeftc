@@ -17,10 +17,13 @@ import org.openftc.easyopencv.OpenCvWebcam;
 import org.firstinspires.ftc.teamcode.util.TwoPositions;
 
 public class CenterStageAutonomous {
-    public static volatile TwoPositions intakePositions = new TwoPositions(1.0, 0.5);
-    public static volatile TwoPositions depositLeftPositions = new TwoPositions(1.0, 0.0);
-    public static volatile TwoPositions depositRightPositions = new TwoPositions(1.0, 0.0);
-    public final int RIGHTANGLETURNTIME = 200;
+    // intake heights, outtake position
+    public static double resetIntakeHeight = 1.0;
+    public static double intakeHeight1 = 0.807;
+    public static double intakeHeight2 = 0.76;
+    public static double intakeHeight3 = 0.63;
+    public static volatile TwoPositions depositLeftPositions = new TwoPositions(0.72, 0.0);
+    public static volatile TwoPositions depositRightPositions = new TwoPositions(0.28, 1.0);
 
     private RobotSleep theSleep;
     public Slides slides;
@@ -170,7 +173,7 @@ public class CenterStageAutonomous {
          * Reset the position of the deposit box thing to default
          */
         robot.depositLeft.setPosition(depositLeftPositions.normal);
-//        robot.depositRight.setPosition(depositRightPositions.normal);
+        robot.depositRight.setPosition(depositRightPositions.normal);
     }
 
     public void setDepositBox() {
@@ -178,15 +181,19 @@ public class CenterStageAutonomous {
          * Set the position of the deposit box thing to be moved out and ready for outtaking.
          */
         robot.depositLeft.setPosition(depositLeftPositions.out);
-//        robot.depositRight.setPosition(depositRightPositions.out);
+        robot.depositRight.setPosition(depositRightPositions.out);
     }
 
-    public void wheelKeepPixel() {
+    public void wheelKeepPixel(int milliseconds) {
         robot.wheel.setPower(-1.0);
+        sleep(milliseconds);
+        robot.wheel.setPower(0.0);
     }
 
-    public void wheelSpitPixel() {
+    public void wheelSpitPixel(int milliseconds) {
         robot.wheel.setPower(1.0);
+        sleep(milliseconds);
+        robot.wheel.setPower(0.0);
     }
 
 
@@ -236,43 +243,6 @@ public class CenterStageAutonomous {
         this.CancelPowerRobot();
     }
 
-    public void strafeRight(int milliseconds, double power) {
-        /**
-         * Strafe right for some time.
-         * @param milliseconds - How long to strafe for, in milliseconds
-         * @param power - The power to use for the motors
-         */
-        this.strafeLeft(milliseconds, -power);
-    }
-
-
-    public void turnLeft(double power) {
-        this.spinLeft(power);
-        long sleeptime = (long)(this.RIGHTANGLETURNTIME/power); // tweak this value with trial and error
-        this.sleep(sleeptime);
-        this.CancelPowerRobot();
-    }
-
-    public void turnRight(double power) {
-        this.spinRight(power);
-        long sleeptime = (long)(this.RIGHTANGLETURNTIME/power);
-        this.sleep(sleeptime);
-        this.CancelPowerRobot();
-    }
-
-    public void spinLeft(double power) {
-//        power=-power;
-        this.moveDrivetrain(
-                -power,
-                power,
-                -power,
-                power
-        );
-//        robot.motorFrontLeft.setPower(-power);
-//        robot.motorFrontRight.setPower(-power);
-//        robot.motorBackLeft.setPower(power);
-//        robot.motorBackRight.setPower(power);
-    }
     public void spinLeft(int milliseconds, double power) {
         /**
          * Table for how to turn 90 degrees at different powers
@@ -382,6 +352,31 @@ public class CenterStageAutonomous {
         robot.intakeControl.setPosition(0.5);
         sleep(milliseconds);
         robot.intakeControl.setPosition(1.0);
+    }
+
+    public void intakeOn(int mode) {
+        robot.wheel.setPower(-1.0);
+        this.resetDepositBox();
+        if(mode == 1){
+            robot.intakeControl.setPosition(intakeHeight1);
+        }
+        if(mode == 2){
+            robot.intakeControl.setPosition(intakeHeight2);
+        }
+        if(mode == 3){
+            robot.intakeControl.setPosition(intakeHeight3);
+        }
+        sleep(550);
+
+        robot.intake.setPower(-1.0);
+        sleep(1500);
+
+    }
+
+    public void intakeOff() {
+        robot.intakeControl.setPosition(resetIntakeHeight);
+        robot.wheel.setPower(0.0);
+        robot.intake.setPower(0.0);
     }
 
     private void moveDrivetrain(

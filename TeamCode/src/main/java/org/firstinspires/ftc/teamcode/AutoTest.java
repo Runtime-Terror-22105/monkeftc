@@ -64,7 +64,7 @@ public class AutoTest extends LinearOpMode {
 //            auto.slides.setSlidePower(auto.slides.updateSlides());
 //        }
         auto.setDepositBox();
-        auto.wheelSpitPixel();
+//        auto.wheelSpitPixel();
 
 
 

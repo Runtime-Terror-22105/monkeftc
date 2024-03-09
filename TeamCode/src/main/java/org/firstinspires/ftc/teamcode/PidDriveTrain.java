@@ -11,6 +11,8 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 @Config
 public class PidDriveTrain {
+    public static volatile double normalizePowerAmt = 0.05;
+
     // region pid constants - x
     public static volatile double KpX = 0.14;
     public static volatile double KiX = 0;
@@ -135,9 +137,9 @@ public class PidDriveTrain {
             // reset the timer for next time
             timerX.reset();
             xPower = normalizePower(out);
+//            xPower = out;
         }
         else {
-//            xReached = true;
             reachedX = true;
             _resetTempXVars();
         }
@@ -163,6 +165,7 @@ public class PidDriveTrain {
             // reset the timer for next time
             timerY.reset();
             yPower = normalizePower(out);
+//            yPower = out;
         }
         else {
 //            yReached = true;
@@ -190,7 +193,8 @@ public class PidDriveTrain {
 
             // reset the timer for next time
             timerH.reset();
-            hPower = normalizePower(out);
+//            hPower = normalizePower(out);
+            hPower = out;
         }
         else {
 //            hReached = true;
@@ -258,15 +262,7 @@ public class PidDriveTrain {
         return curH;
     }
 
-    public double normalizePower(double p){
-        if(Math.abs(p) < 0.2){
-            if(p < 0){
-                return -0.2;
-            }
-            else{
-                return 0.2;
-            }
-        }
+    public double normalizePower(double p) {
         return p;
     }
 

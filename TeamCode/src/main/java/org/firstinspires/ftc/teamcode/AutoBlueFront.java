@@ -15,8 +15,8 @@ public class AutoBlueFront extends LinearOpMode {
     private FtcDashboard dashboard;
     private CenterStageAutonomous auto;
     HardwarePushbot robot = new HardwarePushbot();
-    public static volatile TwoPositions depositLeftPositions = new TwoPositions(0.79, 0.0);
-    public static volatile TwoPositions depositRightPositions = new TwoPositions(0.21, 1.0);
+//    public static volatile TwoPositions depositLeftPositions = new TwoPositions(0.73, 0.0);
+//    public static volatile TwoPositions depositRightPositions = new TwoPositions(0.27, 1.0);
     public static double resetIntakeHeight = 1.0;
     public static double intakeHeight1 = 0.79;
     public static double intakeHeight2 = 0.72;
@@ -126,11 +126,11 @@ public class AutoBlueFront extends LinearOpMode {
             }
 
             if(isSus == 2 && !goingDown && robot.slidesEncoder.getCurrentPosition() >= 1000 && slides.getTargetPosition() != 0){
-                setDepositBox();
+                auto.setDepositBox();
             }
             if(goingDown && !startedGoingDown){
                 depositBoxTimer.reset();
-                resetDepositBox();
+                auto.resetDepositBox();
                 startedGoingDown = true;
             }
             if(goingDown && startedGoingDown && depositBoxTimer.milliseconds() >= 575){
@@ -252,20 +252,20 @@ public class AutoBlueFront extends LinearOpMode {
         }
     }
 
-    public void resetDepositBox() {
-        robot.depositLeft.setPosition(depositLeftPositions.normal);
-        robot.depositRight.setPosition(depositRightPositions.normal);
-
-    }
-
-    public void setDepositBox() {
-        robot.depositLeft.setPosition(depositLeftPositions.out);
-        robot.depositRight.setPosition(depositRightPositions.out);
-    }
+//    public void resetDepositBox() {
+//        robot.depositLeft.setPosition(depositLeftPositions.normal);
+//        robot.depositRight.setPosition(depositRightPositions.normal);
+//
+//    }
+//
+//    public void setDepositBox() {
+//        robot.depositLeft.setPosition(depositLeftPositions.out);
+//        robot.depositRight.setPosition(depositRightPositions.out);
+//    }
 
     public void intakeOn(int mode) {
         robot.wheel.setPower(-1.0);
-        resetDepositBox();
+        auto.resetDepositBox();
         if(mode == 1){
             robot.intakeControl.setPosition(intakeHeight1);
         }
@@ -281,11 +281,13 @@ public class AutoBlueFront extends LinearOpMode {
         sleep(1500);
 
     }
+
     public void intakeOff() {
         robot.intakeControl.setPosition(resetIntakeHeight);
         robot.wheel.setPower(0.0);
         robot.intake.setPower(0.0);
     }
+
     public void wheelSpitPixel(int milliseconds) {
         robot.wheel.setPower(1.0);
         sleep(milliseconds);

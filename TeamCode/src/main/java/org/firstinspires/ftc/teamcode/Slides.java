@@ -17,7 +17,7 @@ public class Slides {
     public static int LINE_ONE_HEIGHT   = 1500;
     public static int LINE_TWO_HEIGHT   = 1800;
     public static int LINE_THREE_HEIGHT = 2600;
-    public static int MAX_HEIGHT        = 2650; // to be determined via experimentation
+    public static int MAX_HEIGHT        = 2950; // to be determined via experimentation
 
     // pid constants
     public static volatile double Kp = 0.03;

@@ -19,11 +19,11 @@ import org.firstinspires.ftc.teamcode.util.TwoPositions;
 public class CenterStageAutonomous {
     // intake heights, outtake position
     public static double resetIntakeHeight = 1.0;
-    public static double intakeHeight1 = 0.807;
-    public static double intakeHeight2 = 0.76;
+    public static double intakeHeight1 = 0.8;
+    public static double intakeHeight2 = 0.73;
     public static double intakeHeight3 = 0.63;
-    public static volatile TwoPositions depositLeftPositions = new TwoPositions(0.72, 0.0);
-    public static volatile TwoPositions depositRightPositions = new TwoPositions(0.28, 1.0);
+    public static volatile TwoPositions depositLeftPositions = new TwoPositions(0.84, 0.35);
+    public static volatile TwoPositions depositRightPositions = new TwoPositions(0.16, 0.65);
 
     private RobotSleep theSleep;
     public Slides slides;

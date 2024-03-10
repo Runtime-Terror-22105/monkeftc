@@ -85,6 +85,5 @@ public class HardwarePushbot {
         slidesEncoder = new Encoder(hwMap.get(DcMotorEx.class, "motorFrontLeft"));
         motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); // reset the encoder
         motorFrontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER); // set the motor back to normal
-
     }
 }

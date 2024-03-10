@@ -27,14 +27,13 @@ import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.Rect;
-import org.opencv.core.Size;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
  @Config
 public class ObjectPositionPipeline extends OpenCvPipeline {
-    // public static volatile double DETECTION_THRESHOLD = 0.5;
+     public static volatile int DETECTION_THRESHOLD = 150000;
     // ROI = region of interest, aka the rectangle we're drawing
     // you should fine tune this
     public static volatile Rect ROI_Left   = new Rect(new Point( 0, 75), new Point(140, 240));
@@ -137,7 +136,7 @@ public class ObjectPositionPipeline extends OpenCvPipeline {
         // middle.release();
         right.release();
 
-        if (leftValue < 1000 && rightValue < 1000) {
+        if (leftValue < DETECTION_THRESHOLD && rightValue < DETECTION_THRESHOLD) {
             propLocation = Location.LEFT;
             telemetry.addData("Prop location:", "left");
         }

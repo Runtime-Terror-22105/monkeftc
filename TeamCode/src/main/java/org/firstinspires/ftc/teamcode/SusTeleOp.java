@@ -27,8 +27,8 @@ public class SusTeleOp extends LinearOpMode  {
     public static volatile double MAX_TELEOP_ACCEL = Math.pow(10, 6); // 92.61691602936227
     public static volatile int DEPOSIT_OUT_HEIGHT = 1000;
     public static volatile TwoPositions intakePositions = new TwoPositions(1.0, 0.65);
-    public static volatile TwoPositions depositLeftPositions = new TwoPositions(0.72, 0.0);
-    public static volatile TwoPositions depositRightPositions = new TwoPositions(0.28, 1.0);
+    public static volatile TwoPositions depositLeftPositions = new TwoPositions(0.84, 0.35);
+    public static volatile TwoPositions depositRightPositions = new TwoPositions(0.16, 0.65);
     public static volatile double headingLockPosition = 0.0;
     // Other classwide items
     private HardwarePushbot robot = new HardwarePushbot();
@@ -63,7 +63,8 @@ public class SusTeleOp extends LinearOpMode  {
         boolean planeReleased = false;
 //        double lastLoopTime = 0;
 
-        ElapsedTime loopTimer = new ElapsedTime();
+//        ElapsedTime loopTimer = new ElapsedTime();
+        ElapsedTime gameTimer = new ElapsedTime();
 
         Slides slides = new Slides(
                 telemetry,
@@ -74,10 +75,11 @@ public class SusTeleOp extends LinearOpMode  {
 
         waitForStart();
         resetDepositBox();
+        gameTimer.reset();
 
         while (opModeIsActive()) {
             // reset the timer
-            loopTimer.reset();
+//            loopTimer.reset();
 
             // region Update Slide Positions
             if (Math.abs(gamepad2.left_stick_y) > 0.05) {
@@ -87,13 +89,14 @@ public class SusTeleOp extends LinearOpMode  {
 //                telemetry.addData("move amount", -gamepad2.left_stick_y * SLIDESPEED);
             }
 
+            double slidePosition = robot.slidesEncoder.getCurrentPosition();
             if (gamepad2.dpad_left) {
                 slides.moveToLineOne();
             } else if (gamepad2.dpad_up) {
                 slides.moveToLineTwo();
             } else if (gamepad2.dpad_right) {
                 slides.moveToLineThree();
-            } else if (gamepad2.dpad_down) {
+            } else if (gamepad2.dpad_down && slidePosition >= 750) {
                 // start timer to move to the bottom
                 shouldResetDepositBox = true;
                 depositBoxTimer.reset();
@@ -104,7 +107,6 @@ public class SusTeleOp extends LinearOpMode  {
                 slides.moveToBottom();
             }
 
-            double slidePosition = robot.slidesEncoder.getCurrentPosition();
             if (slidePosition < 15) {
                 shouldResetDepositBox = false;
             } else if (!shouldResetDepositBox && !ignore_automatic_depositbox && slidePosition >= DEPOSIT_OUT_HEIGHT) {
@@ -198,9 +200,10 @@ public class SusTeleOp extends LinearOpMode  {
             // endregion
 
             // region Plane
+//            if (!planeReleased && gameTimer.seconds() > 15) {
             if (!planeReleased) {
                 if(gamepad2.a) {
-                    // rlease the plane
+                    // release the plane
                     planeReleased = true;
                     robot.plane.setPosition(1.0);
                 }
@@ -217,7 +220,7 @@ public class SusTeleOp extends LinearOpMode  {
             // endregion
 
             // update all of the telemetry at the end of each loop iteration
-            telemetry.addData("Loop time", loopTimer.milliseconds());
+//            telemetry.addData("Loop time", loopTimer.milliseconds());
             telemetry.update();
         }
     }

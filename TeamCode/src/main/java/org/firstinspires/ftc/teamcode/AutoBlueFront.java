@@ -6,9 +6,6 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.CenterStageAutonomous.coord;
-import org.firstinspires.ftc.teamcode.util.TwoPositions;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
 
 @Autonomous(name="2+0 Blue Front Auto", group="concept")
 public class AutoBlueFront extends LinearOpMode {
@@ -22,13 +19,13 @@ public class AutoBlueFront extends LinearOpMode {
     public static double intakeHeight2 = 0.72;
     public static double intakeHeight3 = 0.70;
 
-    public static int depositOnePixel = 590;
+    public static int depositOnePixel = 1000;
 
     public coord[] points = new coord[100];
-    public static double backDistance = -36;
-    public coord leftDepo = new coord(backDistance, 19.536, 4.71239, 1, 0.8, Math.toRadians(3));
-    public coord rightDepo = new coord(backDistance, 31.3456, 4.71239, 1, 0.8, Math.toRadians(3));
-    public coord centerDepo = new coord(backDistance, 26.351, 4.71239, 1, 0.8, Math.toRadians(3));
+    public static double backDistance = -34.6;
+    public static coord leftDepo = new coord(backDistance, 20.536, 4.71239, 1, 0.8, Math.toRadians(3));
+    public static coord rightDepo = new coord(backDistance, 39.8456, 4.71239, 1, 0.8, Math.toRadians(3));
+    public static coord centerDepo = new coord(backDistance, 30.351, 4.71239, 1, 0.8, Math.toRadians(3));
 
     // may need to adjust these intake positions
     @Override
@@ -42,7 +39,7 @@ public class AutoBlueFront extends LinearOpMode {
                 robot,
                 telemetry,
                 dashboard,
-                (milliseconds) -> sleep(milliseconds)
+                this::sleep
         );
         Slides slides = new Slides(
                 telemetry,
@@ -54,7 +51,6 @@ public class AutoBlueFront extends LinearOpMode {
                 hardwareMap,
                 telemetry
         );
-        ElapsedTime depositBoxTimer = new ElapsedTime();
 
         auto.initCamera(CenterStageAutonomous.WhatColorToDetect.BLUE);
         waitForStart();
@@ -79,13 +75,16 @@ public class AutoBlueFront extends LinearOpMode {
         int c = 0;
         switch(location) {
             case LEFT:
-                points[0] = new coord(-2, 23.941, 5.83376302, 2, 2, Math.toRadians(3)); // place on purple pixel mark
+                points[0] = new coord(-5, 23.941, 5.83376302, 2, 2, Math.toRadians(3)); // place on purple pixel mark
                 break;
             case MIDDLE:
-                points[0] = new coord(0, 29.8979, 0, 2, 2, Math.toRadians(3)); // place on purple pixel mark
+                points[0] = new coord(0, 25.8979, 0, 2, 2, Math.toRadians(3)); // place on purple pixel mark
                 break;
             case RIGHT:
-                points[0] = new coord(6.6758, 25.8324, 0.7125856101, 2, 2, Math.toRadians(3)); // place on purple pixel mark
+                points[0] = new coord(0, 12.8324, 0.27, 2, 2, Math.toRadians(3)); // place on purple pixel mark
+                points[1] = new coord(6.6758, 23.8324, 0.7125856101, 2, 2, Math.toRadians(3)); // place on purple pixel mark
+                code[0] = 69;
+                c = 1;
                 break;
         }
 
@@ -112,35 +111,19 @@ public class AutoBlueFront extends LinearOpMode {
         points[c] = new coord(-32.22, -0.489, 4.71239, 0.5, 0.5, Math.toRadians(1));
         code[c] = -100;
         c++;
+        points[c] = new coord(-32.22, -0.489, 4.71239, 0.5, 0.5, Math.toRadians(1));
+        code[c] = -100000;
+        c++;
 
 
         int numPoints = c;
-        boolean goingDown = false;
-        boolean startedGoingDown = false;
         int isSus = 2;
-        boolean override = false;
+        auto.resetDepositBox();
         while (opModeIsActive()) { // continuous while loop for program
             double slidePower = slides.updateSlides();
             slides.setSlidePower(slidePower); // also update slides power, copied from teleop
-            if(!override && isSus == 1 && slides.reached){
-                goingDown = true;
-            }
-
-            if(isSus == 2 && !goingDown && robot.slidesEncoder.getCurrentPosition() >= 1000 && slides.getTargetPosition() != 0){
-                auto.setDepositBox();
-            }
-            if(goingDown && !startedGoingDown){
-                depositBoxTimer.reset();
-                auto.resetDepositBox();
-                startedGoingDown = true;
-            }
-            if(goingDown && startedGoingDown && depositBoxTimer.milliseconds() >= 575){
-                slides.moveToBottom();
-                isSus = 2;
-                goingDown = false;
-                startedGoingDown = false;
-                override = true;
-            }
+            telemetry.addData("current point", p);
+            telemetry.addData("current code", code[p]);
 
 
 
@@ -149,13 +132,11 @@ public class AutoBlueFront extends LinearOpMode {
                         points[p].y,
                         points[p].x,
                         points[p].heading,
-                        1.2,
-                        1.2,
+                        1.8,
+                        1.8,
                         points[p].maxErrorH
                 );
             }
-
-
 
             if (isSus == 2 && p != numPoints && follower.reached()) {
                 // I did this to try and be fast
@@ -189,9 +170,12 @@ public class AutoBlueFront extends LinearOpMode {
                 isSus = 2;
                 switch(code[p]) { // will code this after
                     case 12:
-                        slides.moveToLineOne();
+                        auto.resetDepositBox();
+                        slides.setTargetPosition(1300);
+                        sleep(600);
                     case 20:
-                        slides.setTargetPosition(1000);
+                        slides.setTargetPosition(800);
+                        auto.setDepositBox();
                     case -1:
                         intakeOff();
                         break;
@@ -218,14 +202,17 @@ public class AutoBlueFront extends LinearOpMode {
                         break;
                     case 6:
                         wheelSpitPixel(depositOnePixel);
-                        isSus = 1;
-                        slides.moveToLineOne();
+                        slides.setTargetPosition(1600);
                         // Basically, we first have to go UP and then backdown..
                         // Very weird unfortunate consequence of bad planning of camera location
                         break;
                     case 7:
                         wheelSpitPixel(2 * depositOnePixel);
-                        goingDown = true;
+                        break;
+                    case -100:
+                        slides.moveToBottom();
+                        auto.resetDepositBox();
+                        sleep(600);
                         break;
                 }
                 p++;

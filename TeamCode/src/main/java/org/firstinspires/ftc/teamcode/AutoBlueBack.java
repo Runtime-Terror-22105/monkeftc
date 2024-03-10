@@ -19,11 +19,11 @@ public class AutoBlueBack extends LinearOpMode {
     public static int depositOnePixel = 369;
 
     public coord[] points = new coord[100];
-    public static double fromBack = -83.2;
-    public static coord leftDepo = new coord(fromBack, 20.3, 4.71239, 0.8, 0.8, Math.toRadians(3));
-    public static coord rightDepo = new coord(fromBack, 34.0, 4.71239, 2, 0.8, Math.toRadians(3));
-    public static coord centerDepo = new coord(fromBack, 23.9381, 4.71239, 2, 0.8, Math.toRadians(3));
-    public static coord centerDepo2 = new coord(fromBack, 21.9381, 4.71239, 2, 0.8, Math.toRadians(3));
+    public static double fromBack = -83.5;
+    public static coord leftDepo = new coord(fromBack, 21.9, 4.71239, 0.8, 0.8, Math.toRadians(3));
+    public static coord rightDepo = new coord(fromBack, 37.0, 4.71239, 2, 0.8, Math.toRadians(3));
+    public static coord centerDepo = new coord(fromBack, 26.0, 4.71239, 2, 0.8, Math.toRadians(3));
+    public static coord centerDepo2 = new coord(fromBack-0.3333, 26.9381, 4.71239, 2, 0.8, Math.toRadians(3));
 
     // may need to adjust these intake positions
     @Override
@@ -79,7 +79,7 @@ public class AutoBlueBack extends LinearOpMode {
                 break;
             case MIDDLE:
                 points[0] = new coord(-0.17, 26, 0, 2, 2, Math.toRadians(3)); // place on purple pixel mark
-                points[1] = new coord(8, 19.313, 0, 2, 2, Math.toRadians(5)); // move back a little to reset
+                points[1] = new coord(11, 19.313, 0, 2, 2, Math.toRadians(5)); // move back a little to reset
                 break;
             case RIGHT:
                 points[0] = new coord(10.3336, 25.514, 0, 2, 2, Math.toRadians(3)); // place on purple pixel mark

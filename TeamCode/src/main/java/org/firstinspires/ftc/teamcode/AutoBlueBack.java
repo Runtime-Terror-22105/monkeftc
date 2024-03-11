@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -11,6 +12,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 @Autonomous(name="2+3 Blue Back Auto", group="concept")
+@Config
 public class AutoBlueBack extends LinearOpMode {
     private FtcDashboard dashboard;
     private CenterStageAutonomous auto;
@@ -96,10 +98,10 @@ public class AutoBlueBack extends LinearOpMode {
         c++;
 
         // Move forward to stack!
-        points[c] = new coord(12, 50.68, 4.71239, 2, 2, Math.toRadians(3));
+        points[c] = new coord(14, 50.68, 4.71239, 2, 2, Math.toRadians(3));
         code[c] = 0; // Nothing new
         c++;
-        points[c] = new coord(18.5397, 50.68, 4.71239, 2, 0.8, Math.toRadians(3));
+        points[c] = new coord(20.5397, 50.68, 4.71239, 2, 0.8, Math.toRadians(3));
         code[c] = 1; // Start intake as we have reached the stack
         c++;
 
@@ -166,7 +168,7 @@ public class AutoBlueBack extends LinearOpMode {
 
             // Now turn on intake and go to stack!
             if (true) {
-                points[c] = new coord(12, 48, 4.71239, 2, 2, Math.toRadians(3));
+                points[c] = new coord(14, 48, 4.71239, 2, 2, Math.toRadians(3));
                 code[c] = 0;
                 c++;
                 points[c] = new coord(18.7, 48, 4.71239, 2, 0.8, Math.toRadians(3));

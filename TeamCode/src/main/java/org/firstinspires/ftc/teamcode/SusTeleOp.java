@@ -27,8 +27,8 @@ public class SusTeleOp extends LinearOpMode  {
     public static volatile double MAX_TELEOP_ACCEL = Math.pow(10, 6); // 92.61691602936227
     public static volatile int DEPOSIT_OUT_HEIGHT = 1000;
     public static volatile TwoPositions intakePositions = new TwoPositions(1.0, 0.65);
-    public static volatile TwoPositions depositLeftPositions = new TwoPositions(0.84, 0.35);
-    public static volatile TwoPositions depositRightPositions = new TwoPositions(0.16, 0.65);
+    public static volatile TwoPositions depositLeftPositions = new TwoPositions(1.0, 0.35);
+    public static volatile TwoPositions depositRightPositions = new TwoPositions(0.0, 0.65);
     public static volatile double headingLockPosition = 0.0;
     // Other classwide items
     private HardwarePushbot robot = new HardwarePushbot();

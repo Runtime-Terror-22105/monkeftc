@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -11,6 +12,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 @Autonomous(name="2+3 Red Back Auto", group="concept")
+@Config
 public class AutoRedBack extends LinearOpMode {
     private FtcDashboard dashboard;
     private CenterStageAutonomous auto;

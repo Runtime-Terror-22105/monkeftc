@@ -2,12 +2,14 @@ package org.firstinspires.ftc.teamcode;
 
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.CenterStageAutonomous.coord;
 
 @Autonomous(name="2+0 Blue Front Auto", group="concept")
+@Config
 public class AutoBlueFront extends LinearOpMode {
     private FtcDashboard dashboard;
     private CenterStageAutonomous auto;
@@ -22,10 +24,10 @@ public class AutoBlueFront extends LinearOpMode {
     public static int depositOnePixel = 1000;
 
     public coord[] points = new coord[100];
-    public static double backDistance = -34.6;
-    public static coord leftDepo = new coord(backDistance, 20.536, 4.71239, 1, 0.8, Math.toRadians(3));
+    public static double backDistance = -37;
+    public static coord leftDepo = new coord(backDistance, 23, 4.71239, 1, 0.8, Math.toRadians(3));
     public static coord rightDepo = new coord(backDistance, 39.8456, 4.71239, 1, 0.8, Math.toRadians(3));
-    public static coord centerDepo = new coord(backDistance, 30.351, 4.71239, 1, 0.8, Math.toRadians(3));
+    public static coord centerDepo = new coord(backDistance, 28.551, 4.71239, 1, 0.8, Math.toRadians(3));
 
     // may need to adjust these intake positions
     @Override
@@ -81,39 +83,47 @@ public class AutoBlueFront extends LinearOpMode {
                 points[0] = new coord(0, 25.8979, 0, 2, 2, Math.toRadians(3)); // place on purple pixel mark
                 break;
             case RIGHT:
-                points[0] = new coord(0, 12.8324, 0.27, 2, 2, Math.toRadians(3)); // place on purple pixel mark
-                points[1] = new coord(6.6758, 23.8324, 0.7125856101, 2, 2, Math.toRadians(3)); // place on purple pixel mark
+                points[0] = new coord(0, 13.8324, 0.27, 2, 2, Math.toRadians(3)); // place on purple pixel mark
+                points[1] = new coord(3.6758, 22.8324, 0.7125856101, 2, 2, Math.toRadians(3)); // place on purple pixel mark
                 code[0] = 69;
                 c = 1;
                 break;
         }
 
-        code[c] = 12;
-        c++;
-        points[c] = new coord(-1.8901, 8.865, 0, 2, 2, Math.toRadians(3)); // place on purple pixel marknew coord(0, 29.8979, 0, 2, 2, Math.toRadians(3)); // place on purple pixel mark
-        code[c] = 20;
-        c++;
-
-        switch(location) {
-            case LEFT:
-                points[c] = leftDepo;
-                break;
-            case MIDDLE:
-                points[c] = centerDepo;
-                break;
-            case RIGHT:
-                points[c] = rightDepo;
-                break;
-        }
-        code[c] = 6;
-        c++;
-
-        points[c] = new coord(-32.22, -0.489, 4.71239, 0.5, 0.5, Math.toRadians(1));
-        code[c] = -100;
-        c++;
-        points[c] = new coord(-32.22, -0.489, 4.71239, 0.5, 0.5, Math.toRadians(1));
-        code[c] = -100000;
-        c++;
+//        code[c] = 12;
+//        c++;
+//        points[c] = new coord(-1.8901, 8.865, 0, 2, 2, Math.toRadians(3)); // place on purple pixel marknew coord(0, 29.8979, 0, 2, 2, Math.toRadians(3)); // place on purple pixel mark
+//        code[c] = 20;
+//        c++;
+//
+//        switch (location) {
+//            case LEFT:
+//                points[c] = leftDepo;
+//                break;
+//            case MIDDLE:
+//                points[c] = centerDepo;
+//                break;
+//            case RIGHT:
+//                points[c] = rightDepo;
+//                break;
+//        }
+//        code[c] = 6;
+//        c++;
+//        points[c] = centerDepo;
+//        points[c].x += 3;
+//        code[c] = 200;
+//        c++;
+//        points[c] = centerDepo;
+//        points[c].x += 3;
+//        code[c] = 42;
+//        c++;
+//
+//        points[c] = new coord(-32.22, -0.489, 4.71239, 0.5, 0.5, Math.toRadians(1));
+//        code[c] = -100;
+//        c++;
+//        points[c] = new coord(-32.22, -0.489, 4.71239, 0.5, 0.5, Math.toRadians(1));
+//        code[c] = -100000;
+//        c++;
 
 
         int numPoints = c;
@@ -201,8 +211,7 @@ public class AutoBlueFront extends LinearOpMode {
                         // approximate height for proper yellow pixel placement
                         break;
                     case 6:
-                        wheelSpitPixel(depositOnePixel);
-                        slides.setTargetPosition(1600);
+                        wheelSpitPixel(depositOnePixel+1000);
                         // Basically, we first have to go UP and then backdown..
                         // Very weird unfortunate consequence of bad planning of camera location
                         break;
@@ -214,6 +223,11 @@ public class AutoBlueFront extends LinearOpMode {
                         auto.resetDepositBox();
                         sleep(600);
                         break;
+
+                    case 42:
+                        auto.resetDepositBox();
+                        sleep(800);
+                        slides.moveToBottom();
                 }
                 p++;
             }

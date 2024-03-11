@@ -22,8 +22,8 @@ public class CenterStageAutonomous {
     public static double intakeHeight1 = 0.8;
     public static double intakeHeight2 = 0.73;
     public static double intakeHeight3 = 0.63;
-    public static volatile TwoPositions depositLeftPositions = new TwoPositions(0.84, 0.35);
-    public static volatile TwoPositions depositRightPositions = new TwoPositions(0.16, 0.65);
+    public static volatile TwoPositions depositLeftPositions = new TwoPositions(1.0, 0.35);
+    public static volatile TwoPositions depositRightPositions = new TwoPositions(0.0, 0.65);
 
     private RobotSleep theSleep;
     public Slides slides;

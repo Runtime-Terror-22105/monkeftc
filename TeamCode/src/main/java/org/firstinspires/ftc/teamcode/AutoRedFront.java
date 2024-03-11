@@ -26,7 +26,6 @@ public class AutoRedFront extends LinearOpMode {
     public static coord leftDepo = new coord(backDistance, 33, -4.71239, 1, 0.8, Math.toRadians(3));
     public static coord rightDepo = new coord(backDistance, 18.536, -4.71239, 1, 0.8, Math.toRadians(3));
     public static coord centerDepo = new coord(backDistance, 26.351, -4.71239, 1, 0.8, Math.toRadians(3));
-
     // may need to adjust these intake positions
     @Override
     public void runOpMode() {

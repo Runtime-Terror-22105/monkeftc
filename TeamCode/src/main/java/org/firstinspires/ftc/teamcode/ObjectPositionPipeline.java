@@ -33,7 +33,8 @@ import org.openftc.easyopencv.OpenCvPipeline;
 
  @Config
 public class ObjectPositionPipeline extends OpenCvPipeline {
-     public static volatile int DETECTION_THRESHOLD = 150000;
+     public static volatile int BLUE_DETECTION_THRESHOLD = 150000;
+     public static volatile int RED_DETECTION_THRESHOLD = 200000;
     // ROI = region of interest, aka the rectangle we're drawing
     // you should fine tune this
     public static volatile Rect ROI_Left   = new Rect(new Point( 0, 75), new Point(140, 240));
@@ -96,7 +97,9 @@ public class ObjectPositionPipeline extends OpenCvPipeline {
             return input;
         }
 
+        int detection_threshold;
         if (DETECT_RED) {
+            detection_threshold = RED_DETECTION_THRESHOLD;
             // check if red one is there, check both high and low range in spectrum
             Mat mat1 = mat.clone();
             Mat mat2 = mat.clone();
@@ -105,6 +108,7 @@ public class ObjectPositionPipeline extends OpenCvPipeline {
             Core.bitwise_or(mat1, mat2, mat);
         }
         else {
+            detection_threshold = BLUE_DETECTION_THRESHOLD;
             // check if blue one is there
             Core.inRange(mat, MIN_BLUE, MAX_BLUE, mat);
         }
@@ -136,7 +140,7 @@ public class ObjectPositionPipeline extends OpenCvPipeline {
         // middle.release();
         right.release();
 
-        if (leftValue < DETECTION_THRESHOLD && rightValue < DETECTION_THRESHOLD) {
+        if (leftValue < detection_threshold && rightValue < detection_threshold) {
             propLocation = Location.LEFT;
             telemetry.addData("Prop location:", "left");
         }
